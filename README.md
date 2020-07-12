@@ -1,5 +1,5 @@
 # Python-Link-Shortner
 
-# Libraries
+# Modules
   - Flask
   - pymongo (+ voluptuous)
