@@ -30,8 +30,16 @@ class MongoDB(MongoClient):
             print(e)
             return False
 
-    def get_URL(self, query):
-        # 쿼리 구문을 통해 DB에서 데이터를 가져온다.
+    def get_short_url(self, raw_url):
+        # Raw_URL로 Short_URL을 검색한다
         collection = self[self._db][self._col]
-        
-        return collection.find_one(query)['Raw_URL']
+
+        # Raw_URL로 검색
+        find_item = collection.find_one({"Raw_URL" : raw_url})
+
+        # 없을경우 None 반환
+        if find_item is None:
+            return None
+
+        # 존재할경우 Short_URL 반환
+        return find_item['Short_URL']
