@@ -1,6 +1,6 @@
 from handling_db import MongoDB
 from handling_url import make_it_short
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect
 app = Flask(__name__)
 Mongo = MongoDB()
 
@@ -25,7 +25,16 @@ def shorten_url():
     }
     Mongo.save_data(db_data)
 
+    # AJAX에 축약된 URL을 반환한다.
     return short_url
+
+@app.route('/<short_url>')
+def redirect_url(short_url):
+    # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
+    Raw_URL = Mongo.get_URL({'Short_URL': short_url})     # 샘플 코드, 확인 후 삭제할 것.
+
+    return redirect(Raw_URL)                              # 해당 URL로 이동한다.
+
 
 if __name__ == "__main__":
     app.run(debug=True)
