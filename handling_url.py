@@ -1,5 +1,5 @@
+from short_url import encode_url
 
-def make_it_short(raw_url):
-    # URL을 짧게 축약한다.
-    pass
-    return raw_url
+def create_short_url(unique_id:int):
+    # 새로운 URL을 생성한다.
+    return encode_url(unique_id, min_length=7)

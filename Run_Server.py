@@ -1,5 +1,5 @@
 from handling_db import MongoDB
-from handling_url import make_it_short
+from handling_url import create_short_url
 from flask import Flask, render_template, url_for, request, redirect
 app = Flask(__name__)
 Mongo = MongoDB()
@@ -25,7 +25,8 @@ def shorten_url():
         print("raw_url is not in db")
 
         # 짧은 URL 생성
-        short_url = make_it_short(raw_url)
+        unique_id = Mongo.get_unique_id()
+        short_url = create_short_url(unique_id)
 
         # DB에 추가
         # DB에 넣는 부분
@@ -34,6 +35,10 @@ def shorten_url():
           #  'Short_URL': short_url
         #}
         #Mongo.save_data(db_data)
+
+        # DB 추가 후 unique_id를 증가시킨다.
+        #Mongo.increase_id()
+
         print("raw_url: ", raw_url, " short_url: ", short_url)
 
     # AJAX에 축약된 URL을 반환한다.
