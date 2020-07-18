@@ -2,9 +2,18 @@ from pymongo import MongoClient
 from voluptuous import Schema, Required, All, Url
 
 DEFAULT_HOST = 'mongodb+srv://admin:1234@links.fc8p4.mongodb.net/PYTHON-LINK-SHORTNER?retryWrites=true&w=majority'
+DEFAULT_COL = 'link_table'
+DEFAULT_DB = 'slink'
+COLLECTIONS = {
+    'LINKS': 'link_table',
+    'CONFIG': 'config'
+}
+QUERIES = {
+    'UNIQUE_ID': {'variable': 'unique_id'}
+}
 
 class MongoDB(MongoClient):
-    def __init__(self, host=None, db='slink', collection='link_table'):
+    def __init__(self, host=None, db=DEFAULT_DB, collection=DEFAULT_COL):
         self._db = db                    # DB명
         self._col = collection           # Collection명
         self.default_host = host         # DB 호스트 명
@@ -43,3 +52,23 @@ class MongoDB(MongoClient):
 
         # 존재할경우 Short_URL 반환
         return find_item['Short_URL']
+
+    def get_unique_id(self):
+        # URL 생성을 위한 ID 값을 가져온다.
+        collection = self[self._db][COLLECTIONS['CONFIG']]
+
+        my_query = QUERIES['UNIQUE_ID']
+        my_result = { 'value': True }
+
+        return collection.find_one(my_query, my_result)['value']
+
+    def increase_id(self):
+        # URL 생성에 사용될 ID(int)를 증가시킨다.
+        collection = self[self._db][COLLECTIONS['CONFIG']]
+
+        my_query = QUERIES['UNIQUE_ID']    # variable 필드값이 unique_id
+        new_value = {'$inc': {'value': 1}}      # value 필드값을 1만큼 증가시킨다.
+        
+        result = collection.update_one(my_query, new_value)
+
+        return result.modified_count > 0        # 추가되었는지 확인한다.
