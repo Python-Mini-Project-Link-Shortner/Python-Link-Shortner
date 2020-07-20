@@ -53,6 +53,17 @@ class MongoDB(MongoClient):
         # 존재할경우 Short_URL 반환
         return find_item['Short_URL']
 
+    def get_raw_url(self, short_url):
+        # Short_URL로 Raw_URL을 검색한다. (방식은 short_url과 동일)
+        collection = self[self._db][self._col]
+
+        find_item = collection.find_one({"Short_URL" : short_url})
+
+        if find_item is None:
+            return None
+        
+        return find_item['Raw_URL']
+
     def get_unique_id(self):
         # URL 생성을 위한 ID 값을 가져온다.
         collection = self[self._db][COLLECTIONS['CONFIG']]
@@ -66,7 +77,7 @@ class MongoDB(MongoClient):
         # URL 생성에 사용될 ID(int)를 증가시킨다.
         collection = self[self._db][COLLECTIONS['CONFIG']]
 
-        my_query = QUERIES['UNIQUE_ID']    # variable 필드값이 unique_id
+        my_query = QUERIES['UNIQUE_ID']         # variable 필드값이 unique_id
         new_value = {'$inc': {'value': 1}}      # value 필드값을 1만큼 증가시킨다.
         
         result = collection.update_one(my_query, new_value)
