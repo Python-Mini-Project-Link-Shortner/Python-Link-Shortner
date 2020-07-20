@@ -48,7 +48,7 @@ def shorten_url():
 @app.route('/<short_url>')
 def redirect_url(short_url):
     # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
-    Raw_URL = Mongo.get_URL({'Short_URL': short_url})     # 샘플 코드, 확인 후 삭제할 것.
+    Raw_URL = Mongo.get_raw_url(short_url)
 
     # 페이지가 존재하지 않으면 오류 페이지 출력
     if Raw_URL is None:
