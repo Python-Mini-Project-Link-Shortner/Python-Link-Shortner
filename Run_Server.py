@@ -1,8 +1,12 @@
 from handling_db import MongoDB
 from handling_url import create_short_url, validate_url
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, jsonify
+from flask_cors import CORS
 app = Flask(__name__)
 Mongo = MongoDB()
+
+# enable CORS
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 @app.route('/')
 def home():
@@ -55,6 +59,14 @@ def redirect_url(short_url):
         return render_template('page_404.html')
 
     return redirect(Raw_URL)
+
+@app.route('/api/test', methods=['post'])
+def test():
+    return jsonify([
+        {"id": "5846385767", "Raw_URL": "https://www.naver.com", "Short_URL": "nav2.com"},
+        {"id": "5893746588", "Raw_URL": "https://www.daum.net", "Short_URL": "dau2.net"},
+        {"id": "8284947484", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"},
+        {"id": "82849473885", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"}])
 
 if __name__ == "__main__":
     app.run(debug=True)
