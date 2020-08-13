@@ -2,9 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Buefy from 'buefy'
 import Clipboard from 'v-clipboard'
-import 'buefy/dist/buefy.css'
 
 Vue.use(Buefy)
 Vue.use(Clipboard)
