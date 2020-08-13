@@ -1,10 +1,10 @@
 <template>
-    <v-app-bar app color="white">
+    <v-app-bar color="white" height="80" app>
         <v-container class="limit-width" fluid>
             <v-row align="center">
                 <v-app-bar-nav-icon
-                  class="hidden-md-and-up"
-                  @click="drawer = !drawer"
+                class="hidden-md-and-up"
+                @click="toggleDrawer"
                 />
                 <!-- MiniPy 타이틀 표시하는 부분 -->
                 <v-toolbar-title>
@@ -17,14 +17,14 @@
 
                 <div>
                     <v-tabs
-                     class="hidden-sm-and-down" 
-                     background-color="transparent"
-                     slider-size="2"
-                     >
+                    class="hidden-sm-and-down" 
+                    background-color="transparent"
+                    slider-size="2"
+                    >
                         <v-tab 
-                          v-for="item in menuItems" 
-                          :key="item.name" 
-                          :ripple="false"
+                        v-for="item in mainLinks" 
+                        :key="item.name" 
+                        :ripple="false"
                         >
                             {{item.name}}
                         </v-tab>
@@ -38,16 +38,16 @@
 </template>
 
 <script>
+import {mapState, mapMutations} from 'vuex'
+
 export default {
     name: 'AppNavBar',
-    data: () => ({
-        menuItems: [
-            {name: 'Main', href: ''},
-            {name: 'About', href: ''},
-            {name: 'Contact', href: ''}
-        ],
-        drawer: false
-    })
+    computed: {
+        ...mapState(['mainLinks'])
+    },
+    methods: {
+        ...mapMutations(['toggleDrawer'])
+    }
 }
 </script>
 
