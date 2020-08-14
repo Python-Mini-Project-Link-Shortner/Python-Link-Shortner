@@ -19,9 +19,13 @@ def shorten_url():
     # AJAX를 통해 원본 URL을 처리하는 페이지.
 
     # 원본 URL 데이터 가져오기
-    raw_url = request.form['raw_url']
+    raw_url = request.json['url']
+    print(raw_url)
     if not validate_url(raw_url):
-        return "Invalid URL"
+        return jsonify({
+            'flag': False,
+            'msg': 'Invalid URL.'
+        })
 
     # 이미 저장된 URL인지 확인
     short_url = Mongo.get_short_url(raw_url)
@@ -47,7 +51,10 @@ def shorten_url():
         print("raw_url: ", raw_url, " short_url: ", short_url)
 
     # AJAX에 축약된 URL을 반환한다.
-    return request.host_url + short_url
+    return jsonify({
+        'flag': True,
+        'msg': request.host_url + short_url
+        })
 
 @app.route('/<short_url>')
 def redirect_url(short_url):

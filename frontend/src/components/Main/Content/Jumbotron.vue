@@ -12,30 +12,28 @@
                 placeholder="Input Your Link Here."
                 >
                     <template slot="append">
-                        <v-btn color="primary">Shorten</v-btn>
+                        <v-btn color="primary" @click="shortenURL">Shorten</v-btn>
                     </template>
                 </v-text-field>
             </v-col>
 
             <v-col cols="12" md="10">
                 <v-alert 
+                  :value="alertSetting.isSuccess"
+                  :type="alertSetting.type" 
                   class="ma-0" 
-                  type="success" 
                   dense 
                   dark 
                   dismissible
                   >
-                  성공!
-                </v-alert>
-
-                <v-alert 
-                  class="ma-0" 
-                  type="warning" 
-                  dense 
-                  dark 
-                  dismissible
-                  >
-                  실패!
+                    <v-row justify="space-around" align="center">
+                        <v-col class="py-0 pl-5">
+                            {{alertSetting.msg}}
+                        </v-col>
+                        <v-col class="py-0 pr-5 text-right">
+                            <v-btn small outlined>Copy</v-btn>
+                        </v-col>
+                    </v-row>
                 </v-alert>
             </v-col>
         </v-row>  
@@ -44,15 +42,40 @@
 </template>
 
 <script>
+import axios from 'axios'
+import {mapState} from 'vuex'
+
 export default {
     name: 'Jumbotron',
     data() {
         return {
             imgPath: require('@/assets/img/jumbo 2.jpg'),
             url: '',
-            isSuccess: false
+            alertSetting: {
+                isSuccess: false,
+                type: 'success',
+                msg: 'default'
+            }
         }
     },
+    computed: {
+        ...mapState(['serverURL'])
+    },
+    methods: {
+        shortenURL() {
+            axios.post(this.serverURL, {url: this.url})
+              .then( res => {
+                  const alert = this.alertSetting
+                  alert.isSuccess = res.data.flag
+                  alert.type = res.data.flag ? 'success' : 'warning'
+                  alert.msg = res.data.msg
+                  console.log(res.data)
+              }).catch( ex => {
+                  console.log(ex)
+              })
+
+        }
+    }
 }
 </script>
 
