@@ -8,9 +8,7 @@
                 />
                 <!-- MiniPy 타이틀 표시하는 부분 -->
                 <v-toolbar-title>
-                    <router-link tag="a" :to="{name: 'Main'}" class="logo no-drag">
-                        &lt; Mini<span class="py">Py</span> &gt;
-                    </router-link>
+                    <Logo />
                 </v-toolbar-title>
 
                 <v-spacer />
@@ -38,7 +36,9 @@
 </template>
 
 <script>
+import Logo from './Content/Logo.vue'
 import {mapState, mapMutations} from 'vuex'
+
 
 export default {
     name: 'AppNavBar',
@@ -47,29 +47,14 @@ export default {
     },
     methods: {
         ...mapMutations(['toggleDrawer'])
+    },
+    components: {
+        Logo
     }
 }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500&display=swap');
-.logo {
-    font-family: 'Recursive', sans-serif;
-    font-weight: 300;
-    font-size: 2em;
-    text-decoration: none;
-    color: inherit;
-}
-.logo .py {
-    color: rgb(55,115,165);
-}
-.no-drag {
-    -ms-user-select: none; 
-    -moz-user-select: -moz-none;
-    -webkit-user-select: none; 
-    -khtml-user-select: none; 
-    user-select:none;
-}
 .limit-width {
     max-width: 1200px;
 }

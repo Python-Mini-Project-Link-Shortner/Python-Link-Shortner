@@ -47,17 +47,15 @@ import {mapState} from 'vuex'
 
 export default {
     name: 'Jumbotron',
-    data() {
-        return {
-            imgPath: require('@/assets/img/jumbo 2.jpg'),
-            url: '',
-            alertSetting: {
-                isSuccess: false,
-                type: 'success',
-                msg: 'default'
-            }
+    data: () => ({
+        imgPath: require('@/assets/img/jumbo 2.jpg'),
+        url: '',
+        alertSetting: {
+            isSuccess: false,
+            type: 'success',
+            msg: 'default'
         }
-    },
+    }),
     computed: {
         ...mapState(['serverURL'])
     },
