@@ -24,5 +24,7 @@ export default {
 </script>
 
 <style>
-
+    .limit-width {
+        max-width: 1200px;
+    }
 </style>

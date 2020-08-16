@@ -1,6 +1,6 @@
 <template>
     <v-footer color="rgb(67,66,66)">
-        <v-container class="white--text" style="max-width: 1200px">
+        <v-container class="white--text limit-width">
             <v-row>
                 <v-col class="text-center" cols="12">
                     <Logo />

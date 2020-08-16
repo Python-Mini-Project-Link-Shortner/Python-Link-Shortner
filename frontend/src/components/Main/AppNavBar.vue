@@ -53,9 +53,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.limit-width {
-    max-width: 1200px;
-}
-</style>

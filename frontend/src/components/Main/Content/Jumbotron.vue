@@ -1,6 +1,6 @@
 <template>
   <!-- 스크롤에 반응하는 Jumbotron -->
-  <v-parallax dark :src="imgPath" height="700">
+  <v-parallax class="mb-5" dark :src="imgPath" height="700">
     <v-container style="max-width: 800px;">
         <v-row align="center" justify="center" no-gutters>
             <!-- 링크 입력하는 텍스트 박스 -->
@@ -67,8 +67,7 @@
         </v-snackbar>
     </div>
 
-
-</v-parallax>
+  </v-parallax>
 </template>
 
 <script>

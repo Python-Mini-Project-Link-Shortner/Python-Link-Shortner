@@ -2,17 +2,17 @@
   <v-main>
       <Jumbotron />
 
-      <MainFeatures />
+      <Features />
   </v-main>
 </template>
 
 <script>
 import Jumbotron from './Content/Jumbotron.vue'
-import MainFeatures from './Content/MainFeatures.vue'
+import Features from './Content/Features.vue'
 export default {
     name: 'AppContent',
     components: {
-        Jumbotron, MainFeatures
+        Jumbotron, Features
     }
 }
 </script>
