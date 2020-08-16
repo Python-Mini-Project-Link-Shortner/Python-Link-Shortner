@@ -8,9 +8,9 @@ export default new Vuex.Store({
     isLogin: false,
     isLoginError: false,
     mainLinks: [
-      {name: 'Main', href: ''},
-      {name: 'About', href: ''},
-      {name: 'Contact', href: ''}
+      {name: 'Main', href: '#'},
+      {name: 'About', href: '#about'},
+      {name: 'Contact', href: '#contact'}
     ],
     drawer: false,
     serverURL: 'http://127.0.0.1:5000/ajax'

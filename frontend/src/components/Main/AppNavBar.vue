@@ -23,6 +23,7 @@
                         v-for="item in mainLinks" 
                         :key="item.name" 
                         :ripple="false"
+                        @click="scrollTo(item)"
                         >
                             {{item.name}}
                         </v-tab>
@@ -46,7 +47,10 @@ export default {
         ...mapState(['mainLinks'])
     },
     methods: {
-        ...mapMutations(['toggleDrawer'])
+        ...mapMutations(['toggleDrawer']),
+        scrollTo(item) {
+            this.$vuetify.goto( item.href === "#" ? 0 : item.href )
+        }
     },
     components: {
         Logo
