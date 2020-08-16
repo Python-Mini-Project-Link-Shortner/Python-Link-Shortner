@@ -1,185 +1,75 @@
 <template>
-  <v-app>
-    <!--
-      상단 툴바
-      @property {clipped-left} 좌측의 navigation-drawer가 app-bar 밑에 있는지 결정
-      @value $vuetify.breakpoint.lgAndUp 브라우저 Large 이상의 사이즈에서 true
-      @property {collapse-on-scroll} 스크롤중에는 collapsed 상태로 변경
-      @property {app} 해당 컴포넌트를 애플리케이션 레이아웃의 일부로 지정합니다. content sizing을 동적으로 조정하는데 사용됩니다. 
-    -->
-    <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
-      <!-- 메뉴버튼 -->
-      <v-app-bar-nav-icon @click.stop="showDrawer = !showDrawer;"></v-app-bar-nav-icon>
-      <!-- 타이틀 -->
-      <v-toolbar-title class="toolbar-title ml-0 pl-4 text-left">
-        <v-btn depressed tile blocked :ripple="false" class="hidden-xs no-background-hover">
-          Link Shortner Title
-        </v-btn>
-      </v-toolbar-title>
-      <!--
-        검색바
-        @property {flat} solo나 solo-inverted일 때 그림자 비활성화
-        @property {solo-inverted} focus 되기 전까지 투명한 상태로 활성화
-        @property {hide-details} 메뉴 위에 있어서 hint가 추가되면 레이아웃 깨지므로 가려준다
-        @property {label} 아무 입력도 없을 때 나오는 단어
-        @property {prepend-inner-icon} 입력창 내부 좌측에 붙여줄 아이콘. v-icon 참고 
-      -->
-      <v-text-field flat solo-inverted hide-details label="Keywords" prepend-inner-icon="mdi-magnify" class="hidden-xs"></v-text-field>
-      <!-- 공백 채우기 -->
-      <v-spacer></v-spacer>
-      <v-divider vertical></v-divider>
-      <!-- 계정관리 -->
-      <v-menu v-model="showAccountMenu" :offset-y="true">
-        <!--
-          계정관리 버튼 슬롯
-          @property {v-slot} 어느 Vue Slot에 넣어줄것인지 정해준다. v-menu는 activator 슬롯만 존재한다
-          @values attrs, on, value
-          @value on 이벤트
-          @value attr attribute 데이터
-        -->
-        <template v-slot:activator="{ on, attrs }">
-          <!--
-            계정관리 버튼
-            @property {depressed} box-shadow 0으로 설정
-            @property {tile} radius 0으로 설정
-            @property {ripple} 물결 이펙트
-            @property {v-bind} 슬롯의 attrs로 설정
-            @property {v-on} 슬롯의 on으로 설정
-          -->
-          <v-btn depressed tile :ripple="false" v-bind="attrs" v-on="on" class="no-background-hover max-height">
-            My Account <v-icon v-text="showAccountMenu ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
-          </v-btn>
-        </template>
+  <v-container class="text-left" px-6 py-5 fluid>
+    <v-row>
+      <v-col cols="12">
+        <div style="height: 240px; background-color: cyan; border-radius: 8px;">여러가지 분석자료들 넣을 수 있으면 넣어보세요</div>
+      </v-col>
+    </v-row>
 
-        <!--
-          계정관리 메뉴
-        -->
-        <v-list>
-          <v-list-item v-for="(item, index) in accountActionList" :key="'account-action-' + index" @click="">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+    <v-row>
+      <v-col cols="12">
+        <div style="background-color: grey">원석이형이 만들 입력 컴포넌트 여기다 넣으면 된다</div>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="12" class="text-right">
+        <v-btn class="mx-2" color="primary" :disabled="favoriteDisable">관심등록</v-btn>
+        <v-btn class="mx-2" color="error" :disabled="removeDisable">삭제</v-btn>
+        <v-btn class="mx-2" color="success" :disabled="tagDisable">#태그</v-btn>
+        <v-btn class="mx-2" color="secondary" :disabled="hideDisable">숨기기</v-btn>
+      </v-col>
+
+      <v-col cols="12" v-for="n in 10" :key="n">
+        <v-card :elevation="3">
+          <v-list-item class="grey lighten-2 height-48">
+            <div class="text-truncate font-weight-bold">탭이름 (길면...)</div>
+            <v-spacer></v-spacer>
+            <div class="grey--text lighten-1 pr-4 ">2020-08-13</div>
+            <v-checkbox v-model="checkboxTest[n - 1]"></v-checkbox>
           </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>
+          <v-divider class="grey lighten-1"></v-divider>
 
-    <!--
-      navigation-drawer는 좌측에 뜨는 메뉴 패널이다
-      @property {v-model} 네비게이션 화면에 표시 여부 결정
-      @property {clipped} navigation-drawer가 app-bar 밑에 있는지 결정
-      @value $vuetify.breakpoint.lgAndUp 브라우저 Large 이상의 사이즈에서 true
-      @property {app} 해당 컴포넌트를 애플리케이션 레이아웃의 일부로 지정합니다. content sizing을 동적으로 조정하는데 사용됩니다.
-    -->
-    <v-navigation-drawer v-model="showDrawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
-      <!--
-        메뉴에 표시될 리스트
-        @property {subheader} 메뉴 구분용 타이틀 넣을때 필요합니다
-      -->
-      <v-list subheader>
-        <!-- 메뉴의 타이틀 -->
-        <v-subheader>Action1</v-subheader>
+          <v-card-text>
+            <div class="text-h6 red--text text--darken-1 pb-1">pysh.com/ABC</div>
+            <div class="text-truncate">http://naver.com</div>
+          </v-card-text>
 
-        <!-- 표시될 아이템 -->
-        <v-list-item v-for="item in drawerSubtitle1ActionList" :key="item.text" @click="closeDrawer();">
-          <v-list-item-icon>
-            <v-icon v-text="item.icon"></v-icon>
-          </v-list-item-icon>
+          <v-card-actions class="px-3 pt-0">
+            <v-btn outlined color="primary">복사</v-btn>
+            <v-btn outlined color="error">제거</v-btn>
+            <v-btn outlined color="secondary">탭이름 변경</v-btn>
+            <v-btn outlined color="success">#태그</v-btn>
+            <v-btn outlined color="warning">기타</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
 
-          <v-list-item-content>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <!-- 구분줄 -->
-        <v-divider></v-divider>
-        <!-- 메뉴의 타이틀 -->
-        <v-subheader>Action2</v-subheader>
-
-        <!-- 표시될 아이템 -->
-        <v-list-item v-for="item in drawerSubtitle2ActionList" :key="item.text" @click="closeDrawer();">
-          <v-list-item-icon>
-            <v-icon v-text="item.icon"></v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <!-- 구분줄 -->
-        <v-divider></v-divider>
-        <!-- 메뉴의 타이틀 -->
-        <v-subheader>Action2</v-subheader>
-
-        <!-- 표시될 아이템 -->
-        <v-list-item v-for="item in drawerSubtitle3ActionList" :key="item.text" @click="closeDrawer();">
-          <v-list-item-icon>
-            <v-icon v-text="item.icon"></v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-main>
-      <v-container class="fill-height" fluid>
-        tttt
-      </v-container>
-    </v-main>
-  </v-app>
+      <v-col cols="12">
+        <v-pagination v-model="page" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" :length="10" :total-visible="10"></v-pagination>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: 'Manage',
   data: () => ({
-    showDrawer: null, // 왼쪽 네비게이션 화면 표시 여부
-    showAccountMenu: false, // 계정 관리 메뉴 표시 여부
-    accountActionList: [ // 관리 메뉴
-      { title: '링크관리', link: '' },
-      { title: '계정관리', link: '' },
-      { title: '로그아웃', link: '' }
-    ],
-    drawerSubtitle1ActionList: [ // 좌측 링크 메뉴1
-      { icon: 'mdi-contacts', text: 'Something1', link: '' },
-      { icon: 'mdi-history', text: 'Something2', link: '' }
-    ],
-    drawerSubtitle2ActionList: [ // 좌측 링크 메뉴2
-      { icon: 'mdi-content-copy', text: 'Something3', link: '' }
-    ],
-    drawerSubtitle3ActionList: [ // 좌측 링크 메뉴3
-      { icon: 'mdi-content-copy', text: 'Something4', link: '' }
-    ]
+    page: 1,
+    favoriteDisable: true,
+    removeDisable: true,
+    tagDisable: true,
+    hideDisable: true,
+    checkboxTest: []
   }),
   methods: {
-    closeDrawer() {
-      // Display 크기가 large 이상일경우에만 실행됩니다
-      if (this.$vuetify.breakpoint.lgAndUp != true) {
-        this.showDrawer = false;
-      }
-    }
-  },
+  }
 }
 </script>
 
 <style scoped>
-  /deep/ .v-toolbar__content {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    padding-right: 12px !important;
-  }
-  
-  .toolbar-title {
-    width: 300px;
-  }
-
-  .no-background-hover::before {
-    background-color: transparent !important;
-  }
-
-  .max-height {
-    height: 100% !important;
+  .height-48 {
+    height: 48px !important;
   }
 </style>
