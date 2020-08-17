@@ -19,10 +19,6 @@ class MongoDB(MongoClient):
         self.default_host = host         # DB 호스트 명
         if not host:
             self.default_host = DEFAULT_HOST
-        self.schema = Schema({           # 저장할 때의 유효성 검사 스키마
-            Required('Raw_URL'): Url(),
-            Required('Short_URL'): All(str)
-        })
         super().__init__(self.default_host)
     
     def save_data(self, data):
@@ -30,12 +26,11 @@ class MongoDB(MongoClient):
         collection = self[self._db][self._col]
 
         try:
-            # 유효성 검사 후 DB에 추가한다.
-            self.schema(data)
+            # DB에 추가한다.
             collection.insert_one(data)
             return True
         except Exception as e:
-            # 스키마에 충족하지 않으면 False 반환
+            # 저장에 실패했으면 False 반환
             print(e)
             return False
 
