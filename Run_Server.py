@@ -26,7 +26,7 @@ def shorten_url():
             'msg': 'Invalid URL.'
         })
 
-    # www, http가 생략된 URL을 수정한다.
+    # 프로토콜이 생략된 url을 수정한다.
     raw_url = normalize_url(raw_url)
 
     # 이미 저장된 URL인지 확인

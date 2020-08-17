@@ -40,17 +40,19 @@
 import Logo from './Content/Logo.vue'
 import {mapState, mapMutations} from 'vuex'
 
+const main = 'main' // Vuex의 main 모듈
 
 export default {
 	name: 'AppNavBar',
 	computed: {
-		...mapState(['mainLinks'])
+		...mapState(main, ['mainLinks'])
 	},
 	methods: {
-		...mapMutations(['toggleDrawer']),
+		...mapMutations(main, ['toggleDrawer']),
 		scrollTo(item) {
-			this.$vuetify.goTo( item.href === "#" ? 0 : item.href, { duration: 1000 })
-		}
+			this.$vuetify.goTo( 
+				item.href === "#" ? 0 : item.href, { duration: 1000 }
+			)}
 	},
 	components: {
 		Logo

@@ -24,17 +24,19 @@
 <script>
 import {mapState, mapMutations} from 'vuex'
 
+const main = 'main' // Vuex의 main 모듈
+
 export default {
   name: 'AppDrawer',
   computed: {
-    ...mapState(['mainLinks']),
+    ...mapState(main, ['mainLinks']),
     drawer: {
       get()    { return this.$store.state.drawer },
       set(val) { this.setDrawer(val) }
     }
   },
   methods: {
-    ...mapMutations(['setDrawer'])
+    ...mapMutations(main, ['setDrawer'])
   }
 }
 </script>
