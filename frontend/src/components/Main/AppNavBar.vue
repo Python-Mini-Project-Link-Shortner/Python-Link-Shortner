@@ -49,7 +49,7 @@ export default {
 	methods: {
 		...mapMutations(['toggleDrawer']),
 		scrollTo(item) {
-			this.$vuetify.goto( item.href === "#" ? 0 : item.href )
+			this.$vuetify.goTo( item.href === "#" ? 0 : item.href, { duration: 1000 })
 		}
 	},
 	components: {
