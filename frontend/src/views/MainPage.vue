@@ -1,13 +1,13 @@
 <template>
-  <v-app>
-      <AppNavBar />
-    
-      <AppDrawer />
+	<v-app>
+		<AppNavBar />
 
-      <AppContent />
+		<AppDrawer />
 
-      <AppFooter />
-  </v-app>
+		<AppContent />
+
+		<AppFooter />
+	</v-app>
 </template>
 
 <script>
@@ -16,15 +16,15 @@ import AppDrawer from '@/components/Main/AppDrawer.vue'
 import AppContent from '@/components/Main/AppContent.vue'
 import AppFooter from '@/components/Main/AppFooter.vue'
 export default {
-    name: 'MainPage',
-    components: {
-        AppNavBar, AppDrawer, AppContent, AppFooter
-    }
+	name: 'MainPage',
+	components: {
+		AppNavBar, AppDrawer, AppContent, AppFooter
+	}
 }
 </script>
 
 <style>
-    .limit-width {
-        max-width: 1200px;
-    }
+.limit-width {
+	max-width: 1200px;
+}
 </style>
