@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapState(main, ['mainLinks']),
     drawer: {
-      get()    { return this.$store.state.drawer },
+      get()    { return this.$store.state.main.drawer },
       set(val) { this.setDrawer(val) }
     }
   },
