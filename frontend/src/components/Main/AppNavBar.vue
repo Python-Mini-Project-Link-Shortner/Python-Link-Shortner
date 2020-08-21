@@ -21,7 +21,7 @@
           >
             <v-tab 
             v-for="item in mainLinks" :key="item.name" 
-            :ripple="false" @click="scrollTo(item)"
+            :ripple="false" @click="goTo(item)"
             >
               {{item.name}}
             </v-tab>
@@ -36,6 +36,7 @@
 
 <script>
 import Logo from './Content/Logo.vue'
+import routeMix from '@/components/mixins/route.js'
 import {mapState, mapMutations} from 'vuex'
 
 const main = 'main' // Vuex의 main 모듈
@@ -50,15 +51,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(main, ['toggleDrawer', 'setTabIndex']),
-    scrollTo(item) {
-      this.$vuetify.goTo( 
-        item.href === "#" ? 0 : item.href, { duration: 1000 }
-      )
-    }
+    ...mapMutations(main, ['toggleDrawer', 'setTabIndex', 'setIntersection'])
   },
   components: {
     Logo
-  }
+  },
+  mixins: [ routeMix ]
 }
 </script>
