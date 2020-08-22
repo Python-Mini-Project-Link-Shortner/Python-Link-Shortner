@@ -76,7 +76,7 @@ import { mapActions } from 'vuex'
 import Logo from '@/components/Logo.vue'
 
 export default {
-  name: 'ManageNavDrawer',
+  name: 'ManageDrawer',
   components: {
     HomeLogo: Logo
   },
