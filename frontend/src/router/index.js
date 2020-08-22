@@ -1,5 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import MainPage from '@/views/MainPage.vue'
+import AppDrawer from '@/views/MainPage/AppDrawer.vue'
+import AppFooter from '@/views/MainPage/AppFooter.vue'
+import AppNavBar from '@/views/MainPage/AppNavBar.vue'
+import ManageNavBar from '@/views/ManagePage/ManageNavBar.vue'
+import ManageNavDrawer from '@/views/ManagePage/ManageDrawer.vue'
 
 Vue.use(VueRouter)
 
@@ -11,19 +17,33 @@ Vue.use(VueRouter)
   },
   {
     path: '/main',
-    component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage.vue'),
+    components:  {
+      default: MainPage,
+      navBar: AppNavBar,
+      drawer: AppDrawer,
+      footer: AppFooter
+    },
     children: [
       {
         path: '',
         name: 'Main',
-        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainHome.vue')
+        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/AppMainHome.vue')
       },
       {
         path: 'api',
         name: 'MainAPI',
-        component: () => import(/* webpackChunkName: "api" */ '@/views/MainPage/MainAPI.vue')
+        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/AppMainAPI.vue')
       }
     ]
+  },
+  {
+    path: '/manage',
+    name: 'Manage',
+    components: {
+      default: () => import(/* webpackChunkName: "manage" */ '@/views/Manage.vue'),
+      navBar: ManageNavBar,
+      drawer: ManageNavDrawer
+    }
   }
   // {
   //   path: '/about',

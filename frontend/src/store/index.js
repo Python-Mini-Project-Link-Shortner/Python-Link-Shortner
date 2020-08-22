@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import main from './modules/main.js'
+import manageModule from '@/store/modules/manageModule.js'
 
 Vue.use(Vuex)
 
+// https://uxgjs.tistory.com/149 참고사이트
 export default new Vuex.Store({
   state: {
     isLogin: false,
@@ -20,6 +22,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    main
+    main,
+    manage: manageModule
   }
 })
