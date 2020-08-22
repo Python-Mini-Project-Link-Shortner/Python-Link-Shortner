@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import ShortenLink from './ShortenLink.vue'
+import ShortenLink from '@/components/ShortenLink.vue'
 
 export default {
   name: 'Jumbotron',

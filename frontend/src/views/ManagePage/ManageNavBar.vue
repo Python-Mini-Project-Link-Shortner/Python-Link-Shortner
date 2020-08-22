@@ -66,7 +66,7 @@ import Logo from '@/components/Logo.vue'
 
 // lgAndUp일때 ManageNavDrawer를 항상 보여주게 된다
 export default {
-  name: 'ManageAppBar',
+  name: 'ManageNavBar',
   components: {
     HomeLogo: Logo
   },

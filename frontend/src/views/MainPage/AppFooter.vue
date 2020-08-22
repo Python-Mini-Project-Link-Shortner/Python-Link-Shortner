@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Logo from './Content/Logo.vue'
+import Logo from '@/components/Logo.vue'
 
 export default {
   name: 'AppFooter',

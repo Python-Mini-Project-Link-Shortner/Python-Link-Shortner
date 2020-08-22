@@ -1,24 +1,13 @@
 <template>
-  <v-app>
-    <AppNavBar />
-
-    <AppDrawer />
-
-    <AppMain />
-
-    <AppFooter />
-  </v-app>
+  <AppMain />
 </template>
 
 <script>
-import AppNavBar from '@/components/Main/AppNavBar.vue'
-import AppDrawer from '@/components/Main/AppDrawer.vue'
-import AppMain from '@/components/Main/AppMain.vue'
-import AppFooter from '@/components/Main/AppFooter.vue'
+import AppMain from '@/views/MainPage/AppMain.vue'
 export default {
   name: 'MainPage',
   components: {
-    AppNavBar, AppDrawer, AppMain, AppFooter
+    AppMain
   }
 }
 </script>

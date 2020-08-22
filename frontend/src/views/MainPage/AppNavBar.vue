@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import Logo from './Content/Logo.vue'
+import Logo from '@/components/Logo.vue'
 import mixRoute from '@/components/mixins/mixRoute.js' // goto(item)
 import {mapState, mapMutations} from 'vuex'
 

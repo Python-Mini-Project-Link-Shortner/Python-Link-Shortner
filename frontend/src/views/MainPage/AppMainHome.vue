@@ -24,7 +24,7 @@ import { mapState, mapMutations } from 'vuex'
 const main = 'main' // Vuex의 'main' 모듈
 
 export default {
-  name: 'MainHome',
+  name: 'MainMainHome',
   data: () => ({
     intersectInfo: [
       { index: 0, y: 0 },
