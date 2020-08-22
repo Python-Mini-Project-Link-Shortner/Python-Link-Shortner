@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col cols="12">
-        <div style="background-color: grey">원석이형이 만들 입력 컴포넌트 여기다 넣으면 된다</div>
+        <LinkInput alert></LinkInput>
       </v-col>
     </v-row>
 
@@ -53,8 +53,13 @@
 </template>
 
 <script>
+import ShortenLink from '@/components/ShortenLink.vue'
+
 export default {
   name: 'Manage',
+  components: {
+    LinkInput: ShortenLink
+  },
   data: () => ({
     page: 1,
     favoriteDisable: true,

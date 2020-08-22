@@ -2,7 +2,8 @@ export default module = {
   // namespace가 존재하므로 사용할때는 {등록시킬때이름/}를 추가해줘서 사용해야 한다
   namespaced: true,
   state: () => ({
-    showDrawer: null  // Manage 페이지의 NavigationDrawer 상태값
+    showDrawer: true  // Manage 페이지의 NavigationDrawer 상태값
+    // desktop아니라 모바일일경우 false로 바뀌게 수정
   }),
   mutations: {
     setDrawer(state, value) { // showDrawer 값 변경

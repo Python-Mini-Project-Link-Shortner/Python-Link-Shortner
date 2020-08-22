@@ -7,6 +7,12 @@
     @property {app} 해당 컴포넌트를 애플리케이션 레이아웃의 일부로 지정합니다. content sizing을 동적으로 조정하는데 사용됩니다.
   -->
   <v-navigation-drawer v-model="showDrawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+    <template v-slot:prepend v-if="!$vuetify.breakpoint.lgAndUp">
+      <div class="mt-3">
+        <HomeLogo></HomeLogo>
+      </div>
+    </template>
+
     <!--
       메뉴에 표시될 리스트
       @property {subheader} 메뉴 구분용 타이틀 넣을때 필요합니다
@@ -58,14 +64,22 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+
+    <template v-slot:append>
+      <div class="mb-3">@2020 MiniPy.com</div>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import Logo from '@/components/Logo.vue'
 
 export default {
   name: 'ManageNavDrawer',
+  components: {
+    HomeLogo: Logo
+  },
   data: () => ({
     drawerSubtitle1ActionList: [ // 좌측 링크 메뉴1
       { icon: 'mdi-contacts', text: 'Something1', link: '' },
@@ -81,7 +95,7 @@ export default {
   computed: {
     showDrawer: {
       get() { return this.$store.state.manage.showDrawer; }, // Vuex의 manageModule에서 showDrawer 가져옴
-      set() {} // set 불가
+      set(value) { if (value === false) this.close(); }
     }
   },
   methods: {
@@ -89,8 +103,8 @@ export default {
       'closeDrawer' // vuex의 manageModule에서 함수들 가져옴
     ]),
     close() {
-      // Display 크기가 large 이상일경우에만 실행됩니다
-      if (this.$vuetify.breakpoint.lgAndUp != true) {
+      // Display 크기가 large 이상이 아닐 경우에만 실행됩니다
+      if (this.$vuetify.breakpoint.lgAndUp !== true) {
         this.closeDrawer();
       }
     }

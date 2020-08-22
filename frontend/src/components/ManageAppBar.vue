@@ -8,12 +8,10 @@
   -->
   <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
     <!-- 메뉴버튼 -->
-    <v-app-bar-nav-icon @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon v-if="!$vuetify.breakpoint.lgAndUp" @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
     <!-- 타이틀 -->
     <v-toolbar-title class="toolbar-title ml-0 pl-4 text-left">
-      <v-btn depressed tile blocked :ripple="false" class="hidden-xs no-background-hover">
-        Link Shortner Title
-      </v-btn>
+      <HomeLogo></HomeLogo>
     </v-toolbar-title>
     <!--
       검색바
@@ -64,9 +62,20 @@
 
 <script>
 import { mapActions } from 'vuex'
+import Logo from '@/components/Logo.vue'
 
+// lgAndUp일때 ManageNavDrawer를 항상 보여주게 된다
 export default {
   name: 'ManageAppBar',
+  components: {
+    HomeLogo: Logo
+  },
+  mounted() {
+    // 크기 줄이고 뒤로가기 후 다시 돌아올 때 문제생기므로 여기서 처리해줘야한다
+    if (this.$vuetify.breakpoint.lgAndUp === true) {
+      this.openDrawer();
+    }
+  },
   data: () => ({
     showAccountMenu: false, // 계정 관리 메뉴 표시 여부
     accountActionList: [ // 관리 메뉴
@@ -77,7 +86,7 @@ export default {
   }),
   methods: {
     ...mapActions('manage', [
-      'toggleDrawer'
+      'toggleDrawer', 'openDrawer'
     ])
   }
 }
