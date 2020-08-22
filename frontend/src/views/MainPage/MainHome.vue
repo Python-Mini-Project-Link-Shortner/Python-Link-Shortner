@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import Jumbotron from '@/components/Main/Content/Jumbotron.vue'
-import About from '@/components/Main/Content/About.vue'
+import Jumbotron from '@/components/MainPage/Jumbotron.vue'
+import About from '@/components/MainPage/About.vue'
 import { mapState, mapMutations } from 'vuex'
 
 const main = 'main' // Vuex의 'main' 모듈
 
 export default {
-  name: 'MainMainHome',
+  name: 'MainPage',
   data: () => ({
     intersectInfo: [
       { index: 0, y: 0 },

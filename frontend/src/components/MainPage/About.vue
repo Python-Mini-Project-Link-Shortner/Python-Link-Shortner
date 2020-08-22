@@ -1,7 +1,7 @@
 <template>
   <div class="mb-9 mt-12" id="about">
     <SubHeader title="About">
-      MiniPy provides simplified version of any links ready to share on SNSs, blogs, Etc. <br>
+      MiniPy provides simplified version of any links ready to share on SNSs, blogs, etc. <br>
       Just with one click— shorten, share, manage altogether come in handy. <br>
     </SubHeader>
 

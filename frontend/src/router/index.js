@@ -27,12 +27,12 @@ Vue.use(VueRouter)
       {
         path: '',
         name: 'Main',
-        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/AppMainHome.vue')
+        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainHome.vue')
       },
       {
         path: 'api',
         name: 'MainAPI',
-        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/AppMainAPI.vue')
+        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainAPI.vue')
       }
     ]
   },
