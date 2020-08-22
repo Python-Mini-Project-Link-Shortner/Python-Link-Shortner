@@ -28,7 +28,20 @@
           </v-tabs>
         </div>
 
-        <v-btn color="rgb(55,115,165)" dark class="mx-3">Login</v-btn>
+        <!-- 구글 로그인 버튼 -->
+        <v-btn color="rgb(55,115,165)" dark class="mx-3" outlined>
+          <v-row justify="space-between" align="center">
+            <v-col class="pa-0">
+              <v-avatar tile size="26">
+                <img src="@/assets/img/Google Logo.png" alt="">
+              </v-avatar>
+            </v-col>
+            <v-col class="pa-1">
+              Login
+            </v-col>
+          </v-row>
+        </v-btn>
+
       </v-row>
     </v-container>
   </v-app-bar>
@@ -36,7 +49,7 @@
 
 <script>
 import Logo from './Content/Logo.vue'
-import routeMix from '@/components/mixins/route.js'
+import mixRoute from '@/components/mixins/mixRoute.js' // goto(item)
 import {mapState, mapMutations} from 'vuex'
 
 const main = 'main' // Vuex의 main 모듈
@@ -56,6 +69,6 @@ export default {
   components: {
     Logo
   },
-  mixins: [ routeMix ]
+  mixins: [ mixRoute ]
 }
 </script>

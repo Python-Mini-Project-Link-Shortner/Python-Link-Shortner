@@ -1,6 +1,6 @@
 import {mapMutations} from 'vuex'
 
-const routeMix = {
+const mixRoute = {
   methods: {
     ...mapMutations(['setIntersection']),
     // 스크롤인지 라우터인지 확인한다.
@@ -28,10 +28,12 @@ const routeMix = {
         )
       // route로 동작할 경우
       } else if (behavior === 'route') {
+        const router = this.$router
 
+        router.push(item.href)
       }
     }
   }
 }
 
-export default routeMix
+export default mixRoute

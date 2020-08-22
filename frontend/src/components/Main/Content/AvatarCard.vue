@@ -3,15 +3,15 @@
     <div class="text-center" :style="{height: `${iconSize/2}px`}">
       <!-- 상단 중앙 아바타 -->
       <v-avatar class="mx-auto" :style="styles" :size="iconSize" color="white" rounded>
-        <v-icon size="64" color="rgb(55,115,165)">{{icon}}</v-icon>
+        <v-icon size="60" color="rgb(55,115,165)">{{icon}}</v-icon>
       </v-avatar>
     </div>
     <!-- 카드 타이틀 -->
     <v-card-title class="justify-center pt-1">
       <slot name="title" />
     </v-card-title>
-    <v-card-text>
-      asd
+    <v-card-text class="px-8">
+      <slot name="content" />
     </v-card-text>
   </v-card>
 </template>

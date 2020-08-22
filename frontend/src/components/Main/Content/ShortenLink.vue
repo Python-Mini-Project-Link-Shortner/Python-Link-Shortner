@@ -122,9 +122,6 @@ export default {
   },
   computed: {
     ...mapState(['serverURL'])
-  },
-  mounted() {
-    console.log(this.$attr)
   }
 }
 </script>

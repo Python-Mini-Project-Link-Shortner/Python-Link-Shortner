@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <div>
     <Jumbotron v-intersect="{
         handler: onIntersect,
         options: {
@@ -7,24 +7,24 @@
         }
       }" index="0" />
 
-    <Features v-intersect="{
+    <About v-intersect="{
         handler: onIntersect,
         options: {
           threshold: [0.0, 1.0]
         }
       }" index="1" />
-  </v-main>
+  </div>
 </template>
 
 <script>
-import Jumbotron from './Content/Jumbotron.vue'
-import Features from './Content/Features.vue'
+import Jumbotron from '@/components/Main/Content/Jumbotron.vue'
+import About from '@/components/Main/Content/About.vue'
 import { mapState, mapMutations } from 'vuex'
 
 const main = 'main' // Vuex의 'main' 모듈
 
 export default {
-  name: 'AppContent',
+  name: 'MainHome',
   data: () => ({
     intersectInfo: [
       { index: 0, y: 0 },
@@ -32,10 +32,10 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(main, ['intersectEnabled', 'tabIndex'])
+    ...mapState(main, ['intersectEnabled', 'tabIndex', 'listIndex'])
   },
   methods: {
-    ...mapMutations(main, ['setTabIndex']), // Tab 선택을 변경
+    ...mapMutations(main, ['setTabIndex']),
     onIntersect(entries, observer) {
       const entry = entries[0]
       const targetIndex = Number(entry.target.getAttribute('index'))  // 대상요소 인덱스
@@ -63,12 +63,12 @@ export default {
         }
       }
 
-      // 대상 요소의 y 좌표를 저장한다.
+      // 다음 호출을 위해 y 좌표를 저장한다.
       this.intersectInfo[targetIndex].y = currentY
     }
   },
   components: {
-    Jumbotron, Features
+    Jumbotron, About
   }
 }
 </script>
