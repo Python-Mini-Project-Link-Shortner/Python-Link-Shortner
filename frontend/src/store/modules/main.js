@@ -2,11 +2,11 @@ const main = {
   namespaced: true,
   state: {
     mainLinks: [
-      {name: 'Main', href: '#'},
-      {name: 'About', href: '#about'},
-      {name: 'Features', href: '#Features'},
-      {name: 'Contact', href: '#contact'},
-      {name: 'API', href: '/main/api'}
+      {name: 'Main', routeName: 'Main', href: '/main#'},
+      {name: 'About', routeName: 'Main', href: '/main#about'},
+      {name: 'Features', routeName: 'Main', href: '/main#Features'},
+      {name: 'Contact', routeName: 'Main', href: '/main#contact'},
+      {name: 'API', routeName: 'MainAPI', href: '/main/api'}
     ],
     intersectEnabled: true,
     drawer: false,

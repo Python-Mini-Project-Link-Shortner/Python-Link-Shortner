@@ -2,7 +2,8 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder = "./dist")
 Mongo = MongoDB()
 
 # enable CORS
@@ -11,7 +12,6 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/')
 def home():
     # Root 페이지로 사용할 파일을 지정한다.
-    # HTML은 서버 파일(flask)과 인접한 'templates' 폴더에 있어야 함.
     return render_template('index.html')
 
 @app.route('/ajax', methods=['GET', 'POST'])
