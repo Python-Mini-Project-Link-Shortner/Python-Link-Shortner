@@ -2,12 +2,9 @@
   <v-app-bar color="white" height="80" app>
     <v-container class="limit-width" fluid>
       <v-row align="center">
-        <v-app-bar-nav-icon
-        class="hidden-md-and-up" @click="toggleDrawer"
-        />
         <!-- MiniPy 타이틀 표시하는 부분 -->
         <v-toolbar-title>
-          <Logo />
+          <Logo sizable/>
         </v-toolbar-title>
 
         <v-spacer />
@@ -29,19 +26,11 @@
         </div>
 
         <!-- 구글 로그인 버튼 -->
-        <v-btn color="rgb(55,115,165)" dark class="mx-3" outlined>
-          <v-row justify="space-between" align="center">
-            <v-col class="pa-0">
-              <v-avatar tile size="26">
-                <img src="@/assets/img/Google Logo.png" alt="">
-              </v-avatar>
-            </v-col>
-            <v-col class="pa-1">
-              Login
-            </v-col>
-          </v-row>
-        </v-btn>
+        <GLoginBtn class="hidden-sm-and-down" />
 
+        <v-app-bar-nav-icon
+        class="hidden-md-and-up" @click="toggleDrawer"
+        />
       </v-row>
     </v-container>
   </v-app-bar>
@@ -49,6 +38,7 @@
 
 <script>
 import Logo from '@/components/Logo.vue'
+import GLoginBtn from '@/components/GLoginBtn.vue'
 import mixRoute from '@/components/mixins/mixRoute.js' // goto(item)
 import {mapState, mapMutations} from 'vuex'
 
@@ -67,7 +57,7 @@ export default {
     ...mapMutations(main, ['toggleDrawer', 'setTabIndex', 'setIntersection'])
   },
   components: {
-    Logo
+    Logo, GLoginBtn
   },
   mixins: [ mixRoute ]
 }

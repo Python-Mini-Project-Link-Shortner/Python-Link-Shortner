@@ -17,9 +17,11 @@ const mixRoute = {
         const targetAnchor = href.slice(href.indexOf('#'))
 
         // 페이지가 변하지 않는 경우는 스크롤
-        if (currentPath === targetPath) return {type: 'scroll', anchor: targetAnchor}
+        if (currentPath === targetPath) 
+          return {type: 'scroll', anchor: targetAnchor}
         // 페이지가 변하는 경우 라우트
-        else return {type: 'route', path: targetPath, anchor: targetAnchor}
+        else 
+          return {type: 'route', path: targetPath, anchor: targetAnchor}
 
       // #이 없으면 라우트
       } else return {type: 'route', path: href, anchor: ''}
