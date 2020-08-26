@@ -1,12 +1,12 @@
 <template>
-  <v-btn class="mx-3" color="rgb(55,115,165)" dark outlined>
-    <v-row justify="space-between" align="center">
-      <v-col class="px-0">
+  <v-btn color="rgb(55,115,165)" dark outlined :block="block">
+    <v-row justify="space-around" align="center">
+      <v-col cols="auto" class="px-0">
         <v-avatar tile size="26">
           <img src="@/assets/img/Google Logo.png" alt="">
         </v-avatar>
       </v-col>
-      <v-col class="pa-1" :class="{'text-small': long}">
+      <v-col cols="auto" class="pa-1" :class="{'text-small': long}">
         {{loginText}}
       </v-col>
     </v-row>
@@ -24,6 +24,10 @@ export default {
     },
     props: {
       long: {
+        type: Boolean,
+        default: () => false
+      },
+      block: {
         type: Boolean,
         default: () => false
       }

@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    serverURL: 'http://127.0.0.1:5000/ajax'
+    serverURL: 'http://cotidie.pythonanywhere.com/ajax'
   },
   mutations: {
     loginSuccess(state) {

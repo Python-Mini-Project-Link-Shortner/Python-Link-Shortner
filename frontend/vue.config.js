@@ -3,7 +3,5 @@ module.exports = {
 
   "transpileDependencies": [
     "vuetify"
-  ],
-
-  assetsDir: 'dist'
+  ]
 }
