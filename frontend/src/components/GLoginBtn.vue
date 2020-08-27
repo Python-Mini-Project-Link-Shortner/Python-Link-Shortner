@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="rgb(55,115,165)" dark outlined :block="block">
+  <v-btn color="rgb(55,115,165)" dark outlined :block="block" :id="_uid">
     <v-row justify="space-around" align="center">
       <v-col cols="auto" class="px-0">
         <v-avatar tile size="26">
@@ -14,24 +14,52 @@
 </template>
 
 <script>
+import {mapState, mapMutations} from 'vuex'
+
 export default {
-    name: 'GLoginBtn',
-    computed: {
-      loginText() {
-        if (this.long) return 'Sign in with Google'
-        else return 'Login'
-      }
-    },
-    props: {
-      long: {
-        type: Boolean,
-        default: () => false
-      },
-      block: {
-        type: Boolean,
-        default: () => false
-      }
+  name: 'GLoginBtn',
+  computed: {
+    ...mapState(['userInfo']),
+    loginText() {
+      if (this.long) return 'Sign in with Google'
+      else return 'Login'
     }
+  },
+  props: {
+    long: {
+      type: Boolean,
+      default: () => false
+    },
+    block: {
+      type: Boolean,
+      default: () => false
+    }
+  },
+  methods: {
+    ...mapMutations(['setUserInfo'])
+  },
+  mounted() {
+    gapi.load('auth2', function(){
+      // 로그인 기능을 적용할 요소
+      const element = document.getElementById(this._uid)
+      // OAuth2 기능을 활성화한다.
+      const auth2 = gapi.auth2.init({
+        client_id: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com',
+      })
+
+      // 로그인 기능을 적용한다. 1: 적용할 요소 2: 옵션 3: 성공시 콜백함수
+      auth2.attachClickHandler(element, {},
+        function(googleUser) {
+          const authResponse = googleUser.getAuthResponse()
+          const loggedIn = true
+          const idToken = authResponse.id_token
+          const name = googleUser.getBasicProfile().getName()
+
+          this.setUserInfo({loggedIn, idToken, name})
+          console.log(this.userInfo)
+      }.bind(this))
+    }.bind(this)) 
+  }
 }
 </script>
 

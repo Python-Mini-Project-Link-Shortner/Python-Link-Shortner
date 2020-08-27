@@ -8,16 +8,20 @@ Vue.use(Vuex)
 // https://uxgjs.tistory.com/149 참고사이트
 export default new Vuex.Store({
   state: {
-    isLogin: false,
-    serverURL: 'http://cotidie.pythonanywhere.com/ajax'
+    userInfo: {
+      loggedIn: false,
+      idToken: '',
+      name: ''
+    },
+    serverURL: 'http://127.0.0.1:5000/ajax'
+    //serverURL: 'http://cotidie.pythonanywhere.com/ajax'
   },
   mutations: {
-    loginSuccess(state) {
-      state.isLogin = true
+    setUserInfo(state, payload) {
+      Object.keys(payload).forEach(key => {
+        state.userInfo[key] = payload[key]
+      })
     },
-    loginFail(state) {
-      state.isLogin = false
-    }
   },
   actions: {
   },
