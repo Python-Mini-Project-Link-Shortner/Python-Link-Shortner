@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'MainMainAPI',
+  name: 'MainPageAPI',
 }
 </script>
 

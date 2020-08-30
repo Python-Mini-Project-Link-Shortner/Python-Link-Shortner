@@ -2,7 +2,9 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
-app = Flask(__name__)
+app = Flask(__name__,
+            static_folder='dist',
+            template_folder = "./dist")
 Mongo = MongoDB()
 
 # enable CORS
@@ -11,7 +13,6 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/')
 def home():
     # Root 페이지로 사용할 파일을 지정한다.
-    # HTML은 서버 파일(flask)과 인접한 'templates' 폴더에 있어야 함.
     return render_template('index.html')
 
 @app.route('/ajax', methods=['GET', 'POST'])
@@ -45,7 +46,7 @@ def shorten_url():
             'Raw_URL': raw_url,
             'Short_URL': short_url
         }
-        flag = Mongo.save_data(db_data)
+        flag = Mongo.save_data(db_data, 'LINKS')
 
         # DB 추가 후 unique_id를 증가시킨다.
         if flag:
@@ -84,4 +85,9 @@ def test():
         {"id": "82849473885", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"}])
 
 if __name__ == "__main__":
+    print(app.root_path)
+    print(app.static_folder)
+    print(app.static_url_path)
+    print(app._static_folder)
     app.run(debug=True)
+    

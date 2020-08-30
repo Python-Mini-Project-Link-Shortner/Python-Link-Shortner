@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-5 my-8" >
+  <v-card class="mx-5 my-8" min-height="300px" max-width="360px">
     <div class="text-center" :style="{height: `${iconSize/2}px`}">
       <!-- 상단 중앙 아바타 -->
       <v-avatar class="mx-auto" :style="styles" :size="iconSize" color="white" rounded>
@@ -7,12 +7,15 @@
       </v-avatar>
     </div>
     <!-- 카드 타이틀 -->
-    <v-card-title class="justify-center pt-1">
+    <v-card-title class="justify-center title pt-1">
       <slot name="title" />
     </v-card-title>
-    <v-card-text class="px-8">
+    <v-card-text class="px-8 text-justify">
       <slot name="content" />
     </v-card-text>
+    <v-card-actions class="px-8">
+      <slot name="actions" />
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -39,11 +42,9 @@ export default {
 </script>
 
 <style scoped>
-/* .v-avatar {
-  position: relative;
-  top: -50px;
-  border-radius: 50% !important;
-} */
+.v-card__title {
+  font-size: 1.5em !important;
+}
 .v-card {
   border: 2px solid rgb(55,115,165);
 }
