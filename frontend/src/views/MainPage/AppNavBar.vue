@@ -26,7 +26,7 @@
         </div>
 
         <!-- 구글 로그인 버튼 -->
-        <GLoginBtn class="hidden-sm-and-down" />
+        <GLoginBtn class="hidden-sm-and-down mx-3" />
 
         <v-app-bar-nav-icon
         class="hidden-md-and-up" @click="toggleDrawer"

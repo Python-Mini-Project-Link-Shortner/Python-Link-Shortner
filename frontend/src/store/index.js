@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import main from './modules/main.js'
+import main from '@/store/modules/main.js'
 import manageModule from '@/store/modules/manageModule.js'
 
 Vue.use(Vuex)
@@ -14,7 +14,6 @@ export default new Vuex.Store({
       name: ''
     },
     serverURL: 'http://127.0.0.1:5000/ajax'
-    //serverURL: 'http://cotidie.pythonanywhere.com/ajax'
   },
   mutations: {
     setUserInfo(state, payload) {

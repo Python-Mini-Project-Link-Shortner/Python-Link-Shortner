@@ -2,7 +2,8 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
-app = Flask(__name__, 
+app = Flask(__name__,
+            static_folder='dist',
             template_folder = "./dist")
 Mongo = MongoDB()
 
@@ -64,16 +65,16 @@ def shorten_url():
         'msg': request.host_url + short_url
         })
 
-@app.route('/<short_url>')
-def redirect_url(short_url):
-    # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
-    Raw_URL = Mongo.get_raw_url(short_url)
+# @app.route('/<short_url>')
+# def redirect_url(short_url):
+#     # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
+#     Raw_URL = Mongo.get_raw_url(short_url)
 
-    # 페이지가 존재하지 않으면 오류 페이지 출력
-    if Raw_URL is None:
-        return render_template('page_404.html')
+#     # 페이지가 존재하지 않으면 오류 페이지 출력
+#     if Raw_URL is None:
+#         return render_template('page_404.html')
 
-    return redirect(Raw_URL)
+#     return redirect(Raw_URL)
 
 @app.route('/api/test', methods=['post'])
 def test():
@@ -84,4 +85,9 @@ def test():
         {"id": "82849473885", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"}])
 
 if __name__ == "__main__":
+    print(app.root_path)
+    print(app.static_folder)
+    print(app.static_url_path)
+    print(app._static_folder)
     app.run(debug=True)
+    
