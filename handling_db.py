@@ -6,6 +6,7 @@ DEFAULT_COL = 'link_table'
 DEFAULT_DB = 'slink'
 COLLECTIONS = {
     'LINKS': 'link_table',
+    'USERS': 'user_table',
     'CONFIG': 'config'
 }
 QUERIES = {
@@ -21,9 +22,15 @@ class MongoDB(MongoClient):
             self.default_host = DEFAULT_HOST
         super().__init__(self.default_host)
     
-    def save_data(self, data):
-        # DB에 저장한다.
-        collection = self[self._db][self._col]
+    # DB에 저장한다.
+    def save_data(self, data:object, col_type='LINKS'):
+        # col_type 검사
+        col_type = col_type.upper()
+        if col_type not in COLLECTIONS:
+            print('col_type이 존재하지 않습니다. COLLECTIONS의 키 중 하나로 전달해주십시오.')
+            return False
+        
+        collection = self[self._db][col_type]
 
         try:
             # DB에 추가한다.

@@ -46,7 +46,7 @@ def shorten_url():
             'Raw_URL': raw_url,
             'Short_URL': short_url
         }
-        flag = Mongo.save_data(db_data)
+        flag = Mongo.save_data(db_data, 'LINKS')
 
         # DB 추가 후 unique_id를 증가시킨다.
         if flag:
@@ -65,16 +65,16 @@ def shorten_url():
         'msg': request.host_url + short_url
         })
 
-# @app.route('/<short_url>')
-# def redirect_url(short_url):
-#     # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
-#     Raw_URL = Mongo.get_raw_url(short_url)
+@app.route('/<short_url>')
+def redirect_url(short_url):
+    # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
+    Raw_URL = Mongo.get_raw_url(short_url)
 
-#     # 페이지가 존재하지 않으면 오류 페이지 출력
-#     if Raw_URL is None:
-#         return render_template('page_404.html')
+    # 페이지가 존재하지 않으면 오류 페이지 출력
+    if Raw_URL is None:
+        return render_template('page_404.html')
 
-#     return redirect(Raw_URL)
+    return redirect(Raw_URL)
 
 @app.route('/api/test', methods=['post'])
 def test():

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import main from '@/store/modules/main.js'
 import manageModule from '@/store/modules/manageModule.js'
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -27,5 +28,6 @@ export default new Vuex.Store({
   modules: {
     main,
     manage: manageModule
-  }
+  },
+  plugins: [createPersistedState()],
 })
