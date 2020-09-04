@@ -51,10 +51,12 @@
         -->
         <v-list class="grey lighten-4" nav>
           <v-list-item v-for="(item, index) in accountActionList" :key="'account-action-' + index"
-          v-ripple="{ class: 'blue--text' }"
+          v-ripple="{ class: 'blue--text' }" 
           class="list-blue" :to="item.link" style="cursor: pointer;">
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+              <v-list-item-title v-text="item.title" 
+              @click="accountActionClick(item.action)">
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -72,6 +74,7 @@
 import { mapActions } from 'vuex'
 import Logo from '@/components/Logo.vue'
 import SearchBar from '@/components/Manage/SearchBar.vue'
+import {userLogout} from '@/assets/js/account.js'
 
 // lgAndUp일때 ManageNavDrawer를 항상 보여주게 된다
 export default {
@@ -89,14 +92,19 @@ export default {
   data: () => ({
     showAccountMenu: false, // 계정 관리 메뉴 표시 여부
     accountActionList: [ // 관리 메뉴
-      { title: '계정관리', link: '' },
-      { title: '로그아웃', link: '' }
+      { title: '계정관리', link: '', event: ''},
+      { title: '로그아웃', link: '', action: 'logout'}
     ]
   }),
   methods: {
     ...mapActions('manage', [
       'toggleDrawer', 'openDrawer'
-    ])
+    ]),
+    accountActionClick(action) {
+      if (action === 'logout') {
+        userLogout()
+      }
+    }
   }
 }
 </script>

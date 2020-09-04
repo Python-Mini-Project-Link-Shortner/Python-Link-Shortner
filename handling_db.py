@@ -30,7 +30,7 @@ class MongoDB(MongoClient):
             print('col_type이 존재하지 않습니다. COLLECTIONS의 키 중 하나로 전달해주십시오.')
             return False
         
-        collection = self[self._db][col_type]
+        collection = self[self._db][COLLECTIONS[col_type]]
 
         try:
             # DB에 추가한다.
@@ -39,7 +39,18 @@ class MongoDB(MongoClient):
         except Exception as e:
             # 저장에 실패했으면 False 반환
             print(e)
+            return False        
+
+    # 콜렉션에서 find_one을 실행한다,
+    def find_data(self, col_type, query):
+        col_type = col_type.upper()
+        if col_type not in COLLECTIONS:
+            print('col_type이 존재하지 않습니다. COLLECTIONS의 키 중 하나로 전달해주십시오.')
             return False
+
+        collection = self[self._db][COLLECTIONS[col_type]]
+
+        return collection.find_one(query)
 
     def get_short_url(self, raw_url):
         # Raw_URL로 Short_URL을 검색한다
@@ -74,6 +85,15 @@ class MongoDB(MongoClient):
         my_result = { 'value': True }
 
         return collection.find_one(my_query, my_result)['value']
+
+    # 해당 유저가 ban 상태인지 확인한다.
+    def is_banned(self, user_id):
+        collection = collection = self[self._db][COLLECTIONS['USERS']]
+
+        result = collection.findOne({'userID': user_id}, 
+                            { '_id': 0, 'userID': 1, 'banned': 1 })
+
+        return result
 
     def increase_id(self):
         # URL 생성에 사용될 ID(int)를 증가시킨다.

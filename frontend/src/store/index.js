@@ -11,10 +11,12 @@ export default new Vuex.Store({
   state: {
     userInfo: {
       loggedIn: false,
-      idToken: '',
-      name: ''
+      userID: '',
+      name: '',
+      expiresAt: null,
     },
-    serverURL: 'http://127.0.0.1:5000/ajax'
+    serverURL: 'http://127.0.0.1:5000/ajax',
+    clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },
   mutations: {
     setUserInfo(state, payload) {

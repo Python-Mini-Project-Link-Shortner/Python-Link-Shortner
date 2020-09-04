@@ -7,37 +7,9 @@ import AppFooter from '@/views/MainPage/AppFooter.vue'
 import AppNavBar from '@/views/MainPage/AppNavBar.vue'
 import ManageNavBar from '@/views/ManagePage/ManageNavBar.vue'
 import ManageNavDrawer from '@/views/ManagePage/ManageDrawer.vue'
+import {userLogout} from '@/assets/js/account.js'
 
 Vue.use(VueRouter)
-
-// 로그인 상태인지 확인하는 함수. 
-// 비로그인 사용자는 Main 페이지로 돌려보낸다.
-const setHomePage = () => function(to, from, next) {
-  if (!store.state.userInfo.loggedIn) {
-    next({name: 'Main'})
-  } else {
-    next({name: 'Manage'})
-  }
-}
-
-const loginRequired = () => function(to, from, next) {
-  console.log(store.state.userInfo)
-  if (!store.state.userInfo.loggedIn) {
-    alert('로그인이 필요한 서비스입니다.')
-    next(from)
-  } else {
-    next()
-  }
-}
-
-const logoutRequired = () => function(to, from, next) {
-  console.log(store.state.userInfo)
-  if (store.state.userInfo.loggedIn) {
-    next({name: 'Manage'})
-  } else {
-    next()
-  }
-}
 
 const routes = [
   {
@@ -54,6 +26,7 @@ const routes = [
       drawer: AppDrawer,
       footer: AppFooter
     },
+    redirect: {name: 'MainHome'},
     children: [
       {
         path: '',
@@ -89,6 +62,17 @@ const router = new VueRouter({
 
 router.beforeEach(function(to, from, next) {
   const loggedIn = store.state.userInfo.loggedIn
+  const expiresAt = store.state.userInfo.expiresAt
+
+  // 로그인 기간이 만료된 경우 자동 로그아웃
+  if (expiresAt) {
+    const now = new Date().getTime()
+
+    if (now >= expiresAt) {
+      userLogout()
+      next({name: 'Main'})
+    }
+  }
 
   // 홈페이지인 경우
   if (to.matched.some(record => record.name === 'Home')) {
