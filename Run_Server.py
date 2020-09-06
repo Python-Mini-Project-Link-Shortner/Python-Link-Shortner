@@ -2,7 +2,6 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
-import datetime
 
 app = Flask(__name__,
             static_folder='dist',
