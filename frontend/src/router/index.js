@@ -15,22 +15,20 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    redirect: {name: 'MainHome'}
+    redirect: {name: 'Main'}
   },
   {
     path: '/main',
-    name: 'Main',
     components:  {
       default: MainPage,
       navBar: AppNavBar,
       drawer: AppDrawer,
       footer: AppFooter
     },
-    redirect: {name: 'MainHome'},
     children: [
       {
         path: '',
-        name: 'MainHome',
+        name: 'Main',
         component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainHome.vue'),
       },
       {

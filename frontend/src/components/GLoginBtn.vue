@@ -16,6 +16,7 @@
 <script>
 import {mapState, mapMutations} from 'vuex'
 import {userLogin} from '@/assets/js/account.js'
+import axios from 'axios'
 
 export default {
   name: 'GLoginBtn',

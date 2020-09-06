@@ -2,6 +2,8 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
+import datetime
+
 app = Flask(__name__,
             static_folder='dist',
             template_folder = "./dist")
@@ -66,15 +68,32 @@ def shorten_url():
         })
 
 # 신규유저 등록 및 로그인 시간을 갱신하는 페이지 (로그인 시)
-@app.route('/axios/login')
+@app.route('/axios/login', methods=['GET','POST'])
 def update_user():
     # 유저 정보 가져오기
     user_id = request.json['userID']
 
     # 유저를 검색한다.
-    banned = Mongo.is_banned(user_id)
+    user_info = Mongo.find_data({'userID': user_id},'USERS')
+    banned = user_info['banned']
 
-    return jsonify(banned)
+    # 정상 유저인 경우 신규등록 또는 로그인시간 갱신
+    if user_info is None or not banned:
+        Mongo.upsert_user(user_id)
+        return jsonify({
+            'flag': True,
+        })
+
+    # 밴 상태 확인
+    if user_info['banned']:
+        # 밴인 유저는 False 반환
+        return jsonify({
+            'flag': False,
+            'msg': 'The User Is Banned',
+        })
+
+    # 나머지 경우
+    return jsonify({'flag':True})
 
 @app.route('/<short_url>')
 def redirect_url(short_url):

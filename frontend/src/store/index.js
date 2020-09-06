@@ -15,7 +15,10 @@ export default new Vuex.Store({
       name: '',
       expiresAt: null,
     },
-    serverURL: 'http://127.0.0.1:5000/ajax',
+    serverURL: {
+      login: 'http://127.0.0.1:5000/axios/login',
+      shorten:'http://127.0.0.1:5000/ajax'
+    },
     clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },
   mutations: {

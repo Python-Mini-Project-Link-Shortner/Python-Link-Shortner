@@ -94,7 +94,7 @@ export default {
   methods: {
     // 서버로부터 축약 링크를 반환받는다. => Shorten 버튼
     shortenURL() {
-      axios.post(this.serverURL, {url: this.url})
+      axios.post(this.serverURL['shorten'], {url: this.url})
         .then( res => {
           const alert = this.alertSetting
 

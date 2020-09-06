@@ -1,5 +1,6 @@
 import store from '@/store'
 import router from '@/router'
+import axios from 'axios'
 
 // 로그인 기능을 적용할 요소 ID를 받고, 로그인 이후 동작을 정의한다.
 const userLogin = function(elemID) {
@@ -13,18 +14,30 @@ const userLogin = function(elemID) {
 
   // 로그인 기능을 적용한다. 1: 적용할 요소, 2: 옵션, 3: 성공시 콜백함수
   auth2.attachClickHandler(element, {}, function(googleUser) {
+    const serverURL = store.state.serverURL
     const authResponse = googleUser.getAuthResponse()
     const loggedIn = true
     const userID = googleUser.getBasicProfile().getEmail()
     const name = googleUser.getBasicProfile().getName()
     const expiresAt = authResponse.expires_at
 
-    console.log(new Date().getTime())
-    console.log(expiresAt)
-
-    // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-    store.commit('setUserInfo', {loggedIn, userID, name, expiresAt})
-    router.push({name: 'Manage'})
+    axios.post(serverURL['login'], {userID: userID})
+    .then( res => {
+      // 로그인 거부된 경우
+      if (!res.data.flag) {
+        alert(res.data.msg)
+        router.push({name:'Home'})
+        return
+      // 로그인 성공한 경우
+      } else {
+        // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
+        store.commit('setUserInfo', {loggedIn, userID, name, expiresAt})
+        router.push({name: 'Manage'})
+      }
+      console.log(res)
+    }).catch( ex => {
+      console.log(ex)
+    })
   })
 }
 
