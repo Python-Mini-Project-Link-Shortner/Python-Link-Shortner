@@ -1,5 +1,10 @@
 <template>
   <v-container class="text-left" px-6 py-5 fluid>
+    <!-- 로딩창 -->
+    <v-overlay :absolute=true :value="loading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
     <!-- 분석창 -->
     <v-row>
       <v-col cols="12">
@@ -16,19 +21,19 @@
 
     <!-- 링크 -->
     <v-row>
-      <v-col cols="12" v-for="n in 10" :key="n">
+      <v-col cols="12" v-for="link in linkList" :key="link._id">
         <v-card outlined hover>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h6 text-truncate" style="color: #E71D36;">minipy.shorten.at/abcdefg</v-list-item-title>
-              <v-list-item-subtitle>2020-08-28</v-list-item-subtitle>
+              <v-list-item-title class="text-h6 text-truncate" style="color: #E71D36;">{{ link.Short_URL }}</v-list-item-title>
+              <v-list-item-subtitle>{{ link.Make_Date }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-spacer></v-spacer>
-            <v-checkbox v-model="clickedLink" :value="n"></v-checkbox>
+            <v-checkbox v-model="clickedLink" :value="link._id"></v-checkbox>
           </v-list-item>
 
-          <v-card-subtitle class="py-0 font-weight-regular">네이버</v-card-subtitle>
-          <v-card-text class="text--primary pb-1">https://www.naver.com</v-card-text>
+          <v-card-subtitle class="py-0 font-weight-regular">브라우저탭에뜨는 이름</v-card-subtitle>
+          <v-card-text class="text--primary pb-1">{{ link.Raw_URL }}</v-card-text>
 
           <v-card-actions class="px-4">
             <div><span class="info--text">#Empty</span></div>
@@ -51,9 +56,16 @@
         </v-card>
       </v-col>
 
+      <!-- 오류 -->
+      <v-col cols="12" v-if="showError">
+        <v-alert type="error">
+          데이터 불러오기에 실패했습니다
+        </v-alert>
+      </v-col>
+
       <!-- 페이지네이션 -->
       <v-col cols="12">
-        <v-pagination v-model="page" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" :length="10" :total-visible="10"></v-pagination>
+        <v-pagination v-model="page" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" :length="maxPage" :page="page" :total-visible="10"></v-pagination>
       </v-col>
     </v-row>
 
@@ -79,6 +91,7 @@
       </v-btn>
     </v-speed-dial>
 
+    <!-- TODO: Dialog들 전부 components/Dialog로 옮기기 -->
     <v-dialog v-model="deleteDialog" max-width="360">
       <v-card>
         <v-card-title class="headline error--text">
@@ -214,16 +227,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import axios from 'axios'
 import ShortenLink from '@/components/ShortenLink.vue'
 
 export default {
-  name: 'Manage',
+  name: 'ManageHome',
   components: {
     LinkInput: ShortenLink
   },
   data: () => ({
+    loading: false, // 로딩상태
+    maxPage: 1, // 최대 페이지 번호
     page: 1, // 현재 페이지 번호
+    itemPerPage: 10, // 페이지 당 아이템 갯수
     fab: false, // Floating Button 클릭 상태
+    linkList: [], // 나의 링크 배열
     clickedLink: [], // 현재 클릭한 링크 아이디 배열
     tagName: '', // 변경할 태그 이름
     deleteDialog: false, // 삭제 dialog
@@ -231,11 +250,73 @@ export default {
     tagDialog: false, // 태그 dialog
     tagChangeDialog: false, // 태그 변경 dialog
     tagDeleteDialog: false, // 태그 삭제 dialog
-    favoriteDialog: false // 즐겨찾기 dialog
+    favoriteDialog: false, // 즐겨찾기 dialog
+    showError: false // 에러 표시
   }),
+  created: function() {
+    // 생성되었을 때 데이터 가져오기
+    this.pageEnter()
+  },
+  watch: {
+    // 라우트 변경시 데이터 가져오기 다시 호출
+    '$route': 'pageEnter',
+    // 페이지 변경시 다음 페이지 데이터 가져오기
+    page: function(newPage) {
+      this.startLoading()
+      this.resetForPaging()
+      this.page = newPage
+      this.fetchLinkData(this.fetchError)
+      this.stopLoading()
+    }
+  },
   computed: {
+    ...mapState(['linkPageURL', 'userInfo']),
     fabDisabled: function() {
-      return this.clickedLink.length === 0;
+      return this.clickedLink.length === 0
+    }
+  },
+  methods: {
+    resetForPaging() {
+      this.fab = false
+      this.linkList.length = 0
+      this.clickedLink.length = 0
+      this.tagName = ''
+      this.deleteDialog = false
+      this.hideDialog = false
+      this.tagDialog = false
+      this.tagChangeDialog = false
+      this.tagDeleteDialog = false
+      this.favoriteDialog = false,
+      this.showError = false
+    },
+    startLoading() {
+      this.loading = true
+    },
+    stopLoading() {
+      setTimeout(() => {this.loading = false}, 450)
+    },
+    pageEnter() {
+      // 페이지에 들어올때마다 호출된다
+      this.resetForPaging()
+      this.startLoading()
+      this.fetchLinkData(this.fetchError)
+      this.stopLoading()
+    },
+    fetchError(e) {
+      console.log(e)
+      this.showError = true
+    },
+    fetchLinkData(errorFunc) {
+      // 자신의 아이디에 해당하는 LinkList를 서버에서 가져온다
+      axios.post(this.linkPageURL,
+        { user_id: this.userInfo.email, page: this.page, item_count: this.itemPerPage })
+        .then(res => {
+          this.maxPage = res.data.maxPage
+          this.page = res.data.page
+          this.linkList = res.data.list
+        }).catch(e => {
+          errorFunc(e)
+        })
     }
   }
 }

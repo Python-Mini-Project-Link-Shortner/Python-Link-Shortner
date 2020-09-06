@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from voluptuous import Schema, Required, All, Url
+from pagination import Pagination
 
 DEFAULT_HOST = 'mongodb+srv://admin:1234@links.fc8p4.mongodb.net/PYTHON-LINK-SHORTNER?retryWrites=true&w=majority'
 DEFAULT_COL = 'link_table'
@@ -85,3 +86,14 @@ class MongoDB(MongoClient):
         result = collection.update_one(my_query, new_value)
 
         return result.modified_count > 0        # 추가되었는지 확인한다.
+
+    # user_id: 현재 로그인한 사용자 아이디
+    # page: 현재 페이지 번호
+    # item_count: 페이지 당 아이템 갯수
+    def get_link_pagination(self, user_id, page = 1, item_count = 10):
+        collection = self[self._db][self._col]
+
+        res = collection.find({ 'User_ID': user_id })
+        if res is None: return None
+
+        return Pagination.paging(res, [('Make_Date', -1)], page, item_count)

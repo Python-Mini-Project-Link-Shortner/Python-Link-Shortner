@@ -12,9 +12,11 @@ export default new Vuex.Store({
     userInfo: {
       loggedIn: false,
       idToken: '',
-      name: ''
+      name: '',
+      email: ''
     },
-    serverURL: 'http://127.0.0.1:5000/ajax'
+    serverURL: 'http://127.0.0.1:5000/ajax',
+    linkPageURL: 'http://127.0.0.1:5000/api/linkList'
   },
   mutations: {
     setUserInfo(state, payload) {

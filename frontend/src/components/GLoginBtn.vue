@@ -53,9 +53,10 @@ export default {
           const loggedIn = true
           const idToken = authResponse.id_token
           const name = googleUser.getBasicProfile().getName()
+          const email = googleUser.getBasicProfile().getEmail()
 
           // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-          this.setUserInfo({loggedIn, idToken, name})
+          this.setUserInfo({loggedIn, idToken, name, email})
           this.$router.push({name: 'Manage'})
       }.bind(this))
     }.bind(this)) 

@@ -2,6 +2,8 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
+from data_encoder import DataEncoder
+
 app = Flask(__name__,
             static_folder='dist',
             template_folder = "./dist")
@@ -76,13 +78,18 @@ def redirect_url(short_url):
 
     return redirect(Raw_URL)
 
-@app.route('/api/test', methods=['post'])
-def test():
-    return jsonify([
-        {"id": "5846385767", "Raw_URL": "https://www.naver.com", "Short_URL": "nav2.com"},
-        {"id": "5893746588", "Raw_URL": "https://www.daum.net", "Short_URL": "dau2.net"},
-        {"id": "8284947484", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"},
-        {"id": "82849473885", "Raw_URL": "https://cloud.mongodb.com/v2/5f09fe1763fbbc6247f478b2#metrics/replicaSet/5f2504bd130d2e5f9b9e2aa0/explorer/slink/link_table/find", "Short_URL": "cloud.net"}])
+@app.route('/api/linkList', methods=['POST'])
+def link_list():
+    user_id = request.json['user_id']
+    page = request.json['page']
+    item_count = request.json['item_count']
+
+    res = Mongo.get_link_pagination(user_id, page, item_count)
+    if res is None: return None
+
+    # pagination 가능하게 pagination.py 작성
+    # page, maxPage, list Dictionary로 반환하게
+    return DataEncoder().encode(res)
 
 if __name__ == "__main__":
     print(app.root_path)
