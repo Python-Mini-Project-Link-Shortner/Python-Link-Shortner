@@ -71,6 +71,7 @@ def shorten_url():
 @app.route('/axios/login', methods=['GET','POST'])
 def update_user():
     # 유저 정보 가져오기
+    print(request.json)
     email = request.json['email']
     id_token = request.json['idToken']
 

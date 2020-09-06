@@ -41,7 +41,6 @@ const routes = [
   },
   {
     path: '/manage',
-    name: 'Manage', // 이거 지워야함(지울경우 beforeEach땜에 빈화면뜸), 밑에 beforeEach도 regex로 수정해야 함
     components: {
       default: ManagePage,
       navBar: ManageNavBar,
