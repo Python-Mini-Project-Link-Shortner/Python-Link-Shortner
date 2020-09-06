@@ -8,47 +8,18 @@ import AppNavBar from '@/views/MainPage/AppNavBar.vue'
 import ManagePage from '@/views/ManagePage.vue'
 import ManageNavBar from '@/views/ManagePage/ManageNavBar.vue'
 import ManageNavDrawer from '@/views/ManagePage/ManageDrawer.vue'
+import {userLogout} from '@/assets/js/account.js'
 
 Vue.use(VueRouter)
-
-// 로그인 상태인지 확인하는 함수. 
-// 비로그인 사용자는 Main 페이지로 돌려보낸다.
-const setHomePage = () => function(to, from, next) {
-  if (!store.state.userInfo.loggedIn) {
-    next({name: 'Main'})
-  } else {
-    next({name: 'ManageHome'})
-  }
-}
-
-const loginRequired = () => function(to, from, next) {
-  console.log(store.state.userInfo)
-  if (!store.state.userInfo.loggedIn) {
-    alert('로그인이 필요한 서비스입니다.')
-    next(from)
-  } else {
-    next()
-  }
-}
-
-const logoutRequired = () => function(to, from, next) {
-  console.log(store.state.userInfo)
-  if (store.state.userInfo.loggedIn) {
-    next({name: 'ManageHome'})
-  } else {
-    next()
-  }
-}
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    redirect: {name: 'MainHome'}
+    redirect: {name: 'Main'}
   },
   {
     path: '/main',
-    name: 'Main',
     components:  {
       default: MainPage,
       navBar: AppNavBar,
@@ -58,7 +29,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'MainHome',
+        name: 'Main',
         component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainHome.vue'),
       },
       {
@@ -97,6 +68,17 @@ const router = new VueRouter({
 
 router.beforeEach(function(to, from, next) {
   const loggedIn = store.state.userInfo.loggedIn
+  const expiresAt = store.state.userInfo.expiresAt
+
+  // 로그인 기간이 만료된 경우 자동 로그아웃
+  if (expiresAt) {
+    const now = new Date().getTime()
+
+    if (now >= expiresAt) {
+      userLogout()
+      next({name: 'Main'})
+    }
+  }
 
   // 홈페이지인 경우
   if (to.matched.some(record => record.name === 'Home')) {

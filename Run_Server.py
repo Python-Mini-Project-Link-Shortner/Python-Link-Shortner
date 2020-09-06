@@ -67,6 +67,34 @@ def shorten_url():
         'msg': request.host_url + short_url
         })
 
+# 신규유저 등록 및 로그인 시간을 갱신하는 페이지 (로그인 시)
+@app.route('/axios/login', methods=['GET','POST'])
+def update_user():
+    # 유저 정보 가져오기
+    user_id = request.json['userID']
+
+    # 유저를 검색한다.
+    user_info = Mongo.find_data({'userID': user_id},'USERS')
+    banned = user_info['banned']
+
+    # 정상 유저인 경우 신규등록 또는 로그인시간 갱신
+    if user_info is None or not banned:
+        Mongo.upsert_user(user_id)
+        return jsonify({
+            'flag': True,
+        })
+
+    # 밴 상태 확인
+    if user_info['banned']:
+        # 밴인 유저는 False 반환
+        return jsonify({
+            'flag': False,
+            'msg': 'The User Is Banned',
+        })
+
+    # 나머지 경우
+    return jsonify({'flag':True})
+
 @app.route('/<short_url>')
 def redirect_url(short_url):
     # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.

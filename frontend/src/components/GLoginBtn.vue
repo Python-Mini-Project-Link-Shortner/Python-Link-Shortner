@@ -15,6 +15,8 @@
 
 <script>
 import {mapState, mapMutations} from 'vuex'
+import {userLogin} from '@/assets/js/account.js'
+import axios from 'axios'
 
 export default {
   name: 'GLoginBtn',
@@ -39,27 +41,10 @@ export default {
     ...mapMutations(['setUserInfo'])
   },
   mounted() {
-    gapi.load('auth2', function(){
-      // 로그인 기능을 적용할 요소
-      const element = document.getElementById(this._uid)
-      // OAuth2 기능을 활성화한다.
-      const auth2 = gapi.auth2.init({
-        client_id: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com',
-      })
-
-      // 로그인 기능을 적용한다. 1: 적용할 요소, 2: 옵션, 3: 성공시 콜백함수
-      auth2.attachClickHandler(element, {}, function(googleUser) {
-          const authResponse = googleUser.getAuthResponse()
-          const loggedIn = true
-          const idToken = authResponse.id_token
-          const name = googleUser.getBasicProfile().getName()
-          const email = googleUser.getBasicProfile().getEmail()
-
-          // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-          this.setUserInfo({loggedIn, idToken, name, email})
-          this.$router.push({name: 'Manage'})
-      }.bind(this))
-    }.bind(this)) 
+    const uid = this._uid
+    gapi.load('auth2', function() {
+      userLogin(uid)
+    })
   }
 }
 </script>
