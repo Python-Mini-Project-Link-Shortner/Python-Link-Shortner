@@ -71,15 +71,16 @@ def shorten_url():
 @app.route('/axios/login', methods=['GET','POST'])
 def update_user():
     # 유저 정보 가져오기
-    user_id = request.json['userID']
+    email = request.json['email']
+    id_token = request.json['idToken']
 
     # 유저를 검색한다.
-    user_info = Mongo.find_data({'userID': user_id},'USERS')
+    user_info = Mongo.find_data({'email': email},'USERS')
     banned = user_info['banned']
 
     # 정상 유저인 경우 신규등록 또는 로그인시간 갱신
     if user_info is None or not banned:
-        Mongo.upsert_user(user_id)
+        Mongo.upsert_user(id_token, email)
         return jsonify({
             'flag': True,
         })
@@ -125,4 +126,3 @@ if __name__ == "__main__":
     print(app.static_url_path)
     print(app._static_folder)
     app.run(debug=True)
-    

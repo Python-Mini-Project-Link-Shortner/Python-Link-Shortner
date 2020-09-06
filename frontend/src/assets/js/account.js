@@ -17,11 +17,12 @@ const userLogin = function(elemID) {
     const serverURL = store.state.serverURL
     const authResponse = googleUser.getAuthResponse()
     const loggedIn = true
-    const userID = googleUser.getBasicProfile().getEmail()
+    const idToken = ''
+    const email = googleUser.getBasicProfile().getEmail()
     const name = googleUser.getBasicProfile().getName()
     const expiresAt = authResponse.expires_at
 
-    axios.post(serverURL['login'], {userID: userID})
+    axios.post(serverURL['login'], {email, idToken})
     .then( res => {
       // 로그인 거부된 경우
       if (!res.data.flag) {
@@ -31,7 +32,7 @@ const userLogin = function(elemID) {
       // 로그인 성공한 경우
       } else {
         // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-        store.commit('setUserInfo', {loggedIn, userID, name, expiresAt})
+        store.commit('setUserInfo', {loggedIn, idToken, email, name, expiresAt})
         router.push({name: 'Manage'})
       }
       console.log(res)
@@ -42,7 +43,7 @@ const userLogin = function(elemID) {
 }
 
 const userLogout = function() {
-  const payload = {loggedIn: false, userID: '', name: '', expiresAt: null}
+  const payload = {loggedIn: false, idToken: '', email: '', name: '', expiresAt: null}
 
   // 유저 정보 초기화 후 Main 페이지로 이동
   store.commit('setUserInfo', payload)

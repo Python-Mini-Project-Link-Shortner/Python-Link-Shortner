@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     userInfo: {
       loggedIn: false,
-      userID: '',
+      idToken: '',
       email: '',
       name: '',
       expiresAt: null,

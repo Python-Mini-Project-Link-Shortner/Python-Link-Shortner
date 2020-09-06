@@ -270,7 +270,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['linkPageURL', 'userInfo']),
+    ...mapState(['serverURL', 'userInfo']),
     fabDisabled: function() {
       return this.clickedLink.length === 0
     }
@@ -308,7 +308,7 @@ export default {
     },
     fetchLinkData(errorFunc) {
       // 자신의 아이디에 해당하는 LinkList를 서버에서 가져온다
-      axios.post(this.linkPageURL,
+      axios.post(this.serverURL.linkPageURL,
         { user_id: this.userInfo.email, page: this.page, item_count: this.itemPerPage })
         .then(res => {
           this.maxPage = res.data.maxPage

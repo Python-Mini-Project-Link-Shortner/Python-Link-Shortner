@@ -97,12 +97,12 @@ class MongoDB(MongoClient):
 
         return result
 
-    def upsert_user(self, user_id):
+    def upsert_user(self, id_token, email):
         collection = self[self._db][COLLECTIONS['USERS']]
 
-        collection.update_one({'userID': user_id}, { 
+        collection.update_one({'email': email}, { 
                 '$setOnInsert': { 'banned': False }, 
-                '$set': { 'lastLogin': datetime.now() }
+                '$set': { 'lastLogin': datetime.now(), 'id_token': id_token }
             }, upsert=True)
 
     def increase_id(self):
