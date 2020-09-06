@@ -83,12 +83,12 @@ router.beforeEach(function(to, from, next) {
   // 홈페이지인 경우
   if (to.matched.some(record => record.name === 'Home')) {
     //로그인된 유저는 Manage로, 아니면 Main으로 돌린다.
-    if (loggedIn) next({name: 'Manage'})
+    if (loggedIn) next({name: 'ManageHome'})
     else next({name: 'Main'})
   // Main 페이지 계열인 경우
   } else if (to.matched.some(record => record.name === 'Main')) {
     // 로그인된 유저는 Manage로, 아니면 그대로 진행한다.
-    if (loggedIn) next({name: 'Manage'})
+    if (loggedIn) next({name: 'ManageHome'})
     else next()
   // Manage 페이지 계열인 경우
   } else if (to.matched.some(record => record.name === "Manage")) {
