@@ -5,6 +5,7 @@ import MainPage from '@/views/MainPage.vue'
 import AppDrawer from '@/views/MainPage/AppDrawer.vue'
 import AppFooter from '@/views/MainPage/AppFooter.vue'
 import AppNavBar from '@/views/MainPage/AppNavBar.vue'
+import ManagePage from '@/views/ManagePage.vue'
 import ManageNavBar from '@/views/ManagePage/ManageNavBar.vue'
 import ManageNavDrawer from '@/views/ManagePage/ManageDrawer.vue'
 import {userLogout} from '@/assets/js/account.js'
@@ -40,12 +41,19 @@ const routes = [
   },
   {
     path: '/manage',
-    name: 'Manage',
+    name: 'Manage', // 이거 지워야함(지울경우 beforeEach땜에 빈화면뜸), 밑에 beforeEach도 regex로 수정해야 함
     components: {
-      default: () => import(/* webpackChunkName: "manage" */ '@/views/Manage.vue'),
+      default: ManagePage,
       navBar: ManageNavBar,
       drawer: ManageNavDrawer
     },
+    children: [
+      {
+        path: '',
+        name: 'ManageHome',
+        component: () => import(/* webpackChunkName: "manageHome" */ '@/views/ManagePage/ManageHome.vue')
+      }
+    ]
   }
   // {
   //   path: '/about',

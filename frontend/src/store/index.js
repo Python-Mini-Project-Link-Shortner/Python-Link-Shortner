@@ -12,12 +12,14 @@ export default new Vuex.Store({
     userInfo: {
       loggedIn: false,
       userID: '',
+      email: '',
       name: '',
       expiresAt: null,
     },
     serverURL: {
       login: 'http://127.0.0.1:5000/axios/login',
-      shorten:'http://127.0.0.1:5000/ajax'
+      shorten:'http://127.0.0.1:5000/ajax',
+      linkPageURL: 'http://127.0.0.1:5000/api/linkList'
     },
     clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },
