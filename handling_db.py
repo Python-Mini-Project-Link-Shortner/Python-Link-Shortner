@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from voluptuous import Schema, Required, All, Url
 from datetime import datetime
 from pagination import Pagination
+from bson import ObjectId
 
 DEFAULT_HOST = 'mongodb+srv://admin:1234@links.fc8p4.mongodb.net/PYTHON-LINK-SHORTNER?retryWrites=true&w=majority'
 DEFAULT_COL = 'link_table'
@@ -126,3 +127,14 @@ class MongoDB(MongoClient):
         if res is None: return None
 
         return Pagination.paging(res, [('Make_Date', -1)], page, item_count)
+
+    # user_id: 현재 로그인한 사용자 아이디
+    # delete_id: 삭제하고픈 Link의 ID
+    def delete_link(self, user_id, delete_id):
+        collection = self[self._db][self._col]
+
+        result = collection.delete_one({ '_id': ObjectId(delete_id), 'User_ID': user_id })
+
+        # 정상적으로 삭제되었을경우 True 반환
+        if result.deleted_count == 1 : return True
+        return False
