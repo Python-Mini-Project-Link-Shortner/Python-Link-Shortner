@@ -3,7 +3,6 @@ export default module = {
   namespaced: true,
   state: () => ({
     showDrawer: true  // Manage 페이지의 NavigationDrawer 상태값
-    // desktop아니라 모바일일경우 false로 바뀌게 수정
   }),
   mutations: {
     setDrawer(state, value) { // showDrawer 값 변경

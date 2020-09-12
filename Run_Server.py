@@ -71,31 +71,29 @@ def shorten_url():
 @app.route('/axios/login', methods=['GET','POST'])
 def update_user():
     # 유저 정보 가져오기
-    print(request.json)
     email = request.json['email']
     id_token = request.json['idToken']
 
     # 유저를 검색한다.
     user_info = Mongo.find_data({'email': email},'USERS')
-    banned = user_info['banned']
 
-    # 정상 유저인 경우 신규등록 또는 로그인시간 갱신
-    if user_info is None or not banned:
+    # 신규 유저인 경우 추가 로그인
+    if user_info is None:
+        Mongo.upsert_user(id_token, email)
+        return jsonify({
+            'flag': True
+        })
+
+    banned = user_info['banned']
+    # 정지되지 않은 정상 유저인 경우 로그인시간 갱신
+    if not banned:
         Mongo.upsert_user(id_token, email)
         return jsonify({
             'flag': True,
         })
 
-    # 밴 상태 확인
-    if user_info['banned']:
-        # 밴인 유저는 False 반환
-        return jsonify({
-            'flag': False,
-            'msg': 'The User Is Banned',
-        })
-
-    # 나머지 경우
-    return jsonify({'flag':True})
+    # 정지 됐을경우
+    return jsonify({'flag': False, 'msg': 'This user is banned'})
 
 @app.route('/<short_url>')
 def redirect_url(short_url):
@@ -110,9 +108,11 @@ def redirect_url(short_url):
 
 @app.route('/api/linkList', methods=['POST'])
 def link_list():
-    user_id = request.json['user_id']
-    page = request.json['page']
-    item_count = request.json['item_count']
+    req_data = request.get_json()
+
+    user_id = req_data['user_id']
+    page = req_data['page']
+    item_count = req_data['item_count']
 
     res = Mongo.get_link_pagination(user_id, page, item_count)
     if res is None: return None
@@ -120,6 +120,24 @@ def link_list():
     # pagination 가능하게 pagination.py 작성
     # page, maxPage, list Dictionary로 반환하게
     return DataEncoder().encode(res)
+
+@app.route('/api/deleteLink', methods=['POST'])
+def delete_link():
+    req_data = request.get_json()
+
+    user_id = req_data['user_id']
+    item_list = req_data['delete_id']
+
+    delete_all = True
+    for id in item_list:
+        res = Mongo.delete_link(user_id, id)
+        if res == False: delete_all = False
+        # TODO :
+        # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
+        # 기술 지원 따로 있음. 찾아보기.
+
+    if delete_all is True: return jsonify({ 'Flag': True })
+    return jsonify({ 'Flag': False })
 
 if __name__ == "__main__":
     print(app.root_path)
