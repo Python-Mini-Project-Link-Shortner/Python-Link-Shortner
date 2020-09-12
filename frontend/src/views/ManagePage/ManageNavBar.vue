@@ -13,7 +13,7 @@
       <v-app-bar-nav-icon v-if="!$vuetify.breakpoint.lgAndUp" @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
       <!-- 타이틀 -->
       <v-toolbar-title class="ml-0 pl-4">
-        <HomeLogo></HomeLogo>
+        <HomeLogo :to="{name: 'Manage'}"></HomeLogo>
       </v-toolbar-title>
       <!-- 공백 채우기 -->
       <v-spacer></v-spacer>

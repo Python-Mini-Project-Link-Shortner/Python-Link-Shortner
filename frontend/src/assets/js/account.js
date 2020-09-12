@@ -28,14 +28,12 @@ const userLogin = function(elemID) {
       if (!res.data.flag) {
         alert(res.data.msg)
         router.push({name:'Home'})
-        return
       // 로그인 성공한 경우
       } else {
         // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
         store.commit('setUserInfo', {loggedIn, idToken, email, name, expiresAt})
         router.push({name: 'Manage'})
       }
-      console.log(res)
     }).catch( ex => {
       console.log(ex)
     })

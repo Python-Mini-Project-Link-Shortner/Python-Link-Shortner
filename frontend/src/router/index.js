@@ -58,7 +58,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'ManageHome',
+        name: 'Manage',
         component: () => import(/* webpackChunkName: "manageHome" */ '@/views/ManagePage/ManageHome.vue')
       },
       {
@@ -68,20 +68,18 @@ const routes = [
       }
     ]
   }
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
 router.beforeEach(function(to, from, next) {
   const loggedIn = store.state.userInfo.loggedIn
   const expiresAt = store.state.userInfo.expiresAt
+  const loggedInPath = { name: 'Manage' }
+  const defaultPath = { name: 'Main' }
 
   // 로그인 기간이 만료된 경우 자동 로그아웃
   if (expiresAt) {
@@ -89,7 +87,7 @@ router.beforeEach(function(to, from, next) {
 
     if (now >= expiresAt) {
       userLogout()
-      next({name: 'Main'})
+      next(defaultPath)
     }
   }
 
@@ -111,24 +109,27 @@ router.beforeEach(function(to, from, next) {
       store.commit(mainModule + '/setTabIndex', NaN)    // 탭 선택 취소
       next({name: 'MainLinkCheck', params:{shortURL} })
     }
+  }
+  
+  // 로그인된 유저는 Manage로, 아니면 Main으로 돌린다.
+  const manageReg = /\/manage.*/
+  const mainReg = /\/main.*/
 
-  // Main 페이지 계열인 경우
-  } else if (to.matched.some(record => record.name === 'Main')) {
-    // 로그인된 유저는 Manage로, 아니면 그대로 진행한다.
-    if (loggedIn) next({name: 'ManageHome'})
-    else next()
-
-  // Manage 페이지 계열인 경우
-  } else if (to.matched.some(record => record.name === "Manage")) {
-    // 비로그인 유저는 Main으로, 아니면 그대로 진행한다.
-    if (!loggedIn) {
+  // Manage 계열인 경우
+  if (manageReg.test(to.fullPath)) {
+    if (loggedIn) {
+      next()
+    } else {
       alert("로그인이 필요한 서비스입니다.")
-      next({name: 'Main'})
-    } else next()
-
-  // 이외의 경우 그대로 진행
-  } else {
-    next()
+      next(defaultPath)
+    }
+  // Main 계열인 경우  
+  } else if (mainReg.test(to.fullPath)) {
+    if (loggedIn) {
+      next(loggedInPath)
+    } else {
+      next()
+    }
   }
 })
 
