@@ -19,6 +19,10 @@ const routes = [
     redirect: {name: 'Main'}
   },
   {
+    path: '/:shortURL@',
+    name: 'LinkCheck'
+  },
+  {
     path: '/main',
     components:  {
       default: MainPage,
@@ -36,6 +40,11 @@ const routes = [
         path: 'api',
         name: 'MainAPI',
         component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainAPI.vue'),
+      },
+      {
+        path: ':shortURL@',
+        name: 'MainLinkCheck',
+        component: () => import(/* webpackChunkName: "main" */ '@/views/LinkCheck.vue'),
       }
     ],
   },
@@ -51,6 +60,11 @@ const routes = [
         path: '',
         name: 'ManageHome',
         component: () => import(/* webpackChunkName: "manageHome" */ '@/views/ManagePage/ManageHome.vue')
+      },
+      {
+        path: ':shortURL@',
+        name: 'ManageLinkCheck',
+        component: () => import(/* webpackChunkName: "manageLinkCheck" */ '@/views/LinkCheck.vue'),
       }
     ]
   }
@@ -84,18 +98,34 @@ router.beforeEach(function(to, from, next) {
     //로그인된 유저는 Manage로, 아니면 Main으로 돌린다.
     if (loggedIn) next({name: 'ManageHome'})
     else next({name: 'Main'})
+
+  // LinkCheck 페이지인 경우
+  // 로그인 여부에 따라 Main/Manage 페이지로 돌린다.
+  } else if (to.matched.some(record => record.name === 'LinkCheck')) {
+    const shortURL = to.params.shortURL
+
+    if (loggedIn) next({name: 'ManageLinkCheck', params:{shortURL} })
+    else {
+      const mainModule = store.state.moduleNames['main']
+
+      store.commit(mainModule + '/setTabIndex', NaN)    // 탭 선택 취소
+      next({name: 'MainLinkCheck', params:{shortURL} })
+    }
+
   // Main 페이지 계열인 경우
   } else if (to.matched.some(record => record.name === 'Main')) {
     // 로그인된 유저는 Manage로, 아니면 그대로 진행한다.
     if (loggedIn) next({name: 'ManageHome'})
     else next()
+
   // Manage 페이지 계열인 경우
   } else if (to.matched.some(record => record.name === "Manage")) {
     // 비로그인 유저는 Main으로, 아니면 그대로 진행한다.
     if (!loggedIn) {
       alert("로그인이 필요한 서비스입니다.")
-      next({name: 'MainHome'})
+      next({name: 'Main'})
     } else next()
+
   // 이외의 경우 그대로 진행
   } else {
     next()

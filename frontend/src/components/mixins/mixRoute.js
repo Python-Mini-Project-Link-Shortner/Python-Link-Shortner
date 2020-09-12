@@ -29,7 +29,7 @@ const mixRoute = {
     goTo(item) {
       const duration = 1000
       const behavior = this.scrollOrRoute(item.href)
-
+      
       // scroll로 동작할 경우
       if (behavior.type === 'scroll') {
         // 스크롤 실행 동안 Intersection 비활성화
@@ -47,6 +47,7 @@ const mixRoute = {
         const router = this.$router
         
         router.push(behavior.path)
+        
         // 스크롤까지 해야하는 경우
         if (behavior.anchor) {
           // DOM 로딩 이후 스크롤한다.

@@ -17,9 +17,14 @@ export default new Vuex.Store({
       expiresAt: null,
     },
     serverURL: {
-      login: 'http://127.0.0.1:5000/axios/login',
-      shorten:'http://127.0.0.1:5000/ajax',
+      login: 'http://127.0.0.1:5000/api/login',
+      shorten:'http://127.0.0.1:5000/api/shorten',
+      check: 'http://127.0.0.1:5000/api/check',
       linkPageURL: 'http://127.0.0.1:5000/api/linkList'
+    },
+    moduleNames:{
+      main: 'main',
+      manage: 'manage'
     },
     clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },

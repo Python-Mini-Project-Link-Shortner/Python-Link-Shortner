@@ -9,10 +9,16 @@
       rounded
       autofocus
       hide-details
-      placeholder="Input Your Link Here."
+      :placeholder="behaviorSetting.placeholderText"
       >
+        // 링크 아이콘
+        <template slot="prepend-inner">
+          <v-icon class="mr-3" size="20" color="rgb(55,115,165)">{{behaviorSetting.icon}}</v-icon>
+        </template>
+
+        // Shorten 버튼
         <template slot="append">
-          <v-btn color="primary" @click="shortenURL">Shorten</v-btn>
+          <v-btn color="primary" @click="behaviorHandler">{{behaviorSetting.btnText}}</v-btn>
         </template>
       </v-text-field>
     </v-col>
@@ -31,10 +37,13 @@
           <v-col class="py-0 pl-5">
             {{alertSetting.msg}}
           </v-col>
+
+          <!-- 메시지 복사 버튼. -->
           <v-col class="py-0 pr-5 text-right"
             v-clipboard="() => alertSetting.msg"
             v-clipboard:success="clipboardSuccess"
-            v-clipboard:error="clipboardError">
+            v-clipboard:error="clipboardError"
+            v-if="alertSetting.copyBtn">
             <v-btn small outlined>Copy</v-btn>
           </v-col>
         </v-row>
@@ -76,6 +85,7 @@ export default {
     url: '',
     alertSetting: {
       isSuccess: false,
+      copyBtn: true,
       type: 'success',
       msg: 'default'
     },
@@ -83,24 +93,82 @@ export default {
       show: false,
       color: '',
       msg: ''
+    },
+    behaviorSetting: {
+      btnText: '',
+      placeholderText: '',
+      icon: ''
     }
   }),
+  computed: {
+    ...mapState(['serverURL']),
+    normalizedBehavior() {
+      return this.behavior.trim().toLowerCase()
+    }
+  },
   props: {
     alert: {
       type: Boolean,
       default: () => false
+    },
+    behavior: {
+      type: String,
+      default: () => 'Shorten'
     }
   },
   methods: {
+    // 동작에 따라 여러 텍스트 및 타입을 설정한다.
+    setOnMounted() {
+      const behavior = this.normalizedBehavior
+
+      if (behavior === 'shorten') {
+        this.behaviorSetting.btnText = 'SHORTEN'
+        this.behaviorSetting.placeholderText = 'Input Your Link Here'
+        this.behaviorSetting.icon = 'fa-link'
+      } else if (behavior === 'check') {
+        this.behaviorSetting.btnText = 'CHECK'
+        this.behaviorSetting.placeholderText = 'Input Your Shortend Link Here'
+        this.behaviorSetting.icon = 'done_outline'
+      }
+    },
+    // 동작을 결정할 메소드
+    behaviorHandler() {
+      const behavior = this.normalizedBehavior
+      if (behavior === 'shorten') {
+        this.shortenURL()
+      } else if (behavior === 'check') {
+        this.checkURL()
+      }
+    },
     // 서버로부터 축약 링크를 반환받는다. => Shorten 버튼
     shortenURL() {
       axios.post(this.serverURL['shorten'], {url: this.url})
         .then( res => {
           const alert = this.alertSetting
 
-          alert.isSuccess = res.data.flag                       // 반환 후 아래에 메시지를 표시한다.
+          alert.isSuccess = true                                // 반환 후 아래에 메시지를 표시한다.
           alert.type = res.data.flag ? 'success' : 'warning'    // 메시지 박스의 테마
           alert.msg = res.data.msg                              // 표시할 메시지
+        }).catch( ex => {
+          console.log(ex)
+        })
+    },
+    checkURL() {
+      axios.post(this.serverURL['check'], {url: this.url})
+        .then( res => {
+          const alert = this.alertSetting
+
+          // 실패한 경우에는 v-alert로 표시한다.
+          if (!res.data.flag) {
+            alert.isSuccess = true        // 반환 후 아래에 메시지를 표시한다.
+            alert.type = 'warning'        // 메시지 박스의 테마
+            alert.msg = res.data.msg      // 표시할 메시지
+            alert.copyBtn = false         // Copy 버튼 삭제
+          
+          // 성공한 경우에는 LinkCheck 페이지로 이동한다.
+          } else {
+            
+          }
         }).catch( ex => {
           console.log(ex)
         })
@@ -120,29 +188,8 @@ export default {
       snack.color = 'warning'
     }
   },
-  computed: {
-    ...mapState(['serverURL'])
+  mounted() {
+    this.setOnMounted()
   }
 }
 </script>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500&display=swap');
-.logo {
-	font-family: 'Recursive', sans-serif;
-	font-weight: 300;
-	font-size: 2em;
-	text-decoration: none;
-	color: inherit;
-}
-.logo .py {
-	color: rgb(55,115,165);
-}
-.no-drag {
-	-ms-user-select: none; 
-	-moz-user-select: -moz-none;
-	-webkit-user-select: none; 
-	-khtml-user-select: none; 
-	user-select:none;
-}
-</style>

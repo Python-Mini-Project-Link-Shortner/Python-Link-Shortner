@@ -10,7 +10,7 @@ const main = {
     ],
     intersectEnabled: true,
     drawer: false,
-    tabIndex: 0,
+    tabIndex: null,
   },
   mutations: {
     toggleDrawer(state) {
