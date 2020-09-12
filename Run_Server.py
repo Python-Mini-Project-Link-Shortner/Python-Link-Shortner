@@ -12,12 +12,14 @@ Mongo = MongoDB()
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
 
-@app.route('/')
-def home():
+# 미식별 링크에 대한 기본 홈. (path는 슬래시를 포함한 str)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def home(path):
     # Root 페이지로 사용할 파일을 지정한다.
     return render_template('index.html')
 
-@app.route('/ajax', methods=['GET', 'POST'])
+@app.route('/api/shorten', methods=['GET', 'POST'])
 def shorten_url():
     # AJAX를 통해 원본 URL을 처리하는 페이지.
 
@@ -68,7 +70,7 @@ def shorten_url():
         })
 
 # 신규유저 등록 및 로그인 시간을 갱신하는 페이지 (로그인 시)
-@app.route('/axios/login', methods=['GET','POST'])
+@app.route('/api/login', methods=['GET','POST'])
 def update_user():
     # 유저 정보 가져오기
     email = request.json['email']
@@ -91,9 +93,34 @@ def update_user():
         return jsonify({
             'flag': True,
         })
-
     # 정지 됐을경우
-    return jsonify({'flag': False, 'msg': 'This user is banned'})
+    else:
+        return jsonify({'flag': False, 'msg': 'This user is banned'})
+
+    # 나머지 경우
+    return jsonify({
+        'flag':True
+        })
+
+# 축약된 URL의 원본 URL을 반환하는 페이지
+@app.route('/api/check', methods=['GET', 'POST'])
+def check_url():
+    short_url = request.json['url']
+
+    # 축약 링크를 DB에서 검색한다.
+    raw_url = Mongo.get_raw_url(short_url)
+
+    # 링크가 존재하지 않으면 실패 반환
+    if raw_url is None:
+        return jsonify({
+            'flag': False,
+            'msg': "The link provided doesn't exist."
+        })
+    
+    return jsonify({
+        'flag': True,
+        'link': raw_url
+    })
 
 @app.route('/<short_url>')
 def redirect_url(short_url):

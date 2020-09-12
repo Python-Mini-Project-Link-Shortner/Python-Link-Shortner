@@ -98,6 +98,7 @@ class MongoDB(MongoClient):
 
         return result
 
+    # 유저의 로그인 시간을 갱신하고, 신규유저는 새로 등록한다.
     def upsert_user(self, id_token, email):
         collection = self[self._db][COLLECTIONS['USERS']]
 

@@ -14,6 +14,7 @@
           class="hidden-sm-and-down" 
           background-color="transparent"
           slider-size="2"
+          optional
           v-model="tabIndex"
           >
             <v-tab 

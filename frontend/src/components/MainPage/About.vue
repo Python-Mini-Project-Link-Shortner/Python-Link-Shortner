@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-9 mt-12" id="about">
+  <div class="pb-9 pt-12" id="about">
     <SubHeader title="About">
       MiniPy provides simplified version of any links ready to share on SNSs, blogs, etc. <br>
       Just with one click— shorten, share, manage altogether come in handy. <br>
@@ -62,6 +62,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

@@ -47,5 +47,10 @@ export default {
 }
 .v-card {
   border: 2px solid rgb(55,115,165);
+  transition: .2s;
+}
+.v-card:hover {
+  border: 3px solid rgb(55,115,165);
+  transform: scale(1.1);
 }
 </style>
