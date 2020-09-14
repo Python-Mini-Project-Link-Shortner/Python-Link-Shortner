@@ -79,28 +79,22 @@ def update_user():
     # 유저를 검색한다.
     user_info = Mongo.find_data({'email': email},'USERS')
 
-    # 신규 유저인 경우 추가 로그인
+    # 신규 유저인 경우 추가
     if user_info is None:
         Mongo.upsert_user(id_token, email)
-        return jsonify({
-            'flag': True
-        })
+        return jsonify({'flag': True})
 
-    banned = user_info['banned']
     # 정지되지 않은 정상 유저인 경우 로그인시간 갱신
+    banned = user_info['banned']
     if not banned:
         Mongo.upsert_user(id_token, email)
-        return jsonify({
-            'flag': True,
-        })
+        return jsonify({'flag': True})
     # 정지 됐을경우
     else:
         return jsonify({'flag': False, 'msg': 'This user is banned'})
 
     # 나머지 경우
-    return jsonify({
-        'flag':True
-        })
+    return jsonify({'flag':True})
 
 # 축약된 URL의 원본 URL을 반환하는 페이지
 @app.route('/api/check', methods=['GET', 'POST'])

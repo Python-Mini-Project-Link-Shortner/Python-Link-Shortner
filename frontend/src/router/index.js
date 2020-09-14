@@ -98,7 +98,7 @@ router.beforeEach(function(to, from, next) {
     else next({name: 'Main'})
 
   // LinkCheck 페이지인 경우
-  // 로그인 여부에 따라 Main/Manage 페이지로 돌린다.
+  // 로그인 여부에 따라 Main/Manage 서브 페이지로 돌린다.
   } else if (to.matched.some(record => record.name === 'LinkCheck')) {
     const shortURL = to.params.shortURL
 

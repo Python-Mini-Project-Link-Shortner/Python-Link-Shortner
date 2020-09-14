@@ -10,8 +10,19 @@
           borderless dense mandatory
           color="primary"
         >
-          <v-btn :value="'Shorten'" width="100">Shorten</v-btn>
-          <v-btn :value="'Check'" width="100">Check</v-btn>
+          <v-tooltip :value="btnToggle === 'Shorten'" bottom>
+            <template v-slot:activator="{ attrs }">
+              <v-btn :value="'Shorten'" width="100" v-bind="attrs">Shorten</v-btn>
+            </template>
+            <span>Create a short link</span>
+          </v-tooltip>
+
+          <v-tooltip :value="btnToggle === 'Check'" bottom>
+            <template v-slot:activator="{ attrs }">
+              <v-btn :value="'Check'" width="100" v-bind="attrs">Check</v-btn>
+            </template>
+            <span>Check the original link</span>
+          </v-tooltip>
         </v-btn-toggle>
       </v-row>
 
@@ -52,4 +63,13 @@ export default {
 </script>
 
 <style scoped>
+.v-tooltip__content::after {
+  content: '';
+  border: solid 8px transparent;
+  border-bottom-color: rgba(97, 97, 97, 0.9);
+  position: absolute;
+  bottom: 100%;
+  right: 50%;
+  margin-right: -8px;
+}
 </style>
