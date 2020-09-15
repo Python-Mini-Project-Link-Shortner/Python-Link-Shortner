@@ -103,7 +103,10 @@ export default {
   computed: {
     ...mapState(['serverURL']),
     normalizedBehavior() {
-      return this.behavior.trim().toLowerCase()
+      // null값 방지
+      const behavior = (!this.behavior) ? 'Shorten' : this.behavior
+
+      return behavior.trim().toLowerCase()
     }
   },
   props: {

@@ -7,7 +7,7 @@
       :style="{height: imgHeight * 1/3 + 'px'}">
         <v-btn-toggle
           v-model="btnToggle" rounded
-          borderless dense mandatory
+          borderless dense
           color="primary"
         >
           <v-tooltip :value="btnToggle === 'Shorten'" bottom>
@@ -26,10 +26,10 @@
         </v-btn-toggle>
       </v-row>
 
+      <!-- 링크 입력하는 텍스트 박스 -->
       <v-row
       align="center" 
       :style="{height: imgHeight * 1/3 + 'px'}">
-        <!-- 링크 입력하는 텍스트 박스 -->
         <ShortenLink alert :behavior="btnToggle" :key="btnToggle"/>
       </v-row>
 
@@ -54,10 +54,16 @@ export default {
       {tab: 'Create', component: 'ShortenLink'},
       {tab: 'Check', component: 'CheckLink'}
     ],
-    btnToggle: 'Shorten',
+    btnToggle: null,
   }),
   components: {
     ShortenLink
+  },
+  mounted() {
+    // Mounted 시점에서 모든 DOM 요소가 업데이트 된 이후 탭 선택
+    this.$nextTick(() => {
+      this.btnToggle = 'Shorten'
+    })
   }
 }
 </script>
