@@ -131,6 +131,9 @@ router.beforeEach(function(to, from, next) {
       next()
     }
   }
+
+  // 어떠한 조건에도 만족하지 않는 경우 해소
+  next()
 })
 
 export default router

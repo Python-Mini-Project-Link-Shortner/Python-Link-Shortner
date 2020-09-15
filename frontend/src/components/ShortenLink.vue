@@ -78,6 +78,7 @@
 <script>
 import {mapState} from 'vuex'
 import axios from 'axios'
+import {getShortCode} from '@/assets/js/handleURL.js'
 
 export default {
   name: 'ShortenLink',
@@ -117,6 +118,10 @@ export default {
     behavior: {
       type: String,
       default: () => 'Shorten'
+    },
+    toggle: {
+      type: Boolean,
+      default: () => false
     }
   },
   methods: {
@@ -157,24 +162,19 @@ export default {
         })
     },
     checkURL() {
-      axios.post(this.serverURL['check'], {url: this.url})
-        .then( res => {
-          const alert = this.alertSetting
+      const result = getShortCode(this.url)
 
-          // 실패한 경우에는 v-alert로 표시한다.
-          if (!res.data.flag) {
-            alert.isSuccess = true        // 반환 후 아래에 메시지를 표시한다.
-            alert.type = 'warning'        // 메시지 박스의 테마
-            alert.msg = res.data.msg      // 표시할 메시지
-            alert.copyBtn = false         // Copy 버튼 삭제
-          
-          // 성공한 경우에는 LinkCheck 페이지로 이동한다.
-          } else {
-            
-          }
-        }).catch( ex => {
-          console.log(ex)
-        })
+      // 올바른 URL 형식인지 검사한다.
+      if (!result.flag) {
+        alert(result.msg)
+        return
+      }
+
+      // LinkCheck 페이지로 이동한다.
+      this.$router.push({
+        name: 'LinkCheck',
+        params: {shortURL: result.shortCode}
+      })
     },
     clipboardSuccess() {
       const snack = this.snackSetting

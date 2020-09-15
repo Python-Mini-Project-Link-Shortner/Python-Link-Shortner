@@ -69,6 +69,9 @@ export default {
 </script>
 
 <style scoped>
+.v-tooltip__content {
+  z-index: 4 !important;
+}
 .v-tooltip__content::after {
   content: '';
   border: solid 8px transparent;
