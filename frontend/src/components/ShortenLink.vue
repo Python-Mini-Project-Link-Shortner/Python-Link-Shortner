@@ -13,7 +13,9 @@
       >
         // 링크 아이콘
         <template slot="prepend-inner">
-          <v-icon class="mr-3" size="20" color="rgb(55,115,165)">{{behaviorSetting.icon}}</v-icon>
+          <v-icon 
+          class="mr-3" size="20" color="rgb(55,115,165)"
+          v-on="toggle ? {click: () => iconToggle()} : {}">{{behaviorSetting.icon}}</v-icon>
         </template>
 
         // Shorten 버튼
@@ -96,6 +98,7 @@ export default {
       msg: ''
     },
     behaviorSetting: {
+      type: '',
       btnText: '',
       placeholderText: '',
       icon: ''
@@ -104,8 +107,14 @@ export default {
   computed: {
     ...mapState(['serverURL']),
     normalizedBehavior() {
-      // null값 방지
-      const behavior = (!this.behavior) ? 'Shorten' : this.behavior
+      let behavior
+
+      if (this.toggle) {
+        behavior = this.behaviorSetting.type
+      } else {
+        // null값 방지
+        behavior = (!this.behavior) ? 'Shorten' : this.behavior
+      }
 
       return behavior.trim().toLowerCase()
     }
@@ -126,7 +135,7 @@ export default {
   },
   methods: {
     // 동작에 따라 여러 텍스트 및 타입을 설정한다.
-    setOnMounted() {
+    setBehavior() {
       const behavior = this.normalizedBehavior
 
       if (behavior === 'shorten') {
@@ -138,6 +147,13 @@ export default {
         this.behaviorSetting.placeholderText = 'Input Your Shortend Link Here'
         this.behaviorSetting.icon = 'done_outline'
       }
+    },
+    iconToggle() {
+      const currentType = this.behaviorSetting.type
+
+      // 타입 토글 및 동작 설정
+      this.behaviorSetting.type = (currentType === 'Shorten') ? 'Check' : 'Shorten'
+      this.setBehavior()
     },
     // 동작을 결정할 메소드
     behaviorHandler() {
@@ -192,7 +208,9 @@ export default {
     }
   },
   mounted() {
-    this.setOnMounted()
-  }
+    // 최초 값 할당 및 동작 설정
+    this.behaviorSetting.type = (!this.behavior) ? 'Shorten' : this.behavior
+    this.setBehavior()
+  },
 }
 </script>

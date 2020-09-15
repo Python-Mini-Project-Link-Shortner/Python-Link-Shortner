@@ -22,6 +22,8 @@ const userLogin = function(elemID) {
     const name = googleUser.getBasicProfile().getName()
     const expiresAt = authResponse.expires_at
 
+    console.log('Hi')
+
     axios.post(serverURL['login'], {email, idToken})
     .then( res => {
       // 로그인 거부된 경우
