@@ -12,14 +12,17 @@
         >
           <v-tooltip :value="btnToggle === 'Shorten'" bottom>
             <template v-slot:activator="{ attrs }">
-              <v-btn :value="'Shorten'" width="100" v-bind="attrs">Shorten</v-btn>
+              <v-btn 
+              :value="'Shorten'" width="100" 
+              v-bind="attrs" ref="btnShorten">Shorten</v-btn>
             </template>
             <span>Create a short link</span>
           </v-tooltip>
 
           <v-tooltip :value="btnToggle === 'Check'" bottom>
             <template v-slot:activator="{ attrs }">
-              <v-btn :value="'Check'" width="100" v-bind="attrs">Check</v-btn>
+              <v-btn :value="'Check'" width="100" 
+              v-bind="attrs" ref="btnCheck">Check</v-btn>
             </template>
             <span>Check the original link</span>
           </v-tooltip>
@@ -55,6 +58,7 @@ export default {
       {tab: 'Check', component: 'CheckLink'}
     ],
     btnToggle: null,
+    forceUpdate: true,
   }),
   components: {
     ShortenLink
@@ -64,7 +68,7 @@ export default {
     this.$nextTick(() => {
       this.btnToggle = 'Shorten'
     })
-  }
+  },
 }
 </script>
 
