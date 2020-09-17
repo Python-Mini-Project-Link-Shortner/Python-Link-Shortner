@@ -13,12 +13,15 @@
           threshold: [0.0, 1.0]
         }
       }" index="1" />
+    
+    <Banner height="300"/>
   </div>
 </template>
 
 <script>
 import Jumbotron from '@/components/MainPage/Jumbotron.vue'
 import About from '@/components/MainPage/About.vue'
+import Banner from '@/components/MainPage/Banner.vue'
 import { mapState, mapMutations } from 'vuex'
 
 const main = 'main' // Vuex의 'main' 모듈
@@ -68,7 +71,7 @@ export default {
     }
   },
   components: {
-    Jumbotron, About
+    Jumbotron, About, Banner
   }
 }
 </script>
