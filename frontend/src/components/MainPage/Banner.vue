@@ -56,7 +56,7 @@ export default {
       setTimeout(() => {
         const baseDelay = 5000; // 5초동안 표시
 
-        // 글자를 없앤다.
+        // baseDelay만큼 표시한 후 글자를 없앤다.
         setTimeout(() => {
           words.forEach(function(word) {
             word.classList.remove('animate')
@@ -64,7 +64,7 @@ export default {
           cite.classList.remove('animate')
         }, baseDelay)
 
-        // 이후 무한반복
+        // 이후 재귀적으로 무한반복
         setTimeout(() => {
           this.setTextAnimation()
         }, baseDelay + maxTransition*2)
