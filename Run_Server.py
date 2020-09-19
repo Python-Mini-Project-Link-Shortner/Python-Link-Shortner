@@ -5,8 +5,8 @@ from flask_cors import CORS
 from data_encoder import DataEncoder
 
 app = Flask(__name__,
-            static_folder='dist',
-            template_folder = "./dist")
+            static_folder='static',
+            template_folder = "templates")
 Mongo = MongoDB()
 
 # enable CORS
@@ -123,7 +123,7 @@ def redirect_url(short_url):
 
     # 페이지가 존재하지 않으면 오류 페이지 출력
     if Raw_URL is None:
-        return render_template('page_404.html')
+        return "Page Not Found"
 
     return redirect(Raw_URL)
 
