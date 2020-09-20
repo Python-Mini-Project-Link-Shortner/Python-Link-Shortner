@@ -9,6 +9,7 @@
           v-model="btnToggle" rounded
           borderless dense
           color="primary"
+          :key="forceUpdate"
         >
           <v-tooltip :value="btnToggle === 'Shorten'" bottom>
             <template v-slot:activator="{ attrs }">
@@ -59,13 +60,34 @@ export default {
       {tab: 'Check', component: 'CheckLink'}
     ],
     btnToggle: null,
-    forceUpdate: true,
+    forceUpdate: 1,
   }),
+  methods: {
+    // forceUpdate 값을 변경한다.
+    tooltipUpdate() {
+      const temp = String(this.btnToggle)
+      
+      // DOM 업데이트 후 툴팁을 다시 표시한다.
+      this.btnToggle = ''
+      this.$nextTick(() => {
+        this.btnToggle = temp
+      })
+
+      // 툴팁 컴포넌트를 업데이트한다.
+      this.forceUpdate = this.forceUpdate * (-1)
+    }
+  },
   mounted() {
     // Mounted 시점에서 모든 DOM 요소가 업데이트 된 이후 탭 선택
     this.$nextTick(() => {
       this.btnToggle = 'Shorten'
     })
+  },
+  created() {
+    window.addEventListener('resize', this.tooltipUpdate)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.tooltipUpdate)
   },
   components: {
     ShortenLink

@@ -11,14 +11,22 @@
       hide-details
       :placeholder="behaviorSetting.placeholderText"
       >
-        // 링크 아이콘
+        <!-- 링크 아이콘 -->
         <template slot="prepend-inner">
-          <v-icon 
-          class="mr-3" size="20" color="rgb(55,115,165)"
-          v-on="toggle ? {click: () => iconToggle()} : {}">{{behaviorSetting.icon}}</v-icon>
+          <v-tooltip :value="toggleTooltip" bottom>
+            <template v-slot:activator="{ attrs }">
+              <v-icon 
+                class="mr-3" size="20" color="rgb(55,115,165)"
+                v-on="toggle ? {click: () => iconToggle()} : {}"
+                v-bind="attrs">
+                {{behaviorSetting.icon}}
+              </v-icon>
+            </template>
+            <span>Click to change the mode</span>
+          </v-tooltip>
         </template>
 
-        // Shorten 버튼
+        <!-- Shorten/Check 버튼 -->
         <template slot="append">
           <v-btn color="primary" @click="behaviorHandler">{{behaviorSetting.btnText}}</v-btn>
         </template>
@@ -129,6 +137,10 @@ export default {
       default: () => 'Shorten'
     },
     toggle: {
+      type: Boolean,
+      default: () => false
+    },
+    toggleTooltip: {
       type: Boolean,
       default: () => false
     }

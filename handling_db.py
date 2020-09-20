@@ -60,25 +60,25 @@ class MongoDB(MongoClient):
         collection = self[self._db][self._col]
 
         # Raw_URL로 검색
-        find_item = collection.find_one({"Raw_URL" : raw_url})
+        find_item = collection.find_one({"rawURL" : raw_url})
 
         # 없을경우 None 반환
         if find_item is None:
             return None
 
         # 존재할경우 Short_URL 반환
-        return find_item['Short_URL']
+        return find_item['shortURL']
 
     def get_raw_url(self, short_url):
         # Short_URL로 Raw_URL을 검색한다. (방식은 short_url과 동일)
         collection = self[self._db][self._col]
 
-        find_item = collection.find_one({"Short_URL" : short_url})
+        find_item = collection.find_one({"shortURL" : short_url})
 
         if find_item is None:
             return None
         
-        return find_item['Raw_URL']
+        return find_item['rawURL']
 
     def get_unique_id(self):
         # URL 생성을 위한 ID 값을 가져온다.

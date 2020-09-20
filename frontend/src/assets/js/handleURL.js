@@ -43,4 +43,4 @@ const getShortCode = function(shortURL) {
   }
 }
 
-export {getShortCode}
+export {parseURL, getShortCode}

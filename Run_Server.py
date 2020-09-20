@@ -100,7 +100,7 @@ def update_user():
 @app.route('/api/check', methods=['GET', 'POST'])
 def check_url():
     short_url = request.json['url']
-
+    
     # 축약 링크를 DB에서 검색한다.
     raw_url = Mongo.get_raw_url(short_url)
 

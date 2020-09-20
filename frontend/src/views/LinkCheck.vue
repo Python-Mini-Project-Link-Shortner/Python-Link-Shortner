@@ -1,8 +1,9 @@
-<!-- 원본 링크를 출력하는 컴포넌트 -->
+<!-- 링크 검사 결과 페이지-->
 <template>
   <v-card flat class="d-inline-block py-12 mx-auto">
     <v-container>
       <v-row justify="center">
+        <!-- 좌측 이미지 -->
         <v-col cols="auto">
           <v-img 
             class="elevation-2"
@@ -11,30 +12,49 @@
             :src="imgPath" />
         </v-col>
 
+        <!-- 우측 컨테이너 -->
         <v-col align="left" :style="{maxWidth: '500px'}">
           <v-row class="fill-height">
+            <!-- 위쪽 텍스트 -->
             <v-col cols="12">
-              <v-card-subtitle class="pb-0">{{cardText.subtitle}}</v-card-subtitle>
+              <v-card-subtitle class="pb-0">{{cardSetting.subtitle}}</v-card-subtitle>
               
-              <v-card-title class="pt-0 mb-0 pb-0">
-                {{cardText.title}}
+              <v-card-title class="pt-0 mb-0 pb-0 font-weight-bold">
+                {{cardSetting.title}}
               </v-card-title>
 
               <v-card-text>
                 <v-divider class="my-0"/>
                 <div class="my-6"></div>
-                <div v-for="(line, index) in cardText.content.split('\n')" :key="index">
+                <div v-for="(line, index) in cardSetting.content.split('\n')" :key="index">
                   {{line}}
                 </div>
               </v-card-text>
             </v-col>
-            <v-col align-self="end">
+
+            <!-- 아래쪽 텍스트: 입력링크, 버튼 -->
+            <v-col class="pb-1" align-self="end">
               <div class="pl-4">
                 <div class="text-body-2">
-                  <span> Your Link: </span>
-                  {{origin + '/' + shortURL}}
+                  <v-icon 
+                    size="20" 
+                    color="rgb(55,115,165)"
+                    class="mr-2">
+                    fa-link
+                  </v-icon>
+                  <a 
+                    class="anchor" 
+                    :href="cardSetting.link"
+                    target="_blank">
+                    {{cardSetting.link}}
+                  </a>
                 </div>
-                <v-btn class="mt-2" color="primary">Home</v-btn>
+                <v-btn 
+                  class="mt-3" 
+                  color="primary" 
+                  v-bind="cardSetting.attrs">
+                  {{cardSetting.button}}
+                </v-btn>
               </div>
             </v-col>
           </v-row>
@@ -48,12 +68,12 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
+import {parseURL} from '@/assets/js/handleURL.js'
 
 export default {
   name: 'LinkCheck',
   data: () => ({
     flag: null,       // 성공, 실패 여부
-    origin: document.location.origin,
     shortURL: '',     // 7자리 축약 URL
     rawURL: '',       // 원본링크
     msg: '',          // 원본링크 검색 이후 결과 메시지
@@ -61,21 +81,32 @@ export default {
   }),
   computed: {
     ...mapState(['serverURL']),
-    cardText() {
-      let title, subtitle, content
+    cardSetting() {
+      let title, subtitle, content, link, button, attrs
 
       if (this.flag) {
-        title = this.rawURL
+        title = parseURL(this.rawURL).host
         subtitle = 'You are accessing to'
         content = ``
+        link = this.rawURL
+        button = 'Go'
+        attrs = {
+          href: this.rawURL,
+          target: '_blank'
+        }
       } else {
         title = 'Page Not Found'
         subtitle = "We are sorry..."
         content =
         `It looks like the link you provided is broken or not registered.\n` +
         `Please check your link again.`
+        link = document.location.origin + '/' + this.shortURL
+        button = 'Home'
+        attrs = {
+          to: {name: 'Home'}
+        }
       }
-      return {title, subtitle, content}
+      return {title, subtitle, content, link, button, attrs}
     }
   },
   // 페이지 진입 시 원본 URL을 받는다.
@@ -100,7 +131,7 @@ export default {
 </script>
 
 <style scoped>
-
-</style>>
-
+.anchor {
+  text-decoration: none;
+}
 </style>
