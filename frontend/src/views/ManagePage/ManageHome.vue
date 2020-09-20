@@ -34,22 +34,26 @@
         <v-card outlined hover>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h6 text-truncate" style="color: #E71D36;">{{ link.Short_URL }}</v-list-item-title>
-              <v-list-item-subtitle>{{ link.Make_Date }}</v-list-item-subtitle>
+              <v-list-item-title class="text-h6 text-truncate" style="color: #E71D36;">{{ link.shortURL }}</v-list-item-title>
+              <v-list-item-subtitle>{{ link.makeDate }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-spacer></v-spacer>
-            <v-checkbox v-model="checkedLink" :value="link._id"></v-checkbox>
+            <v-checkbox v-model="checkedLinkIDList" :value="link._id"></v-checkbox>
           </v-list-item>
 
           <v-card-subtitle class="py-0 font-weight-regular">브라우저탭에뜨는 이름</v-card-subtitle>
-          <v-card-text class="text--primary pb-1">{{ link.Raw_URL }}</v-card-text>
+          <v-card-text class="text--primary pb-1">{{ link.rawURL }}</v-card-text>
 
           <v-card-actions class="px-4">
-            <div><span class="info--text">#Empty</span></div>
+            <!-- 태그 표시 -->
+            <div>
+              <v-chip color="info" text-color="white" v-if="link.tagName">#{{ link.tagName }}</v-chip>
+              <v-chip v-else>####</v-chip>
+            </div>
 
             <v-spacer></v-spacer>
 
-            <!-- 아래 Dialog들을 ref에 등록해서 함수를 직접 호출 -->
+            <!-- Dialog 버튼 -->
             <v-btn icon dark color="success" @click.stop="openDialog(DialogName.Favorite, link._id)">
               <v-icon>mdi-heart-outline</v-icon>
             </v-btn>
@@ -127,7 +131,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Delete); deleteSingleLink();">
+            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Delete); deleteSingleLink(clickedLinkID);">
               삭제
             </v-btn>
             <v-btn color="warning" text class="font-weight-bold" @click="closeDialog(DialogName.Delete)">
@@ -163,6 +167,7 @@
       </v-dialog>
 
       <!-- 태그 Dialog -->
+      <!-- TODO: 나중에 Change랑 Delete를 전부 이 Dialog 밑에 연결되서 나타나게 해서 추가적인 Dialog 없애보면 어떨까? -->
       <v-dialog v-model="dialogs.tagOpen" max-width="360">
         <v-card>
           <v-card-title class="headline">
@@ -198,7 +203,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="success" text class="font-weight-bold" @click="closeDialog(DialogName.TagChange)">
+            <v-btn color="success" text class="font-weight-bold"
+            @click="closeDialog(DialogName.TagChange); closeDialog(DialogName.Tag); changeSingleTag(clickedLinkID, tagName);">
               변경
             </v-btn>
             <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.TagChange)">
@@ -209,19 +215,19 @@
       </v-dialog>
 
       <!-- 태그 삭제 Dialog -->
-      <v-dialog v-model="dialogs.tagDeleteOpen" max-width="320">
-        <v-card class="py-2">
-          <v-card-text class="pb-0">
+      <v-dialog v-model="dialogs.tagDeleteOpen" max-width="360">
+        <v-card class="py-3">
+          <v-card-text class="pb-3">
             <v-container class="pb-0 text-subtitle-1 font-weight-medium black--text">
               태그를 지우시겠습니까?
             </v-container>
           </v-card-text>
-          <v-card-actions>
+          <v-card-actions class="pb-0">
             <v-spacer></v-spacer>
-            <v-btn color="success" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete)">
+            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete); closeDialog(DialogName.Tag); deleteSingleTag(clickedLinkID)">
               확인
             </v-btn>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete)">
+            <v-btn color="info" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete)">
               취소
             </v-btn>
           </v-card-actions>
@@ -274,9 +280,9 @@ export default {
       tagDeleteOpen: false
     },
     linkList: [], // 링크 정보 배열
-    clickedLink: '', // 현재 클릭한 링크 아이디
-    checkedLink: [], // 체크박스 체크한 링크 아이디 배열
-    tagName: '',
+    clickedLinkID: '', // 현재 클릭한 링크 아이디
+    checkedLinkIDList: [], // 체크박스 체크한 링크 아이디 배열
+    tagName: '', // 태그 변경시 사용자가 입력한 태그 이름이 저장될 공간
     showError: false, // 에러 표시
     errorMsg: '' // 에러 메시지
   }),
@@ -295,7 +301,7 @@ export default {
   computed: {
     ...mapState(['serverURL', 'userInfo']),
     fabDisabled: function() {
-      return this.checkedLink.length === 0
+      return this.checkedLinkIDList.length === 0
     }
   },
   methods: {
@@ -303,8 +309,8 @@ export default {
     resetForPaging() {
       this.fab = false
       this.linkList.length = 0
-      this.clickedLink = ''
-      this.checkedLink.length = 0
+      this.clickedLinkID = ''
+      this.checkedLinkIDList.length = 0
       this.tagName = ''
       this.showError = false
       this.errorMsg = ''
@@ -327,7 +333,7 @@ export default {
       this.startLoading()
 
       axios.post(this.serverURL.linkPageURL,
-        { user_id: this.userInfo.email, page: this.page, item_count: this.itemPerPage })
+        { userID: this.userInfo.email, page: this.page, itemCount: this.itemPerPage })
         .then(res => {
           this.maxPage = res.data.maxPage
           this.page = res.data.page
@@ -342,7 +348,7 @@ export default {
     // Dialog 열기
     openDialog(dialogName, linkId = '') {
       if (linkId !== '') {
-        this.clickedLink = linkId
+        this.clickedLinkID = linkId
       }
 
       this.changeDialogValue(dialogName, true)
@@ -353,34 +359,75 @@ export default {
     },
     // Dialog들을 Enum으로 관리할 때 값 변경을 위한 함수
     changeDialogValue(dialogName, value = true) {
-      if (dialogName === this.DialogName.Favorite) {
-        this.dialogs.favoriteOpen = value
-      } else if (dialogName === this.DialogName.Delete) {
-        this.dialogs.deleteOpen = value
-      } else if (dialogName === this.DialogName.Hide) {
-        this.dialogs.hideOpen = value
-      } else if (dialogName === this.DialogName.Tag) {
-        this.dialogs.tagOpen = value
-      } else if (dialogName === this.DialogName.TagChange) {
-        this.dialogs.tagChangeOpen = value
-      } else {
-        this.dialogs.tagDeleteOpen = value
+      switch (dialogName) {
+        case this.DialogName.Favorite:
+          this.dialogs.favoriteOpen = value
+          break
+        case this.DialogName.Delete:
+          this.dialogs.deleteOpen = value
+          break
+        case this.DialogName.Hide:
+          this.dialogs.hideOpen = value
+          break
+        case this.DialogName.Tag:
+          this.dialogs.tagOpen = value
+          break
+        case this.DialogName.TagChange:
+          this.dialogs.tagChangeOpen = value
+          break
+        default:
+          this.dialogs.tagDeleteOpen = value
+          break
       }
     },
     // Card에서 Delete 버튼 클릭시 실행될 링크 하나 지우는 함수
-    deleteSingleLink() {
-      this.startLoading();
+    deleteSingleLink(deleteLinkID) {
+      this.startLoading()
 
       axios.post(this.serverURL.deleteLinkURL,
-        { user_id: this.userInfo.email, delete_id: [this.clickedLink] })
+        { userID: this.userInfo.email, deleteID: [deleteLinkID] })
         .then(res => {
-          this.fetchLinkData(this.fetchError)
+          this.fetchLinkData()
         }).catch(e => {
           console.log(e)
           this.showError = true
           this.errorMsg = "삭제에 실패하였습니다"
         }).finally(() => {
-          this.clickedLink = ''
+          this.clickedLinkID = ''
+          this.stopLoading()
+        })
+    },
+    // 선택한 링크의 태그 변경하는 함수
+    changeSingleTag(linkID, tagName) {
+      this.startLoading()
+
+      axios.post(this.serverURL.changeTagURL,
+        { userID: this.userInfo.email, changeID: [linkID], tagName: tagName })
+        .then(res => {
+          this.fetchLinkData()
+        }).catch(e => {
+          console.log(e)
+          this.showError = true
+          this.errorMsg = "태그 변경에 실패하였습니다"
+        }).finally(() => {
+          this.clickedLinkID = ''
+          this.tagName = ''
+          this.stopLoading()
+        })
+    },
+    deleteSingleTag(linkID) {
+      this.startLoading()
+
+      axios.post(this.serverURL.deleteTagURL,
+        { userID: this.userInfo.email, deleteID: [linkID]})
+        .then(res => {
+          this.fetchLinkData()
+        }).catch(e => {
+          console.log(e)
+          this.showError = true
+          this.errorMsg = "태그 삭제에 실패하였습니다"
+        }).finally(() => {
+          this.clickedLinkID = ''
           this.stopLoading()
         })
     }

@@ -60,25 +60,25 @@ class MongoDB(MongoClient):
         collection = self[self._db][self._col]
 
         # Raw_URL로 검색
-        find_item = collection.find_one({"Raw_URL" : raw_url})
+        find_item = collection.find_one({"rawURL" : raw_url})
 
         # 없을경우 None 반환
         if find_item is None:
             return None
 
         # 존재할경우 Short_URL 반환
-        return find_item['Short_URL']
+        return find_item['shortURL']
 
     def get_raw_url(self, short_url):
         # Short_URL로 Raw_URL을 검색한다. (방식은 short_url과 동일)
         collection = self[self._db][self._col]
 
-        find_item = collection.find_one({"Short_URL" : short_url})
+        find_item = collection.find_one({"shortURL" : short_url})
 
         if find_item is None:
             return None
         
-        return find_item['Raw_URL']
+        return find_item['rawURL']
 
     def get_unique_id(self):
         # URL 생성을 위한 ID 값을 가져온다.
@@ -104,7 +104,7 @@ class MongoDB(MongoClient):
 
         collection.update_one({'email': email}, { 
                 '$setOnInsert': { 'banned': False }, 
-                '$set': { 'lastLogin': datetime.now(), 'id_token': id_token }
+                '$set': { 'lastLogin': datetime.now(), 'idToken': id_token }
             }, upsert=True)
 
     def increase_id(self):
@@ -124,18 +124,36 @@ class MongoDB(MongoClient):
     def get_link_pagination(self, user_id, page = 1, item_count = 10):
         collection = self[self._db][self._col]
 
-        res = collection.find({ 'User_ID': user_id })
+        res = collection.find({ 'userID': user_id })
         if res is None: return None
 
-        return Pagination.paging(res, [('Make_Date', -1)], page, item_count)
+        return Pagination.paging(res, [('makeDate', -1)], page, item_count)
 
     # user_id: 현재 로그인한 사용자 아이디
     # delete_id: 삭제하고픈 Link의 ID
     def delete_link(self, user_id, delete_id):
         collection = self[self._db][self._col]
 
-        result = collection.delete_one({ '_id': ObjectId(delete_id), 'User_ID': user_id })
+        result = collection.delete_one({ '_id': ObjectId(delete_id), 'userID': user_id })
 
         # 정상적으로 삭제되었을경우 True 반환
-        if result.deleted_count == 1 : return True
+        if result.deleted_count == 1: return True
+        return False
+
+    def change_tag(self, user_id, change_id, tag_name):
+        collection = self[self._db][self._col]
+
+        result = collection.update_one({ '_id': ObjectId(change_id), 'userID': user_id }, { '$set': { 'tagName': tag_name } })
+
+        # 정상적으로 변경되었을경우 True 반환
+        if result.matched_count == result.modified_count: return True
+        return False
+
+    def delete_tag(self, user_id, delete_id):
+        collection = self[self._db][self._col]
+
+        result = collection.update_one({ '_id': ObjectId(delete_id), 'userID': user_id }, { '$unset': { 'tagName': '' } })
+
+        # 정상적으로 변경되었을경우 True 반환
+        if result.modified_count == 1: return True
         return False
