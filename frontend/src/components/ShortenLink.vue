@@ -11,12 +11,22 @@
       hide-details
       :placeholder="behaviorSetting.placeholderText"
       >
-        // 링크 아이콘
+        <!-- 링크 아이콘 -->
         <template slot="prepend-inner">
-          <v-icon class="mr-3" size="20" color="rgb(55,115,165)">{{behaviorSetting.icon}}</v-icon>
+          <v-tooltip :value="toggleTooltip" bottom>
+            <template v-slot:activator="{ attrs }">
+              <v-icon 
+                class="mr-3" size="20" color="rgb(55,115,165)"
+                v-on="toggle ? {click: () => iconToggle()} : {}"
+                v-bind="attrs">
+                {{behaviorSetting.icon}}
+              </v-icon>
+            </template>
+            <span>Click to change the mode</span>
+          </v-tooltip>
         </template>
 
-        // Shorten 버튼
+        <!-- Shorten/Check 버튼 -->
         <template slot="append">
           <v-btn color="primary" @click="behaviorHandler">{{behaviorSetting.btnText}}</v-btn>
         </template>
@@ -78,6 +88,7 @@
 <script>
 import {mapState} from 'vuex'
 import axios from 'axios'
+import {getShortCode} from '@/assets/js/handleURL.js'
 
 export default {
   name: 'ShortenLink',
@@ -95,6 +106,7 @@ export default {
       msg: ''
     },
     behaviorSetting: {
+      type: '',
       btnText: '',
       placeholderText: '',
       icon: ''
@@ -103,7 +115,16 @@ export default {
   computed: {
     ...mapState(['serverURL']),
     normalizedBehavior() {
-      return this.behavior.trim().toLowerCase()
+      let behavior
+
+      if (this.toggle) {
+        behavior = this.behaviorSetting.type
+      } else {
+        // null값 방지
+        behavior = (!this.behavior) ? 'Shorten' : this.behavior
+      }
+
+      return behavior.trim().toLowerCase()
     }
   },
   props: {
@@ -114,11 +135,19 @@ export default {
     behavior: {
       type: String,
       default: () => 'Shorten'
+    },
+    toggle: {
+      type: Boolean,
+      default: () => false
+    },
+    toggleTooltip: {
+      type: Boolean,
+      default: () => false
     }
   },
   methods: {
     // 동작에 따라 여러 텍스트 및 타입을 설정한다.
-    setOnMounted() {
+    setBehavior() {
       const behavior = this.normalizedBehavior
 
       if (behavior === 'shorten') {
@@ -130,6 +159,13 @@ export default {
         this.behaviorSetting.placeholderText = 'Input Your Shortend Link Here'
         this.behaviorSetting.icon = 'done_outline'
       }
+    },
+    iconToggle() {
+      const currentType = this.behaviorSetting.type
+
+      // 타입 토글 및 동작 설정
+      this.behaviorSetting.type = (currentType === 'Shorten') ? 'Check' : 'Shorten'
+      this.setBehavior()
     },
     // 동작을 결정할 메소드
     behaviorHandler() {
@@ -154,24 +190,19 @@ export default {
         })
     },
     checkURL() {
-      axios.post(this.serverURL['check'], {url: this.url})
-        .then( res => {
-          const alert = this.alertSetting
+      const result = getShortCode(this.url)
 
-          // 실패한 경우에는 v-alert로 표시한다.
-          if (!res.data.flag) {
-            alert.isSuccess = true        // 반환 후 아래에 메시지를 표시한다.
-            alert.type = 'warning'        // 메시지 박스의 테마
-            alert.msg = res.data.msg      // 표시할 메시지
-            alert.copyBtn = false         // Copy 버튼 삭제
-          
-          // 성공한 경우에는 LinkCheck 페이지로 이동한다.
-          } else {
-            
-          }
-        }).catch( ex => {
-          console.log(ex)
-        })
+      // 올바른 URL 형식인지 검사한다.
+      if (!result.flag) {
+        alert(result.msg)
+        return
+      }
+
+      // LinkCheck 페이지로 이동한다.
+      this.$router.push({
+        name: 'LinkCheck',
+        params: {shortURL: result.shortCode}
+      })
     },
     clipboardSuccess() {
       const snack = this.snackSetting
@@ -189,7 +220,9 @@ export default {
     }
   },
   mounted() {
-    this.setOnMounted()
-  }
+    // 최초 값 할당 및 동작 설정
+    this.behaviorSetting.type = (!this.behavior) ? 'Shorten' : this.behavior
+    this.setBehavior()
+  },
 }
 </script>

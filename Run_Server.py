@@ -83,34 +83,28 @@ def update_user():
     # 유저를 검색한다.
     user_info = Mongo.find_data({'email': email},'USERS')
 
-    # 신규 유저인 경우 추가 로그인
+    # 신규 유저인 경우 추가
     if user_info is None:
         Mongo.upsert_user(id_token, email)
-        return jsonify({
-            'flag': True
-        })
+        return jsonify({'flag': True})
 
-    banned = user_info['banned']
     # 정지되지 않은 정상 유저인 경우 로그인시간 갱신
+    banned = user_info['banned']
     if not banned:
         Mongo.upsert_user(id_token, email)
-        return jsonify({
-            'flag': True,
-        })
+        return jsonify({'flag': True})
     # 정지 됐을경우
     else:
         return jsonify({'flag': False, 'msg': 'This user is banned'})
 
     # 나머지 경우
-    return jsonify({
-        'flag':True
-        })
+    return jsonify({'flag':True})
 
 # 축약된 URL의 원본 URL을 반환하는 페이지
 @app.route('/api/check', methods=['GET', 'POST'])
 def check_url():
     short_url = request.json['url']
-
+    
     # 축약 링크를 DB에서 검색한다.
     raw_url = Mongo.get_raw_url(short_url)
 
@@ -133,7 +127,7 @@ def redirect_url(short_url):
 
     # 페이지가 존재하지 않으면 오류 페이지 출력
     if Raw_URL is None:
-        return render_template('page_404.html')
+        return "Page Not Found"
 
     return redirect(Raw_URL)
 

@@ -41,6 +41,7 @@ export default {
     ...mapMutations(['setUserInfo'])
   },
   mounted() {
+    // 로그인 기능 할당
     const uid = this._uid
     gapi.load('auth2', function() {
       userLogin(uid)
