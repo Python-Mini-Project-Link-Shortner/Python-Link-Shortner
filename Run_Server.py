@@ -47,8 +47,8 @@ def shorten_url():
 
         # DB에 추가
         db_data = {
-            'Raw_URL': raw_url,
-            'Short_URL': short_url
+            'rawURL': raw_url,
+            'shortURL': short_url
         }
         flag = Mongo.save_data(db_data, 'LINKS')
 
@@ -75,6 +75,8 @@ def update_user():
     # 유저 정보 가져오기
     email = request.json['email']
     id_token = request.json['idToken']
+
+    print("what")
 
     # 유저를 검색한다.
     user_info = Mongo.find_data({'email': email},'USERS')
@@ -131,9 +133,9 @@ def redirect_url(short_url):
 def link_list():
     req_data = request.get_json()
 
-    user_id = req_data['user_id']
+    user_id = req_data['userID']
     page = req_data['page']
-    item_count = req_data['item_count']
+    item_count = req_data['itemCount']
 
     res = Mongo.get_link_pagination(user_id, page, item_count)
     if res is None: return None
@@ -146,19 +148,65 @@ def link_list():
 def delete_link():
     req_data = request.get_json()
 
-    user_id = req_data['user_id']
-    item_list = req_data['delete_id']
+    user_id = req_data['userID']
+    item_list = req_data['deleteID']
 
+    # TODO :
+    # https://stackoverflow.com/questions/57140559/mongodb-query-using-where-and-in-clause
+    # MongoDB의 $in을 통해 한번에 변경하는거로 바꿔보자
     delete_all = True
-    for id in item_list:
-        res = Mongo.delete_link(user_id, id)
+    for delete_id in item_list:
+        res = Mongo.delete_link(user_id, delete_id)
         if res == False: delete_all = False
         # TODO :
         # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
         # 기술 지원 따로 있음. 찾아보기.
 
-    if delete_all is True: return jsonify({ 'Flag': True })
-    return jsonify({ 'Flag': False })
+    if delete_all is True: return jsonify({ 'flag': True })
+    return jsonify({ 'flag': False })
+
+@app.route('/api/changeTag', methods=['POST'])
+def change_tag():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    item_list = req_data['changeID']
+    tag_name = req_data['tagName']
+
+    # TODO :
+    # https://stackoverflow.com/questions/57140559/mongodb-query-using-where-and-in-clause
+    # MongoDB의 $in을 통해 한번에 변경하는거로 바꿔보자
+    change_all = True
+    for change_id in item_list:
+        res = Mongo.change_tag(user_id, change_id, tag_name)
+        if res == False: change_all = False
+        # TODO :
+        # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
+        # 기술 지원 따로 있음. 찾아보기.
+
+    if change_all is True: return jsonify({ 'flag': True })
+    return jsonify({ 'flag': False })
+
+@app.route('/api/deleteTag', methods=['POST'])
+def delete_tag():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    item_list = req_data['deleteID']
+
+    # TODO :
+    # https://stackoverflow.com/questions/57140559/mongodb-query-using-where-and-in-clause
+    # MongoDB의 $in을 통해 한번에 변경하는거로 바꿔보자
+    delete_all = True
+    for delete_id in item_list:
+        res = Mongo.delete_tag(user_id, delete_id)
+        if res == False: delete_all = False
+        # TODO :
+        # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
+        # 기술 지원 따로 있음. 찾아보기.
+
+    if delete_all is True: return jsonify({ 'flag': True })
+    return jsonify({ 'flag': False })
 
 if __name__ == "__main__":
     print(app.root_path)

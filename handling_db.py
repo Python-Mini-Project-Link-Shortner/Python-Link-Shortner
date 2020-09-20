@@ -104,7 +104,7 @@ class MongoDB(MongoClient):
 
         collection.update_one({'email': email}, { 
                 '$setOnInsert': { 'banned': False }, 
-                '$set': { 'lastLogin': datetime.now(), 'id_token': id_token }
+                '$set': { 'lastLogin': datetime.now(), 'idToken': id_token }
             }, upsert=True)
 
     def increase_id(self):
@@ -124,18 +124,36 @@ class MongoDB(MongoClient):
     def get_link_pagination(self, user_id, page = 1, item_count = 10):
         collection = self[self._db][self._col]
 
-        res = collection.find({ 'User_ID': user_id })
+        res = collection.find({ 'userID': user_id })
         if res is None: return None
 
-        return Pagination.paging(res, [('Make_Date', -1)], page, item_count)
+        return Pagination.paging(res, [('makeDate', -1)], page, item_count)
 
     # user_id: 현재 로그인한 사용자 아이디
     # delete_id: 삭제하고픈 Link의 ID
     def delete_link(self, user_id, delete_id):
         collection = self[self._db][self._col]
 
-        result = collection.delete_one({ '_id': ObjectId(delete_id), 'User_ID': user_id })
+        result = collection.delete_one({ '_id': ObjectId(delete_id), 'userID': user_id })
 
         # 정상적으로 삭제되었을경우 True 반환
-        if result.deleted_count == 1 : return True
+        if result.deleted_count == 1: return True
+        return False
+
+    def change_tag(self, user_id, change_id, tag_name):
+        collection = self[self._db][self._col]
+
+        result = collection.update_one({ '_id': ObjectId(change_id), 'userID': user_id }, { '$set': { 'tagName': tag_name } })
+
+        # 정상적으로 변경되었을경우 True 반환
+        if result.matched_count == result.modified_count: return True
+        return False
+
+    def delete_tag(self, user_id, delete_id):
+        collection = self[self._db][self._col]
+
+        result = collection.update_one({ '_id': ObjectId(delete_id), 'userID': user_id }, { '$unset': { 'tagName': '' } })
+
+        # 정상적으로 변경되었을경우 True 반환
+        if result.modified_count == 1: return True
         return False
