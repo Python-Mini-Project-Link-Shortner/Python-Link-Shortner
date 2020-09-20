@@ -2,11 +2,13 @@ from handling_db import MongoDB
 from handling_url import create_short_url, validate_url, normalize_url
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_cors import CORS
+from whitenoise import WhiteNoise
 from data_encoder import DataEncoder
 
-app = Flask(__name__,
-            static_folder='static',
-            template_folder = "templates")
+app = Flask(__name__)
+# style.css를 로딩하면
+# http://localhost:5000/assets/style.css로 로딩된다
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='frontend/', prefix='dist/')
 Mongo = MongoDB()
 
 # enable CORS

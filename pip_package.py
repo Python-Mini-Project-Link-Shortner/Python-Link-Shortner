@@ -10,5 +10,6 @@ try:
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'voluptuous'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'short_url'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'flask-cors'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'whitenoise'])
 except Exception as e:
     print(e)
