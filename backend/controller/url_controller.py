@@ -18,10 +18,16 @@ def shorten_url():
         res_data['msg'] = 'Invalid URL'
         return jsonify(res_data)
 
+    # 이미 저장된 URL인지 확인
+    raw_url = url_service.normalize_url(raw_url)
+    short_url = url_service.get_url(raw_url, target="short")
+
     # 축약 URL을 등록한다.
-    short_url = url_service.register_url(raw_url)
-    if short_url == False:
-        # 저장에 실패한 경우
+    if short_url == None:
+        short_url = url_service.register_url(raw_url)
+
+    # URL 등록에 실패한 경우
+    if short_url == None:
         res_data['flag'] = False
         res_data['msg']  = 'DB save failed'
         return jsonify(res_data)
