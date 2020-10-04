@@ -73,7 +73,7 @@ def get_url(url, target="short"):
         search_from = 'shortURL'
         search_for  = 'rawURL'
 
-    res = collection.find({ search_from: url })
+    res = collection.find_one({ search_from: url })
 
     if res is None: return None
     return res[search_for]

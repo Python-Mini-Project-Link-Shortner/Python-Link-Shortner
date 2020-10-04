@@ -3,7 +3,7 @@ from backend.service    import url_service
 
 url_controller = Blueprint('url_controller', __name__)
 
-@url_controller.route('shorten', methods=['GET', 'POST'])
+@url_controller.route('/shorten', methods=['GET', 'POST'])
 def shorten_url():
     # 원본 URL 데이터 가져오기
     req_data = request.get_json()
@@ -39,7 +39,7 @@ def shorten_url():
     return jsonify(res_data)
 
 # 축약된 URL의 원본 URL을 반환하는 페이지
-@url_controller.route('check', methods=['GET', 'POST'])
+@url_controller.route('/check', methods=['GET', 'POST'])
 def check_url():
     req_data = request.get_json()
     res_data = { 'flag': True }

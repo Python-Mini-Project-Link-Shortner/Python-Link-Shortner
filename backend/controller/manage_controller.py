@@ -3,7 +3,7 @@ from backend.service        import link_service
 
 manage_controller = Blueprint('manage_controller', __name__)
 
-@manage_controller.route('linkList', methods=['POST'])
+@manage_controller.route('/linkList', methods=['POST'])
 def link_list():
     req_data = request.get_json()
 
@@ -16,7 +16,7 @@ def link_list():
 
     return res
 
-@manage_controller.route('deleteLink', methods=['POST'])
+@manage_controller.route('/deleteLink', methods=['POST'])
 def delete_link():
     req_data = request.get_json()
 
@@ -36,7 +36,7 @@ def delete_link():
 
     return res
 
-@manage_controller.route('changeTag', methods=['POST'])
+@manage_controller.route('/changeTag', methods=['POST'])
 def change_tag():
     req_data = request.get_json()
 
@@ -55,7 +55,7 @@ def change_tag():
 
     return res
 
-@manage_controller.route('deleteTag', methods=['POST'])
+@manage_controller.route('/deleteTag', methods=['POST'])
 def delete_tag():
     req_data = request.get_json()
 
