@@ -415,6 +415,7 @@ export default {
           this.stopLoading()
         })
     },
+    // 선택한 링크의 태그 삭제하는 함수
     deleteSingleTag(linkID) {
       this.startLoading()
 

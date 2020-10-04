@@ -4,13 +4,9 @@ from flask  import (
     redirect, jsonify, 
     Blueprint
     )
-from app    import create_app
-from backend.handling_db import MongoDB
+from app                    import create_app
 
 app = create_app()
-
-# DB 따로 만들기
-Mongo = MongoDB()
 
 if __name__ == "__main__":
     print(app.root_path)
