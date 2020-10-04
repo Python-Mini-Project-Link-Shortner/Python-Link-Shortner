@@ -44,19 +44,16 @@ def change_tag():
     item_list = req_data['changeID']
     tag_name = req_data['tagName']
 
-    # TODO :
-    # https://stackoverflow.com/questions/57140559/mongodb-query-using-where-and-in-clause
-    # MongoDB의 $in을 통해 한번에 변경하는거로 바꿔보자
-    change_all = True
-    for change_id in item_list:
-        res = Mongo.change_tag(user_id, change_id, tag_name)
-        if res == False: change_all = False
-        # TODO :
-        # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
-        # 기술 지원 따로 있음. 찾아보기.
+    res_data = jsonify({ 'flag': True })
 
-    if change_all is True: return jsonify({ 'flag': True })
-    return jsonify({ 'flag': False })
+    if len(item_list) == 1:
+        res = link_service.change_tag(user_id, item_list[0], tag_name)
+        if res == False: res_data['flag'] = False
+    else:
+        res = link_service.change_tag_array(user_id, item_list, tag_name)
+        if res == False: res_data['flag'] = False
+
+    return res
 
 @manage_controller.route('deleteTag', methods=['POST'])
 def delete_tag():
@@ -65,16 +62,13 @@ def delete_tag():
     user_id = req_data['userID']
     item_list = req_data['deleteID']
 
-    # TODO :
-    # https://stackoverflow.com/questions/57140559/mongodb-query-using-where-and-in-clause
-    # MongoDB의 $in을 통해 한번에 변경하는거로 바꿔보자
-    delete_all = True
-    for delete_id in item_list:
-        res = Mongo.delete_tag(user_id, delete_id)
-        if res == False: delete_all = False
-        # TODO :
-        # 나중에 res가 false이면 MongoDB가 transaction 지원 없으므로 SQL 전부 저장해서 원복시켜야 합니다
-        # 기술 지원 따로 있음. 찾아보기.
+    res_data = jsonify({ 'flag': True })
 
-    if delete_all is True: return jsonify({ 'flag': True })
-    return jsonify({ 'flag': False })
+    if len(item_list) == 1:
+        res = link_service.delete_tag(user_id, item_list[0])
+        if res == False: res_data['flag'] = False
+    else:
+        res = link_service.delete_tag_array(user_id, item_list)
+        if res == False: res_data['flag'] = False
+
+    return res
