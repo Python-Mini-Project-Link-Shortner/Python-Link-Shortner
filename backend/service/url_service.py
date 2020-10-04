@@ -117,29 +117,25 @@ def register_url(raw_url):
         raw_url (str): 원본 URL
 
     Returns:
-        str: DB에 등록된 축약 URL을 반환한다.
+        str: DB에 등록된 축약 URL
+        None: 저장에 실패한 경우
     """
     collection = db.get_collection()
 
-    raw_url     = normalize_url(raw_url)
-    short_url   = get_url(raw_url, target="short")
+    unique_id = get_unique_id()
+    short_url = create_short_url(unique_id)
 
-    # 미등록인 경우 새로 등록
-    if short_url is None:
-        unique_id = get_unique_id()
-        short_url = create_short_url(unique_id)
-
-        # DB에 신규등록
-        data = {
-            'rawURL': raw_url,
-            'shortURL': short_url
-        }
-        try:
-            collection.insert_one(data)
-        except Exception as e:
-            # 저장에 실패한 경우 False 반환
-            print(e)
-            return False
-        increase_id()
+    # DB에 신규등록
+    data = {
+        'rawURL': raw_url,
+        'shortURL': short_url
+    }
+    try:
+        collection.insert_one(data)
+    except Exception as e:
+        # 저장에 실패한 경우 None 반환
+        print(e)
+        return None
+    increase_id()
 
     return short_url
