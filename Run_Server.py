@@ -1,21 +1,13 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify, Blueprint
-from flask_cors import CORS
-from whitenoise import WhiteNoise
-from backend.controller.main_controller import main_controller
-from backend.controller.login_controller import login_controller
-
+from flask  import (
+    render_template, 
+    url_for, request, 
+    redirect, jsonify, 
+    Blueprint
+    )
+from app    import create_app
 from backend.handling_db import MongoDB
-from backend.handling_url import create_short_url, validate_url, normalize_url
-from backend.database.util.data_encoder import DataEncoder
 
-app = Flask(__name__, template_folder='frontend\dist', static_folder='frontend\dist')
-app.wsgi_app = WhiteNoise(app.wsgi_app, root='frontend', prefix='dist')
-app.json_encoder = DataEncoder # Encoder change to Custom Encoder
-CORS(app, resources={r'/*': {'origins': '*'}}) # enable CORS
-
-# Register Blueprints
-# https://flask.palletsprojects.com/en/1.1.x/blueprints/
-app.register_blueprint(main_controller)
+app = create_app()
 
 # DB 따로 만들기
 Mongo = MongoDB()
