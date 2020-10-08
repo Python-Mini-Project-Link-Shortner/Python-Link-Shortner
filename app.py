@@ -16,7 +16,7 @@ def create_app():
     # WhiteNoise 세팅
     app.wsgi_app = WhiteNoise(
         app.wsgi_app,
-        root="frontend/dist/",           # 정적 파일을 찾을 폴더 경로
+        root="frontend/dist/",  # 파일이 위치한 로컬 경로
         prefix="dist/"          # 정적 파일 요청임을 구분할 URL 접두사
     )
     # 인코더 변경

@@ -37,20 +37,21 @@ def is_normal_user(email):
 
     return True
 
-def upsert_user(email, id_token = '', banned = False, last_login = datetime.now()):
+def upsert_user(email, payload):
     """유저에 대해 update와 insert를 동시에 수행한다
 
     Args:
 
             email (str): 저장할 혹은 갱신할 email
-            id_token (str, optional): Google OAUTH의 id_token. Defaults to ''.
-            banned (bool, optional): 정지상태. Defaults to False.
-            last_login ([type], optional): 마지막 로그인 시간. 자동으로 현재 시간으로 갱신한다. Defaults to datetime.now().
+            payload (Obj): 갱신할 정보. { 'field': value } 형식으로 전달.
     """
     collection = db.get_collection("USERS")
 
     collection.update_one({ 'email': email }, {
-        '$setOnInsert': { 'banned': False },
-        '$set': { 'lastLogin': last_login, 'idToken': id_token }
+        '$setOnInsert': { 
+            'banned': False, 
+            'created': datetime.now()
+            },
+        '$set': payload
     }, upsert=True)
 

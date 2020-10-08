@@ -1,5 +1,6 @@
-from flask import Blueprint, session, request, jsonify
-from backend.service import user_service
+from flask              import Blueprint, session, request, jsonify
+from backend.service    import user_service
+from datetime           import datetime
 
 login_controller = Blueprint('login_controller', __name__)
 
@@ -9,15 +10,21 @@ def update_user():
     # 클라이언트가 보낸 유저 정보 가져오기
     req_data = request.get_json()
     email = req_data['email']
-    id_token = req_data['idToken']
 
-    # TODO: Login Time과 Create Time 나누고, 아이디가 있는지 없는지 구분해서 데이턴 넣어주고
-    # ban 상태일 때 데이터 구분해서 넣어줘야한다
+    # 반환값 및 유저 정보
     res_data = { 'flag': True }
-    if not user_service.is_normal_user(email):
+    update_data = { 'lastAccess': datetime.now() }
+    user_info = user_service.get_user_info(email)
+
+    # 정지된 유저인 경우
+    if user_info['banned']:
         res_data['flag'] = False
         res_data['msg'] = 'This user is banned'
-        return jsonify(res_data)
-
-    user_service.upsert_user(email, id_token)
+    # 일반 유저인 경우
+    else:
+        res_data['flag'] = True
+        update_data['lastLogin'] = datetime.now()
+    
+    # 업데이트 후 종료
+    user_service.upsert_user(email, update_data)
     return jsonify(res_data)

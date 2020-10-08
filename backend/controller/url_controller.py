@@ -57,14 +57,3 @@ def check_url():
     res_data['flag'] = True
     res_data['link'] = raw_url
     return jsonify(res_data)
-
-@url_controller.route('/<short_url>')
-def redirect_url(short_url):
-    # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
-    raw_url = url_service.get_url(short_url)
-
-    # 페이지가 존재하지 않으면 오류 페이지 출력
-    if raw_url is None:
-        return "Page Not Found"
-
-    return redirect(raw_url)

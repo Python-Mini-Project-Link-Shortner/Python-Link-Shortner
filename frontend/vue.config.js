@@ -5,5 +5,7 @@ module.exports = {
     "vuetify"
   ],
 
-  publicPath: '/dist'
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/dist'
+    : '/'
 }
