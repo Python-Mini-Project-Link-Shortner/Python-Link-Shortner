@@ -47,11 +47,29 @@ def upsert_user(email, payload):
     """
     collection = db.get_collection("USERS")
 
-    collection.update_one({ 'email': email }, {
-        '$setOnInsert': { 
-            'banned': False, 
-            'created': datetime.now()
-            },
-        '$set': payload
-    }, upsert=True)
+    # 생성 시 기본값 설정
+    now = datetime.now()
+    defaults = {
+        'banned': False,
+        'lastLogin': now,
+        'lastAccess': now,
+        'created': now,
+        'idToken': ""
+    }
+    for key in payload:
+        if key in defaults: defaults.pop(key)
+
+    # 기본설정할 것이 있을 때만 upsert
+    if not defaults:
+        collection.update_one({'email': email}, {
+            '$set': payload
+        })
+    else:
+        collection.update_one({ 'email': email }, {
+            '$setOnInsert': { 
+                'banned': False, 
+                'created': datetime.now()
+                },
+            '$set': payload
+        }, upsert=True)
 

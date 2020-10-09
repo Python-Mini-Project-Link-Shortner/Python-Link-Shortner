@@ -113,7 +113,7 @@ export default {
     }
   }),
   computed: {
-    ...mapState(['serverURL']),
+    ...mapState(['serverURL', 'userInfo']),
     normalizedBehavior() {
       let behavior
 
@@ -178,7 +178,13 @@ export default {
     },
     // 서버로부터 축약 링크를 반환받는다. => Shorten 버튼
     shortenURL() {
-      axios.post(this.serverURL['shorten'], {url: this.url})
+      const userID = this.userInfo['email']
+      const requestData = {
+        url: this.url,
+        email: userID
+      }
+
+      axios.post(this.serverURL['shorten'], requestData)
         .then( res => {
           const alert = this.alertSetting
 

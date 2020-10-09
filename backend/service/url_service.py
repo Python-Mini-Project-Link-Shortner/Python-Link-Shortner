@@ -110,12 +110,12 @@ def increase_id():
 
     return res.modified_count > 0        
 
-def register_url(raw_url):
+def register_url(raw_url, user_id):
     """축약 링크를 등록한다.
 
     Args:
         short_url (str): 축약 URL
-        raw_url (str): 원본 URL
+        user_id   (str): 유저 이메일
 
     Returns:
         str: DB에 등록된 축약 URL
@@ -123,14 +123,19 @@ def register_url(raw_url):
     """
     collection = db.get_collection()
 
+    # 축약 URL 생성
     unique_id = get_unique_id()
     short_url = create_short_url(unique_id)
 
     # DB에 신규등록
     data = {
         'rawURL': raw_url,
-        'shortURL': short_url
+        'shortURL': short_url,
+        'userID': user_id,
+        'makeDate': datetime.now(),
+        'favorite': False
     }
+
     try:
         collection.insert_one(data)
     except Exception as e:

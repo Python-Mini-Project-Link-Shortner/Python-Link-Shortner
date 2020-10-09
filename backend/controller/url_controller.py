@@ -5,9 +5,10 @@ url_controller = Blueprint('url_controller', __name__)
 
 @url_controller.route('/shorten', methods=['GET', 'POST'])
 def shorten_url():
-    # 원본 URL 데이터 가져오기
+    # 원본 URL 및 계정 가져오기
     req_data = request.get_json()
     raw_url = req_data['url']
+    user_id = req_data['email']
 
     # 반환 변수 설정
     res_data = {'flag': True}
@@ -24,7 +25,7 @@ def shorten_url():
 
     # 축약 URL을 등록한다.
     if short_url == None:
-        short_url = url_service.register_url(raw_url)
+        short_url = url_service.register_url(raw_url, user_id)
 
     # URL 등록에 실패한 경우
     if short_url == None:
