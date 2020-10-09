@@ -5,6 +5,7 @@ DEFAULT_COL = 'link_table'
 DEFAULT_DB = 'slink'
 COLLECTIONS = {
     'LINKS': 'link_table',
+    'STATS': 'stat_table',
     'USERS': 'user_table',
     'CONFIG': 'config'
 }
