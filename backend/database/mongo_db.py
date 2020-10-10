@@ -49,4 +49,25 @@ class MongoDB(MongoClient):
 
         return self[self._db][COLLECTIONS[name]]
 
+    def get_config_var(self, name):
+        """DB에 저장된 환경값을 불러온다. 
+
+        Args:
+            name (str): 환경설정 변수명
+
+        Raises:
+            pymongo.erros.InvalidDocument: 잘못된 환경변수 이름
+        """
+        collection = self[self._db][COLLECTIONS['CONFIG']]
+
+        my_query    = {'variable': name}            # 검색필드
+        my_result   = {'value': True}               # 결과필드
+
+        res = collection.find_one(my_query, my_result)
+
+        if res is None:
+            print(f"변수명 {name}이 존재하지 않습니다.")
+            raise errors.InvalidDocument(f"환경설정({name})이 존재하지 않습니다.")
+        return res['value']
+
 db = MongoDB()
