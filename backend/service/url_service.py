@@ -159,15 +159,17 @@ def get_stats_info(short_url):
 
     return collection.find_one({ 'shortURL': short_url })
 
-def extract_stats(environ, stats:dict):
+def extract_stats(headers, environ, stats:dict):
     """통계정보를 stats에 반영한다.
 
     Args:
-        environ (dict): request.environ
+        headers       : Flask request.headers
+        environ (dict): Flask request.environ
         stats   (dict): 기존 통계 정보
     Returns:
         None: stats에 바로 반영된다.
     """
+
     # 0. 클릭 카운트를 높인다.
     stats['count'] += 1
 
@@ -187,9 +189,19 @@ def extract_stats(environ, stats:dict):
     # 2. 시간을 기록한다.
     stats['time'].append(datetime.now())
 
+    # 3. 국가 정보를 기록한다.
+    if headers.getlist("X-Forwarded-For"):
+        # 프록시 서버가 있는 경우
+        user_ip = headers.getlist("X-Forwarded-For")[0]
+    else:
+        user_ip = environ.get('REMOTE_ADDR')
+
+    print(user_ip)
+
     # 불필요한 정보 지우기
     stats.pop('_id', None)
     stats.pop('shortURL', None)
+
 
 def upsert_stats(short_url, stats):
     """통계 정보를 업데이트한다.

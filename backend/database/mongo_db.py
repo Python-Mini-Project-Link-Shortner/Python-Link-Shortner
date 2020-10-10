@@ -1,12 +1,12 @@
 from pymongo import MongoClient, errors, collection
 
 DEFAULT_HOST = 'mongodb+srv://admin:1234@links.fc8p4.mongodb.net/PYTHON-LINK-SHORTNER?retryWrites=true&w=majority'
-DEFAULT_COL = 'link_table'
+DEFAULT_COL = 'linkTable'
 DEFAULT_DB = 'slink'
 COLLECTIONS = {
-    'LINKS': 'link_table',
-    'STATS': 'stat_table',
-    'USERS': 'user_table',
+    'LINKS': 'linkTable',
+    'STATS': 'statTable',
+    'USERS': 'userTable',
     'CONFIG': 'config'
 }
 
