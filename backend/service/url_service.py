@@ -1,14 +1,11 @@
 # Python Standard Libraries
-from datetime                   import datetimev
+from datetime                   import datetime
 from urllib.parse               import urlparse
 # Third-Party Libraries
 from short_url                  import encode_url
-import geoip2.webservice
+import geoip2.database
 # Custom modules
 from backend.database.mongo_db  import db
-
-# 전역변수
-geolite_key = db.get_config_var('geolite_key') # geolite API key
 
 def create_short_url(unique_id:int):
     """7자리 문자열을 생성한다.
@@ -203,12 +200,14 @@ def extract_stats(headers, environ, stats:dict):
     else:
         user_ip = environ.get('REMOTE_ADDR')
         # ip로부터 국가명 추출
-    with geoip2.webservice.Client(geolite_key['id'], geolite_key['key']) as client:
-        response = client.insights(user_ip)
-        country = response.country.name
-    stats['country'][country] = stats['country'].get(country, 0) + 1
+    with geoip2.database.Reader('backend/database/GeoLite2-Country.mmdb') as reader:
+        try:
+            response = reader.country(user_ip)
+            country = response.country.name
+        except:
+            country = 'Not Found'
 
-    print('국가명: ', country)
+    stats['country'][country] = stats['country'].get(country, 0) + 1
 
     # 4. 브라우저 정보를 기록한다.
 
