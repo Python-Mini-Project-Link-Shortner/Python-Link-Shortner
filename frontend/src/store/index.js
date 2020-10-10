@@ -23,7 +23,11 @@ export default new Vuex.Store({
       linkPageURL: 'http://127.0.0.1:5000/api/linkList',
       deleteLinkURL: 'http://127.0.0.1:5000/api/deleteLink',
       changeTagURL: 'http://127.0.0.1:5000/api/changeTag',
-      deleteTagURL: 'http://127.0.0.1:5000/api/deleteTag'
+      deleteTagURL: 'http://127.0.0.1:5000/api/deleteTag',
+      checkFavoriteURL: 'http://127.0.0.1:5000/api/checkFavorite',
+      uncheckFavoriteURL: 'http://127.0.0.1:5000/api/uncheckFavorite',
+      hideNameListURL: 'http://127.0.0.1:5000/api/hideNameList',
+      hideURL: 'http://127.0.0.1:5000/api/hideLink'
     },
     moduleNames:{
       main: 'main',
