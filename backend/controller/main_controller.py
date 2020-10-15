@@ -22,7 +22,12 @@ def redirect_url(short_url):
     # HTTP로부터 통계정보 추출
     stats = url_service.get_stats_info(short_url)
     if stats is None: stats = {}
-    url_service.extract_stats(request.headers, request.environ, stats)
+    url_service.extract_stats(
+        request.headers, 
+        request.environ, 
+        request.user_agent, 
+        stats
+        )
 
     # 통계정보 저장
     url_service.upsert_stats(short_url, stats)

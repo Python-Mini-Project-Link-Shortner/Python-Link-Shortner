@@ -3,7 +3,7 @@ from datetime                   import datetime
 from urllib.parse               import urlparse
 # Third-Party Libraries
 from short_url                  import encode_url
-import geoip2.database
+import geoip2.database          # ip -> location
 # Custom modules
 from backend.database.mongo_db  import db
 
@@ -163,12 +163,13 @@ def get_stats_info(short_url):
 
     return collection.find_one({ 'shortURL': short_url })
 
-def extract_stats(headers, environ, stats:dict):
+def extract_stats(headers, environ, user_agent, stats:dict):
     """통계정보를 stats에 반영한다.
 
     Args:
         headers       : Flask request.headers
         environ (dict): Flask request.environ
+        user_agent    : Flask request.user_agent
         stats   (dict): 기존 통계 정보
     Returns:
         None: stats에 바로 반영된다.
@@ -209,12 +210,13 @@ def extract_stats(headers, environ, stats:dict):
 
     stats['country'][country] = stats['country'].get(country, 0) + 1
 
-    # 4. 브라우저 정보를 기록한다.
+    # 4. 브라우저 및 OS 정보 기록
+    browser = user_agent.browser
+    platform = user_agent.platform
+    stats['browser'][browser] = stats['browser'].get(browser, 0) + 1
+    stats['platform'][platform] = stats['platform'].get(platform, 0) + 1
 
-    # 5. OS 정보를 기록한다.
-
-
-    # 불필요한 정보 지우기
+    # 불필요한 필드 삭제
     stats.pop('_id', None)
     stats.pop('shortURL', None)
 
