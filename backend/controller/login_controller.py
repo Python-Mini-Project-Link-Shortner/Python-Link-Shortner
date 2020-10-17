@@ -1,6 +1,10 @@
-from flask              import Blueprint, session, request, jsonify
-from backend.service    import user_service
+# Standard Libraries
 from datetime           import datetime
+from os                 import abort
+# Third Party Libraries
+from flask              import Blueprint, session, request, jsonify
+# Custom Modules
+from backend.service    import user_service, login_service
 
 login_controller = Blueprint('login_controller', __name__)
 
@@ -28,3 +32,17 @@ def update_user():
     # 업데이트 후 종료
     user_service.upsert_user(email, update_data)
     return jsonify(res_data)
+
+# Oauth 핸드쉐이크
+@login_controller.route('/authCode', methods=['GET','POST'])
+def oauth_shake():
+    req_data = request.get_json()
+
+    # X-Requested-With가 없는 경우 CSRF
+    if not request.headers.get('X-Requested-With'):
+        abort(403)
+
+    # 일회성 코드와 Access 토큰, Refresh 토큰 교환
+    login_service.handshake_oauth(req_data['code'])
+
+    return {'flag': True}

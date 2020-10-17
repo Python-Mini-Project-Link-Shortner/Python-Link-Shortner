@@ -54,7 +54,8 @@ def upsert_user(email, payload):
         'lastLogin': now,
         'lastAccess': now,
         'created': now,
-        'idToken': ""
+        'idToken': "",
+        'refreshToken': ""
     }
     for key in payload:
         if key in defaults: defaults.pop(key)

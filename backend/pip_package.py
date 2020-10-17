@@ -13,5 +13,10 @@ try:
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'whitenoise'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'gunicorn'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'geoip2'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-api-python-client'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-auth'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-auth-httplib2'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-auth-oauthlib'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'oauth2client'])
 except Exception as e:
     print(e)

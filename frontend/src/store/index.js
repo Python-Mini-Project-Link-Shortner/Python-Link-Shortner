@@ -18,6 +18,7 @@ export default new Vuex.Store({
     },
     serverURL: {
       login: 'http://127.0.0.1:5000/api/login',
+      authCode: 'http://127.0.0.1:5000/api/authCode',
       shorten:'http://127.0.0.1:5000/api/shorten',
       check: 'http://127.0.0.1:5000/api/check',
       linkPageURL: 'http://127.0.0.1:5000/api/linkList',
