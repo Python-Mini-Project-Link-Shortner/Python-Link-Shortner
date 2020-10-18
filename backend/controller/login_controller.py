@@ -11,13 +11,23 @@ login_controller = Blueprint('login_controller', __name__)
 # 신규유저 등록 및 로그인 시간을 갱신하는 페이지 (로그인 시)
 @login_controller.route('/login', methods=['GET','POST'])
 def update_user():
-    # 클라이언트가 보낸 유저 정보 가져오기
+    # 인증코드로부터 토큰 얻기
     req_data = request.get_json()
-    email = req_data['email']
+    auth_code = req_data['code']
+    user_data = login_service.handshake_oauth(auth_code)
+    
+    # 구글에서 얻은 유저 정보
+    email = user_data['email']
+    access_token = user_data['accessToken']
+    refresh_token = user_data['refreshToken']
 
     # 반환값 및 유저 정보
     res_data = { 'flag': True }
-    update_data = { 'lastAccess': datetime.now() }
+    update_data = { 
+        'lastAccess': datetime.now(),
+        'accessToken': access_token,
+        'refreshToken': refresh_token
+        }
     user_info = user_service.get_user_info(email)
 
     # 정지된 유저인 경우
@@ -32,17 +42,3 @@ def update_user():
     # 업데이트 후 종료
     user_service.upsert_user(email, update_data)
     return jsonify(res_data)
-
-# Oauth 핸드쉐이크
-@login_controller.route('/authCode', methods=['GET','POST'])
-def oauth_shake():
-    req_data = request.get_json()
-
-    # X-Requested-With가 없는 경우 CSRF
-    if not request.headers.get('X-Requested-With'):
-        abort(403)
-
-    # 일회성 코드와 Access 토큰, Refresh 토큰 교환
-    login_service.handshake_oauth(req_data['code'])
-
-    return {'flag': True}

@@ -54,7 +54,7 @@ def upsert_user(email, payload):
         'lastLogin': now,
         'lastAccess': now,
         'created': now,
-        'idToken': "",
+        'accessToken': "",
         'refreshToken': ""
     }
     for key in payload:

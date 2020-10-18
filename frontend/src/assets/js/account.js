@@ -14,16 +14,30 @@ const userLogin = function(elemID) {
   // 사용자 동의 후 실행할 함수
   const signInCallback = function(authResult) {
     const serverURL = store.state.serverURL
+    const loggedIn = true
 
     if (authResult['code']) {
-      console.log(authResult)
       // 일회성 코드를 서버로 보낸다.
-      axios.post(serverURL['authCode'], {code: authResult['code']}, {
+      axios.post(serverURL['login'], {code: authResult['code']}, {
         headers: {
           'X-Requested-With': 'XMLHttpRequest' // CSRF 공격 방지
         }
       }).then(res => {
-        console.log(res)
+        // 로그인 거부된 경우
+        if (!res.data.flag) {
+          alert(res.data.msg)
+          router.push({name:'Home'})
+        // 로그인 성공한 경우
+        } else {
+          const email = res['email']
+          const name = res['name']
+
+          // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
+          store.commit('setUserInfo', {loggedIn, email, name})
+          router.push({name: 'Manage'})
+        }
+      }).catch( ex => {
+          console.log(ex)
       })
     } else {
       alert("An Error Occurred!")
@@ -36,33 +50,6 @@ const userLogin = function(elemID) {
   element.addEventListener("click", function() {
     auth2.grantOfflineAccess().then(signInCallback)
   })
-
-  // // 로그인 기능을 적용한다. 1: 적용할 요소, 2: 옵션, 3: 성공시 콜백함수
-  // auth2.attachClickHandler(element, {}, function(googleUser) {
-  //   const serverURL = store.state.serverURL
-  //   const authResponse = googleUser.getAuthResponse()
-  //   const loggedIn = true
-  //   const idToken = ''
-  //   const email = googleUser.getBasicProfile().getEmail()
-  //   const name = googleUser.getBasicProfile().getName()
-  //   const expiresAt = authResponse.expires_at
-
-  //   axios.post(serverURL['login'], {email, idToken})
-  //   .then( res => {
-  //     // 로그인 거부된 경우
-  //     if (!res.data.flag) {
-  //       alert(res.data.msg)
-  //       router.push({name:'Home'})
-  //     // 로그인 성공한 경우
-  //     } else {
-  //       // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-  //       store.commit('setUserInfo', {loggedIn, idToken, email, name, expiresAt})
-  //       router.push({name: 'Manage'})
-  //     }
-  //   }).catch( ex => {
-  //     console.log(ex)
-  //   })
-  // })
 }
 
 const userLogout = function() {

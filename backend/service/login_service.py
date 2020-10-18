@@ -21,8 +21,15 @@ def handshake_oauth(code):
     )
 
     # 이메일과 아이디 받기
-    print('Acess Token: ', credentials.access_token)
-    print('Refresh Token: ', credentials.refresh_token)
-    print('ID Token: ', credentials.id_token)
+    access_token = credentials.access_token
+    refresh_token = credentials.refresh_token
+    email = credentials.id_token['email']
+    name = credentials.id_token['name']
 
-    # TODO: refresh 토큰 저장, 결과값 반환, frontend >> account.js 완성
+    # 반환
+    return {
+        'accessToken': access_token,
+        'refreshToken': refresh_token,
+        'email': email,
+        'name': name
+    }
