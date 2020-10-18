@@ -1,7 +1,11 @@
-from short_url                  import encode_url
-from urllib.parse               import urlparse
-from backend.database.mongo_db  import db
+# Python Standard Libraries
 from datetime                   import datetime
+from urllib.parse               import urlparse
+# Third-Party Libraries
+from short_url                  import encode_url
+import geoip2.database          # ip -> location
+# Custom modules
+from backend.database.mongo_db  import db
 
 def create_short_url(unique_id:int):
     """7자리 문자열을 생성한다.
@@ -159,12 +163,13 @@ def get_stats_info(short_url):
 
     return collection.find_one({ 'shortURL': short_url })
 
-def extract_stats(headers, environ, stats:dict):
+def extract_stats(headers, environ, user_agent, stats:dict):
     """통계정보를 stats에 반영한다.
 
     Args:
         headers       : Flask request.headers
         environ (dict): Flask request.environ
+        user_agent    : Flask request.user_agent
         stats   (dict): 기존 통계 정보
     Returns:
         None: stats에 바로 반영된다.
@@ -195,10 +200,23 @@ def extract_stats(headers, environ, stats:dict):
         user_ip = headers.getlist("X-Forwarded-For")[0]
     else:
         user_ip = environ.get('REMOTE_ADDR')
+        # ip로부터 국가명 추출
+    with geoip2.database.Reader('backend/database/GeoLite2-Country.mmdb') as reader:
+        try:
+            response = reader.country(user_ip)
+            country = response.country.name
+        except:
+            country = 'Not Found'
 
-    print(user_ip)
+    stats['country'][country] = stats['country'].get(country, 0) + 1
 
-    # 불필요한 정보 지우기
+    # 4. 브라우저 및 OS 정보 기록
+    browser = user_agent.browser
+    platform = user_agent.platform
+    stats['browser'][browser] = stats['browser'].get(browser, 0) + 1
+    stats['platform'][platform] = stats['platform'].get(platform, 0) + 1
+
+    # 불필요한 필드 삭제
     stats.pop('_id', None)
     stats.pop('shortURL', None)
 
@@ -235,3 +253,4 @@ def upsert_stats(short_url, stats):
             '$setOnInsert': defaults,
             '$set': stats
         }, upsert=True)
+
