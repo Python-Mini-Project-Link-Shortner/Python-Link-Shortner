@@ -75,7 +75,7 @@ def delete_link_array(user_id, id_array):
     """
     collection = db.get_collection()
 
-    result = collection.delete_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, id_array) }})
+    result = collection.delete_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, id_array)) }})
 
     if result.deleted_count == len(id_array): return True
     return False
@@ -116,7 +116,7 @@ def change_tag_array(user_id, id_array, tag_name):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, id_array) } }, { '$set': { 'tagName': tag_name } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, id_array)) } }, { '$set': { 'tagName': tag_name } })
 
     if result.modified_count == len(id_array): return True
     return False
@@ -155,7 +155,7 @@ def delete_tag_array(user_id, id_array):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, id_array) } }, { '$unset': { 'tagName': '' } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, id_array)) } }, { '$unset': { 'tagName': '' } })
 
     # 정상적으로 변경되었을경우 True 반환
     if result.modified_count == len(id_array): return True
@@ -196,7 +196,7 @@ def change_favorite_array(user_id, favorite_id_array, favorite):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, favorite_id_array) } }, { '$set': { 'favorite': favorite } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, favorite_id_array)) } }, { '$set': { 'favorite': favorite } })
 
     if result.modified_count == len(favorite_id_array): return True
     return False
@@ -258,7 +258,7 @@ def hide_link_array(user_id, hide_id_array, hide_name):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, hide_id_array) } }, { '$set': { 'hide': True, 'hideName': hide_name } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, hide_id_array)) } }, { '$set': { 'hide': True, 'hideName': hide_name } })
 
     if result.modified_count == len(hide_id_array): return True
     return False
@@ -296,7 +296,7 @@ def unhide_link_array(user_id, unhide_id_array):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': map(ObjectId, unhide_id_array) } }, { '$unset': { 'hideName': '' } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, unhide_id_array)) } }, { '$unset': { 'hideName': '' } })
 
     if result.modified_count == len(unhide_id_array): return True
     return False
