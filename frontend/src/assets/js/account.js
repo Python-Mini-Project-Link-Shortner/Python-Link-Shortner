@@ -29,9 +29,9 @@ const userLogin = function(elemID) {
           router.push({name:'Home'})
         // 로그인 성공한 경우
         } else {
-          const email = res['email']
-          const name = res['name']
-
+          const email = res.data['email']
+          const name = res.data['name']
+          console.log(res)
           // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
           store.commit('setUserInfo', {loggedIn, email, name})
           router.push({name: 'Manage'})
