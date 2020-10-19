@@ -31,7 +31,7 @@ const userLogin = function(elemID) {
         } else {
           const email = res.data['email']
           const name = res.data['name']
-          console.log(res)
+          
           // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
           store.commit('setUserInfo', {loggedIn, email, name})
           router.push({name: 'Manage'})
