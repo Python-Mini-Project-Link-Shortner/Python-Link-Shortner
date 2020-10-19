@@ -11,34 +11,44 @@ const userLogin = function(elemID) {
   const auth2 = gapi.auth2.init({
     client_id: clientID,
   })
-
-  // 로그인 기능을 적용한다. 1: 적용할 요소, 2: 옵션, 3: 성공시 콜백함수
-  auth2.attachClickHandler(element, {}, function(googleUser) {
+  // 사용자 동의 후 실행할 함수
+  const signInCallback = function(authResult) {
     const serverURL = store.state.serverURL
-    const authResponse = googleUser.getAuthResponse()
     const loggedIn = true
-    const idToken = ''
-    const email = googleUser.getBasicProfile().getEmail()
-    const name = googleUser.getBasicProfile().getName()
-    const expiresAt = authResponse.expires_at
 
-    console.log('Hi')
+    if (authResult['code']) {
+      // 일회성 코드를 서버로 보낸다.
+      axios.post(serverURL['login'], {code: authResult['code']}, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest' // CSRF 공격 방지
+        }
+      }).then(res => {
+        // 로그인 거부된 경우
+        if (!res.data.flag) {
+          alert(res.data.msg)
+          router.push({name:'Home'})
+        // 로그인 성공한 경우
+        } else {
+          const email = res['email']
+          const name = res['name']
 
-    axios.post(serverURL['login'], {email, idToken})
-    .then( res => {
-      // 로그인 거부된 경우
-      if (!res.data.flag) {
-        alert(res.data.msg)
-        router.push({name:'Home'})
-      // 로그인 성공한 경우
-      } else {
-        // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-        store.commit('setUserInfo', {loggedIn, idToken, email, name, expiresAt})
-        router.push({name: 'Manage'})
-      }
-    }).catch( ex => {
-      console.log(ex)
-    })
+          // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
+          store.commit('setUserInfo', {loggedIn, email, name})
+          router.push({name: 'Manage'})
+        }
+      }).catch( ex => {
+          console.log(ex)
+      })
+    } else {
+      alert("An Error Occurred!")
+    }
+  }
+
+  // 로그인 기능을 적용한다.
+  // grantOfflineAccess: auth2에 설정된 스코프에 대한 사용자의 동의를 얻은 후
+  //   서버측 핸드쉐이크를 위한 일회성 코드를 then으로 반환한다.
+  element.addEventListener("click", function() {
+    auth2.grantOfflineAccess().then(signInCallback)
   })
 }
 

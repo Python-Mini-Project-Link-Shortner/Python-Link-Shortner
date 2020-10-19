@@ -54,18 +54,39 @@
             <v-spacer></v-spacer>
 
             <!-- Dialog 버튼 -->
-            <v-btn icon dark color="success" @click.stop="openDialog(DialogName.Favorite, link._id)">
-              <v-icon>mdi-heart-outline</v-icon>
-            </v-btn>
-            <v-btn icon dark color="info" @click.stop="openDialog(DialogName.Tag, link._id);">
-              <v-icon>mdi-tag-outline</v-icon>
-            </v-btn>
-            <v-btn icon dark color="warning" @click.stop="openDialog(DialogName.Hide, link._id);">
-              <v-icon>mdi-eye-off-outline</v-icon>
-            </v-btn>
-            <v-btn icon dark color="error" @click.stop="openDialog(DialogName.Delete, link._id);">
-              <v-icon>mdi-delete-outline</v-icon>
-            </v-btn>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark color="success" v-bind="attrs" v-on="on" @click.stop="openDialog(DialogName.Favorite, RequestMode.Single, link._id)">
+                  <v-icon v-if="link.favorite">mdi-heart</v-icon>
+                  <v-icon v-else>mdi-heart-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>즐겨찾기</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark color="info" v-bind="attrs" v-on="on" @click.stop="openDialog(DialogName.Tag, RequestMode.Single, link._id);">
+                  <v-icon>mdi-tag-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>태그변경</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark color="warning" v-bind="attrs" v-on="on" @click.stop="openDialog(DialogName.Hide, RequestMode.Single, link._id);">
+                  <v-icon>mdi-eye-off-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>숨기기</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark color="error" v-bind="attrs" v-on="on" @click.stop="openDialog(DialogName.Delete, RequestMode.Single, link._id);">
+                  <v-icon>mdi-delete-outline</v-icon>
+                </v-btn>
+              </template>
+              <span>링크삭제</span>
+            </v-tooltip>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -84,18 +105,38 @@
           <v-icon v-else>mdi-plus</v-icon>
         </v-btn>
       </template>
-      <v-btn fab dark small color="error" :disabled="fabDisabled" @click.stop="">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="warning" :disabled="fabDisabled" @click.stop="">
-        <v-icon>mdi-eye-off</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="info" :disabled="fabDisabled" @click.stop="">
-        <v-icon>mdi-tag</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="success" :disabled="fabDisabled" @click.stop="">
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn fab dark small color="error" v-bind="attrs" v-on="on" :disabled="fabDisabled" @click.stop="openDialog(DialogName.Delete, RequestMode.Multiple)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <span>선택한 링크들을 삭제합니다</span>
+      </v-tooltip>
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn fab dark small color="warning" v-bind="attrs" v-on="on" :disabled="fabDisabled" @click.stop="openDialog(DialogName.Hide, RequestMode.Multiple)">
+            <v-icon>mdi-eye-off</v-icon>
+          </v-btn>
+        </template>
+        <span>선택한 링크들을 숨깁니다</span>
+      </v-tooltip>
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn fab dark small color="info" v-bind="attrs" v-on="on" :disabled="fabDisabled" @click.stop="openDialog(DialogName.Tag, RequestMode.Multiple)">
+            <v-icon>mdi-tag</v-icon>
+          </v-btn>
+        </template>
+        <span>선택한 링크들의 태그를 변경합니다</span>
+      </v-tooltip>
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn fab dark small color="success" v-bind="attrs" v-on="on" :disabled="fabDisabled" @click.stop="openDialog(DialogName.Favorite, RequestMode.Multiple)">
+            <v-icon>mdi-heart</v-icon>
+          </v-btn>
+        </template>
+        <span>선택한 링크들의 즐겨찾기를 변경합니다</span>
+      </v-tooltip>
     </v-speed-dial>
 
     <!-- Dialog 모음 -->
@@ -103,16 +144,111 @@
       <!-- 즐겨찾기 Dialog -->
       <v-dialog v-model="dialogs.favoriteOpen" width="360">
         <v-card>
-          <v-card-title class="headline">즐겨찾기 추가</v-card-title>
-          <v-card-text>
-            ~~~~~~~~~~ 을 즐겨찾기에 추가하시겠습니까?
+          <v-card-title class="headline">
+            즐겨찾기
+            <v-spacer></v-spacer>
+            <v-btn color="error" icon class="font-weight-bold" @click="closeDialog(DialogName.Favorite)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text class="pb-0">
+            즐겨찾기를 변경하시겠습니까?
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="success" text class="font-weight-bold" @click="closeDialog(DialogName.Favorite)">
-              확인
+            <v-btn color="success" text class="font-weight-bold" @click="closeDialog(DialogName.Favorite); changeFavorite(true);">
+              추가
             </v-btn>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Favorite)">
+            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Favorite); changeFavorite(false);">
+              삭제
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 태그 Dialog -->
+      <!-- TODO: 나중에 Change랑 Delete를 전부 이 Dialog 밑에 연결되서 나타나게 해서 추가적인 Dialog 없애보면 어떨까? -->
+      <v-dialog v-model="dialogs.tagOpen" max-width="420">
+        <v-card>
+          <v-card-title class="headline">
+            태그
+            <v-spacer></v-spacer>
+            <v-btn color="error" icon class="font-weight-bold" @click="closeDialog(DialogName.Tag); tagMode = TagMode.None">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text class="pb-0">
+            <v-row v-if="tagMode == TagMode.None">
+              <v-col cols="6">
+                <v-btn color="success" class="full-width" @click="tagMode = TagMode.Change;">
+                  태그 변경
+                </v-btn>
+              </v-col>
+              <v-col cols="6">
+                <v-btn color="error" class="full-width" @click="tagMode = TagMode.Delete;">
+                  태그 삭제
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row v-if="showTagChange">
+              <v-col class="my-0 pb-0">
+                <v-text-field label="원하는 태그를 입력하세요" v-model="tagName" class="mt-0 pt-0"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row v-if="showTagChange">
+              <v-col cols="6">
+                <v-btn color="success" class="full-width" :disabled="tagName == ''" @click="closeDialog(DialogName.Tag); changeTag(tagName)">
+                  변경
+                </v-btn>
+              </v-col>
+              <v-col cols="6">
+                <v-btn color="error" class="full-width" @click="tagMode = TagMode.None">
+                  취소
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row v-if="showTagDelete">
+              <v-col>
+                <v-container class="pt-0 text-subtitle-1 font-weight-medium black--text">
+                  태그를 지우시면 태그로 검색이 불가능합니다.<br/>
+                  태그를 지우시겠습니까?
+                </v-container>
+              </v-col>
+            </v-row>
+            <v-row v-if="showTagDelete">
+              <v-col cols="6">
+                <v-btn color="error" class="full-width" @click="closeDialog(DialogName.Tag); deleteTag()">
+                  확인
+                </v-btn>
+              </v-col>
+              <v-col cols="6">
+                <v-btn color="info" class="full-width" @click="tagMode = TagMode.None">
+                  취소
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <!-- 숨김 Dialog -->
+      <v-dialog v-model="dialogs.hideOpen" max-width="360">
+        <v-card>
+          <v-card-title class="headline">
+            링크 숨기기
+          </v-card-title>
+          <v-card-text class="pb-0">
+            원하는 위치를 고르세요<br/>
+            <v-select v-model="hideName" :items="hideNameList" :menu-props="{ offsetY: true }"></v-select>
+            <v-btn @click="fetchHideList()">불러오기</v-btn>
+            <v-text-field v-model="hideName" label="숨길 위치" hint="직접 입력도 가능해요"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" text class="font-weight-bold" :disabled="hideName == ''" @click="closeDialog(DialogName.Hide); hideLink(hideName);">
+              숨기기
+            </v-btn>
+            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Hide)">
               취소
             </v-btn>
           </v-card-actions>
@@ -131,103 +267,10 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Delete); deleteSingleLink(clickedLinkID);">
+            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Delete); deleteLink();">
               삭제
             </v-btn>
             <v-btn color="warning" text class="font-weight-bold" @click="closeDialog(DialogName.Delete)">
-              취소
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- 숨김 Dialog -->
-      <v-dialog v-model="dialogs.hideOpen" max-width="360">
-        <v-card>
-          <v-card-title class="headline">
-            링크 숨기기
-          </v-card-title>
-          <v-card-text class="pb-0">
-            숨길 위치를 선택하세요<br/>
-            선택 Menu나오기
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="info" text class="font-weight-bold" @click=";">
-              위치 추가
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="success" text class="font-weight-bold" @click="closeDialog(DialogName.Hide)">
-              숨기기
-            </v-btn>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Hide)">
-              취소
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- 태그 Dialog -->
-      <!-- TODO: 나중에 Change랑 Delete를 전부 이 Dialog 밑에 연결되서 나타나게 해서 추가적인 Dialog 없애보면 어떨까? -->
-      <v-dialog v-model="dialogs.tagOpen" max-width="360">
-        <v-card>
-          <v-card-title class="headline">
-            태그
-            <v-spacer></v-spacer>
-            <v-btn color="error" icon class="font-weight-bold" @click="closeDialog(DialogName.Tag)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text class="pb-0">
-            <v-row>
-              <v-col cols="6">
-                <v-btn color="success" dark class="full-width" @click="openDialog(DialogName.TagChange)">
-                  태그 변경
-                </v-btn>
-              </v-col>
-              <v-col cols="6">
-                <v-btn color="error" dark class="full-width" @click="openDialog(DialogName.TagDelete)">
-                  태그 삭제
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-
-      <!-- 태그 변경 Dialog -->
-      <v-dialog v-model="dialogs.tagChangeOpen" max-width="360">
-        <v-card>
-          <v-card-title class="headline">태그 변경</v-card-title>
-          <v-card-text class="pb-0">
-            <v-text-field label="#태그" v-model="tagName"></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="success" text class="font-weight-bold"
-            @click="closeDialog(DialogName.TagChange); closeDialog(DialogName.Tag); changeSingleTag(clickedLinkID, tagName);">
-              변경
-            </v-btn>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.TagChange)">
-              취소
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- 태그 삭제 Dialog -->
-      <v-dialog v-model="dialogs.tagDeleteOpen" max-width="360">
-        <v-card class="py-3">
-          <v-card-text class="pb-3">
-            <v-container class="pb-0 text-subtitle-1 font-weight-medium black--text">
-              태그를 지우시겠습니까?
-            </v-container>
-          </v-card-text>
-          <v-card-actions class="pb-0">
-            <v-spacer></v-spacer>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete); closeDialog(DialogName.Tag); deleteSingleTag(clickedLinkID)">
-              확인
-            </v-btn>
-            <v-btn color="info" text class="font-weight-bold" @click="closeDialog(DialogName.TagDelete)">
               취소
             </v-btn>
           </v-card-actions>
@@ -247,9 +290,18 @@ const DialogName = Object.freeze({
   Favorite: Symbol("Favorite"),
   Delete: Symbol("Delete"),
   Hide: Symbol("Hide"),
-  Tag: Symbol("Tag"),
-  TagChange: Symbol("TagChange"),
-  TagDelete: Symbol("TagDelete")
+  Tag: Symbol("Tag")
+})
+
+const TagMode = Object.freeze({
+  Change: Symbol("Change"),
+  Delete: Symbol("Delete"),
+  None: Symbol("None")
+})
+
+const RequestMode = Object.freeze({
+  Single: Symbol("Single"),
+  Multiple: Symbol("Multiple")
 })
 
 export default {
@@ -258,14 +310,9 @@ export default {
     LinkInput: ShortenLink,
   },
   data: () => ({
-    DialogName: Object.freeze({
-      Favorite: Symbol("Favorite"),
-      Delete: Symbol("Delete"),
-      Hide: Symbol("Hide"),
-      Tag: Symbol("Tag"),
-      TagChange: Symbol("TagChange"),
-      TagDelete: Symbol("TagDelete")
-    }),
+    DialogName,
+    RequestMode,
+    TagMode,
     loading: false, // 로딩상태
     maxPage: 1, // 최대 페이지 번호
     page: 1, // 현재 페이지 번호
@@ -275,14 +322,16 @@ export default {
       favoriteOpen: false,
       deleteOpen: false,
       hideOpen: false,
-      tagOpen: false,
-      tagChangeOpen: false,
-      tagDeleteOpen: false
+      tagOpen: false
     },
     linkList: [], // 링크 정보 배열
     clickedLinkID: '', // 현재 클릭한 링크 아이디
     checkedLinkIDList: [], // 체크박스 체크한 링크 아이디 배열
+    requestMode: RequestMode.Single, // 서버 요청시 모드 (한개 혹은 여러개)
+    tagMode: TagMode.None, // 태그 요청 모드
     tagName: '', // 태그 변경시 사용자가 입력한 태그 이름이 저장될 공간
+    hideNameList: [], // 링크 숨긴 위치들이 저장된 배열
+    hideName: '', // 링크를 숨길 위치 이름
     showError: false, // 에러 표시
     errorMsg: '' // 에러 메시지
   }),
@@ -296,12 +345,46 @@ export default {
     // 페이지 변경시 다음 페이지 데이터 가져오기
     page: function(newPage) {
       this.pageEnter(newPage)
+    },
+    // dialog 변경시마다 체크할 값들 검사
+    dialogs: {
+      deep: true,
+      handler(newObj) {
+        // tag mode는 열릴때마다 초기화되어야 한다
+        if (newObj.tagOpen == true) {
+          this.tagMode = TagMode.None
+        }
+      }
     }
   },
   computed: {
     ...mapState(['serverURL', 'userInfo']),
     fabDisabled: function() {
       return this.checkedLinkIDList.length === 0
+    },
+    showTagChange: function() {
+      switch (this.tagMode) {
+      case this.TagMode.Change:
+        return true
+      default:
+        return false
+      }
+    },
+    showTagDelete: function() {
+      switch (this.tagMode) {
+      case this.TagMode.Delete:
+        return true
+      default:
+        return false
+      }
+    },
+    linkID: function() {
+      switch (this.requestMode) {
+      case this.RequestMode.Multiple:
+        return this.checkedLinkIDList
+      default:
+        return [this.clickedLinkID]
+      }
     }
   },
   methods: {
@@ -311,7 +394,10 @@ export default {
       this.linkList.length = 0
       this.clickedLinkID = ''
       this.checkedLinkIDList.length = 0
+      this.tagMode = this.TagMode.None
       this.tagName = ''
+      this.hideNameList.length = 0
+      this.hideName = ''
       this.showError = false
       this.errorMsg = ''
     },
@@ -345,10 +431,38 @@ export default {
           this.stopLoading()
         })
     },
+    // 나의 링크 숨김 위치들을 가져온다
+    fetchHideList() {
+      this.startLoading()
+
+      axios.post(this.serverURL.hideNameListURL,
+        { userID: this.userInfo.email })
+        .then(res => {
+          this.hideNameList = res.data.filter(function(data) {
+            return (data != null && data != '')
+          })
+        }).catch(e => {
+          this.showError = true
+          this.errorMsg = "숨김 위치 목록을 불러도는데 실패하였습니다"
+        }).finally(() => {
+          this.stopLoading()
+        })
+    },
     // Dialog 열기
-    openDialog(dialogName, linkId = '') {
+    openDialog(dialogName, requestMode, linkId = '') {
+      // linkId 제공될경우 요청한 것으로 변경
       if (linkId !== '') {
         this.clickedLinkID = linkId
+      }
+      
+      // RequestMode 구분
+      switch (requestMode) {
+      case RequestMode.Multiple:
+        this.requestMode = requestMode
+        break
+      default:
+        this.requestMode = RequestMode.Single
+        break
       }
 
       this.changeDialogValue(dialogName, true)
@@ -360,32 +474,32 @@ export default {
     // Dialog들을 Enum으로 관리할 때 값 변경을 위한 함수
     changeDialogValue(dialogName, value = true) {
       switch (dialogName) {
-        case this.DialogName.Favorite:
-          this.dialogs.favoriteOpen = value
-          break
-        case this.DialogName.Delete:
-          this.dialogs.deleteOpen = value
-          break
-        case this.DialogName.Hide:
-          this.dialogs.hideOpen = value
-          break
-        case this.DialogName.Tag:
-          this.dialogs.tagOpen = value
-          break
-        case this.DialogName.TagChange:
-          this.dialogs.tagChangeOpen = value
-          break
-        default:
-          this.dialogs.tagDeleteOpen = value
-          break
+      case this.DialogName.Favorite:
+        this.dialogs.favoriteOpen = value
+        break
+      case this.DialogName.Delete:
+        this.dialogs.deleteOpen = value
+        break
+      case this.DialogName.Hide:
+        this.dialogs.hideOpen = value
+        break
+      case this.DialogName.Tag:
+        this.dialogs.tagOpen = value
+        break
+      case this.DialogName.TagChange:
+        this.dialogs.tagChangeOpen = value
+        break
+      default:
+        this.dialogs.tagDeleteOpen = value
+        break
       }
     },
-    // Card에서 Delete 버튼 클릭시 실행될 링크 하나 지우는 함수
-    deleteSingleLink(deleteLinkID) {
+    // Card에서 Delete 버튼 클릭시 실행될 링크 지우는 함수
+    deleteLink() {
       this.startLoading()
 
       axios.post(this.serverURL.deleteLinkURL,
-        { userID: this.userInfo.email, deleteID: [deleteLinkID] })
+        { userID: this.userInfo.email, deleteID: this.linkID })
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
@@ -394,15 +508,16 @@ export default {
           this.errorMsg = "삭제에 실패하였습니다"
         }).finally(() => {
           this.clickedLinkID = ''
+          this.checkedLinkIDList = []
           this.stopLoading()
         })
     },
     // 선택한 링크의 태그 변경하는 함수
-    changeSingleTag(linkID, tagName) {
+    changeTag(tagName) {
       this.startLoading()
 
       axios.post(this.serverURL.changeTagURL,
-        { userID: this.userInfo.email, changeID: [linkID], tagName: tagName })
+        { userID: this.userInfo.email, changeID: this.linkID, tagName: tagName })
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
@@ -411,15 +526,17 @@ export default {
           this.errorMsg = "태그 변경에 실패하였습니다"
         }).finally(() => {
           this.clickedLinkID = ''
+          this.checkedLinkIDList = []
           this.tagName = ''
           this.stopLoading()
         })
     },
-    deleteSingleTag(linkID) {
+    // 선택한 링크의 태그 삭제하는 함수
+    deleteTag() {
       this.startLoading()
 
       axios.post(this.serverURL.deleteTagURL,
-        { userID: this.userInfo.email, deleteID: [linkID]})
+        { userID: this.userInfo.email, deleteID: this.linkID })
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
@@ -428,6 +545,44 @@ export default {
           this.errorMsg = "태그 삭제에 실패하였습니다"
         }).finally(() => {
           this.clickedLinkID = ''
+          this.checkedLinkIDList = []
+          this.stopLoading()
+        })
+    },
+    // 즐겨찾기 변경
+    changeFavorite(favorite) {
+      this.startLoading()
+
+      axios.post(favorite == true ? this.serverURL.checkFavoriteURL : this.serverURL.uncheckFavoriteURL,
+        { userID: this.userInfo.email, favoriteID: this.linkID })
+        .then(res => {
+          this.fetchLinkData()
+        }).catch(e => {
+          console.log(e)
+          this.showError = true
+          this.errorMsg = "변경에 실패하였습니다"
+        }).finally(() => {
+          this.clickedLinkID = ''
+          this.checkedLinkIDList = []
+          this.stopLoading()
+        })
+    },
+    // 선택한 링크 숨기기
+    hideLink(hideName) {
+      this.startLoading()
+
+      axios.post(this.serverURL.hideURL,
+        { userID: this.userInfo.email, hideID: this.linkID, hideName: hideName })
+        .then(res => {
+          this.fetchLinkData()
+        }).catch(e => {
+          console.log(e)
+          this.showError = true
+          this.errorMsg = "숨기기에 실패하였습니다"
+        }).finally(() => {
+          this.clickedLinkID = ''
+          this.checkedLinkIDList = []
+          this.hideName = ''
           this.stopLoading()
         })
     }

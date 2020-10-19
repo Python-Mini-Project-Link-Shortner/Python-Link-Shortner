@@ -1,11 +1,12 @@
 from pymongo import MongoClient, errors, collection
 
 DEFAULT_HOST = 'mongodb+srv://admin:1234@links.fc8p4.mongodb.net/PYTHON-LINK-SHORTNER?retryWrites=true&w=majority'
-DEFAULT_COL = 'link_table'
+DEFAULT_COL = 'linkTable'
 DEFAULT_DB = 'slink'
 COLLECTIONS = {
-    'LINKS': 'link_table',
-    'USERS': 'user_table',
+    'LINKS': 'linkTable',
+    'STATS': 'statTable',
+    'USERS': 'userTable',
     'CONFIG': 'config'
 }
 
@@ -47,5 +48,26 @@ class MongoDB(MongoClient):
             raise errors.CollectionInvalid("콜렉션{" + name + "} 이름이 잘못되었습니다")
 
         return self[self._db][COLLECTIONS[name]]
+
+    def get_config_var(self, name):
+        """DB에 저장된 환경값을 불러온다. 
+
+        Args:
+            name (str): 환경설정 변수명
+
+        Raises:
+            pymongo.erros.InvalidDocument: 잘못된 환경변수 이름
+        """
+        collection = self[self._db][COLLECTIONS['CONFIG']]
+
+        my_query    = {'variable': name}            # 검색필드
+        my_result   = {'value': True}               # 결과필드
+
+        res = collection.find_one(my_query, my_result)
+
+        if res is None:
+            print(f"변수명 {name}이 존재하지 않습니다.")
+            raise errors.InvalidDocument(f"환경설정({name})이 존재하지 않습니다.")
+        return res['value']
 
 db = MongoDB()

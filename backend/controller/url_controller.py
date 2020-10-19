@@ -1,13 +1,14 @@
-from flask              import Blueprint, request, jsonify
+from flask              import Blueprint, request, jsonify, redirect
 from backend.service    import url_service
 
 url_controller = Blueprint('url_controller', __name__)
 
-@url_controller.route('shorten', methods=['GET', 'POST'])
+@url_controller.route('/shorten', methods=['GET', 'POST'])
 def shorten_url():
-    # 원본 URL 데이터 가져오기
+    # 원본 URL 및 계정 가져오기
     req_data = request.get_json()
     raw_url = req_data['url']
+    user_id = req_data['email']
 
     # 반환 변수 설정
     res_data = {'flag': True}
@@ -18,10 +19,16 @@ def shorten_url():
         res_data['msg'] = 'Invalid URL'
         return jsonify(res_data)
 
+    # 이미 저장된 URL인지 확인
+    raw_url = url_service.normalize_url(raw_url)
+    short_url = url_service.get_url(raw_url, target="short")
+
     # 축약 URL을 등록한다.
-    short_url = url_service.register_url(raw_url)
-    if short_url == False:
-        # 저장에 실패한 경우
+    if short_url == None:
+        short_url = url_service.register_url(raw_url, user_id)
+
+    # URL 등록에 실패한 경우
+    if short_url == None:
         res_data['flag'] = False
         res_data['msg']  = 'DB save failed'
         return jsonify(res_data)
@@ -33,32 +40,21 @@ def shorten_url():
     return jsonify(res_data)
 
 # 축약된 URL의 원본 URL을 반환하는 페이지
-@url_controller.route('/api/check', methods=['GET', 'POST'])
+@url_controller.route('/check', methods=['GET', 'POST'])
 def check_url():
-    short_url = request.json['url']
+    req_data = request.get_json()
+    res_data = { 'flag': True }
     
     # 축약 링크를 DB에서 검색한다.
-    raw_url = Mongo.get_raw_url(short_url)
+    short_url = req_data['url']
+    raw_url = url_service.get_url(short_url, target="raw")
 
     # 링크가 존재하지 않으면 실패 반환
     if raw_url is None:
-        return jsonify({
-            'flag': False,
-            'msg': "The link provided doesn't exist."
-        })
+        res_data['flag'] = False
+        res_data['msg']  = "The link provided doesn't exist."
+        return jsonify(res_data)
     
-    return jsonify({
-        'flag': True,
-        'link': raw_url
-    })
-
-@app.route('/<short_url>')
-def redirect_url(short_url):
-    # 축약된 URL이 들어오면 DB에서 찾아 원본 링크로 연결한다.
-    Raw_URL = Mongo.get_raw_url(short_url)
-
-    # 페이지가 존재하지 않으면 오류 페이지 출력
-    if Raw_URL is None:
-        return "Page Not Found"
-
-    return redirect(Raw_URL)
+    res_data['flag'] = True
+    res_data['link'] = raw_url
+    return jsonify(res_data)

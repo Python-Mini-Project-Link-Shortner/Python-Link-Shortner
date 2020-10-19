@@ -88,18 +88,21 @@ router.beforeEach(function(to, from, next) {
     if (now >= expiresAt) {
       userLogout()
       next(defaultPath)
+      
+      return
     }
   }
 
   // 홈페이지인 경우
   if (to.matched.some(record => record.name === 'Home')) {
     //로그인된 유저는 Manage로, 아니면 Main으로 돌린다.
-    if (loggedIn) next({name: 'ManageHome'})
-    else next({name: 'Main'})
+    if (loggedIn) next(loggedInPath)
+    else next(defaultPath)
 
-  // LinkCheck 페이지인 경우
-  // 로그인 여부에 따라 Main/Manage 서브 페이지로 돌린다.
+    return
   } else if (to.matched.some(record => record.name === 'LinkCheck')) {
+    // LinkCheck 페이지인 경우
+    // 로그인 여부에 따라 Main/Manage 서브 페이지로 돌린다.
     const shortURL = to.params.shortURL
 
     if (loggedIn) next({name: 'ManageLinkCheck', params:{shortURL} })
@@ -109,6 +112,8 @@ router.beforeEach(function(to, from, next) {
       store.commit(mainModule + '/setTabIndex', NaN)    // 탭 선택 취소
       next({name: 'MainLinkCheck', params:{shortURL} })
     }
+
+    return
   }
   
   // 로그인된 유저는 Manage로, 아니면 Main으로 돌린다.
@@ -123,6 +128,8 @@ router.beforeEach(function(to, from, next) {
       alert("로그인이 필요한 서비스입니다.")
       next(defaultPath)
     }
+
+    return
   // Main 계열인 경우  
   } else if (mainReg.test(to.fullPath)) {
     if (loggedIn) {
@@ -130,6 +137,8 @@ router.beforeEach(function(to, from, next) {
     } else {
       next()
     }
+
+    return
   }
 
   // 어떠한 조건에도 만족하지 않는 경우 해소
