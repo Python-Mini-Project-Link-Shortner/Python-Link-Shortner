@@ -18,11 +18,16 @@ def update_user():
     
     # 구글에서 얻은 유저 정보
     email = user_data['email']
+    name = user_data['name']
     access_token = user_data['accessToken']
     refresh_token = user_data['refreshToken']
 
     # 반환값 및 유저 정보
-    res_data = { 'flag': True }
+    res_data = {
+        'flag': True,
+        'email': email,
+        'name': name
+        }
     update_data = { 
         'lastAccess': datetime.now(),
         'accessToken': access_token,
