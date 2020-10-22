@@ -42,6 +42,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainAPI.vue'),
       },
       {
+        path: 'contact',
+        name: 'MainContact',
+        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainContact.vue'),
+      },
+      {
         path: ':shortURL@',
         name: 'MainLinkCheck',
         component: () => import(/* webpackChunkName: "main" */ '@/views/LinkCheck.vue'),
