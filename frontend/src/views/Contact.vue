@@ -27,7 +27,7 @@
 					<v-text-field
 						outlined
 						v-model="lastName"
-						label="Last Name"
+						label="Last Name*"
 						:rules="nameRules"
 					/>
 				</v-col>
@@ -39,7 +39,7 @@
 					<v-text-field
 						outlined
 						v-model="email"
-						label="E-mail"
+						label="E-mail*"
 						:rules="emailRules"
 						:disabled="emailDisabled"
 					/>
@@ -64,8 +64,9 @@
 						outlined
 						v-model="message"
 						name="message"
-						label="Your Message"
+						label="Your Message*"
 						counter="800"
+						:rules="messageRules"
 					/>
 				</v-col>
 			</v-row>
@@ -108,6 +109,9 @@ export default {
 	}),
 	computed: {
 		...mapState(['userInfo'])
+	},
+	methods: {
+		
 	},
 	created() {
 		// Main 페이지일 경우 isMain = True
