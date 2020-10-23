@@ -1,20 +1,21 @@
 # Standard Libraries
 from datetime           import datetime
 from os                 import abort
+import smtplib, ssl
 # Third Party Libraries
 from flask              import Blueprint, session, request, jsonify
 # Custom Modules
-from backend.service    import user_service, login_service
+from backend.service    import user_service, minipy_service
 
-login_controller = Blueprint('login_controller', __name__)
+minipy_controller = Blueprint('minipy_controller', __name__)
 
 # 신규유저 등록 및 로그인 시간을 갱신하는 페이지 (로그인 시)
-@login_controller.route('/login', methods=['GET','POST'])
+@minipy_controller.route('/login', methods=['GET','POST'])
 def update_user():
     # 인증코드로부터 토큰 얻기
     req_data = request.get_json()
     auth_code = req_data['code']
-    user_data = login_service.handshake_oauth(auth_code)
+    user_data = minipy_service.handshake_oauth(auth_code)
     
     # 구글에서 얻은 유저 정보
     email = user_data['email']
@@ -22,7 +23,7 @@ def update_user():
     access_token = user_data['accessToken']
     refresh_token = user_data['refreshToken']
 
-    # 반환값 및 유저 정보
+    # 반환값 및 갱신 정보
     res_data = {
         'flag': True,
         'email': email,
@@ -43,7 +44,18 @@ def update_user():
     else:
         res_data['flag'] = True
         update_data['lastLogin'] = datetime.now()
-    
+
     # 업데이트 후 종료
     user_service.upsert_user(email, update_data)
+    return jsonify(res_data)
+
+
+# 불만, 피드백 등을 받아 이메일로 전송하는 페이지
+@minipy_controller.route('/contact', methods=['GET','POST'])
+def send_email():
+    req_data = request.get_json()
+    res_data = {
+        'flag': True,
+    }
+
     return jsonify(res_data)

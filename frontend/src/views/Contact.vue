@@ -1,5 +1,5 @@
 <template>
-	<v-container class="pt-0" :class="{'limit-width': isMain}">
+	<v-container class="pt-0 px-0" :class="{'limit-width': isMain}">
 		<div class="polygon white--text">
 			<div class="pt-5 mb-3 text-h5 font-weight-medium">
 				E-Mail Us
@@ -13,7 +13,10 @@
 			</div>
 		</div>
 
-		<v-form class="mx-auto mt-10 mb-5">
+		<v-form 
+			ref="form"
+			class="mx-auto mt-10 mb-5"
+		>
 			<!-- 첫 줄: 이름과 성-->
 			<v-row justify="center">
 				<v-col class="pb-0" cols="12" sm="5">
@@ -51,8 +54,8 @@
 				<v-col class="pb-0" cols="12" sm="10">
 					<v-text-field
 						outlined
-						v-model="title"
-						label="Title"
+						v-model="subject"
+						label="Subject"
 					/>
 				</v-col>
 			</v-row>
@@ -75,6 +78,7 @@
 				outlined
 				class="mb-5 px-8"
 				color="primary"
+				@click="sendMessage"
 			>
 				Send
 			</v-btn>
@@ -84,6 +88,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import axios from 'axios'
 
 export default {
 	name: 'Contact',
@@ -99,7 +104,7 @@ export default {
 			v => !!v || 'E-mail is required',
 			v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
 		],
-		title: '',
+		subject: '',
 		message: '',
 		messageRules: [
 			v => !!v || 'Message is required',
@@ -108,10 +113,31 @@ export default {
 		isMain: null
 	}),
 	computed: {
-		...mapState(['userInfo'])
+		...mapState(['userInfo', 'serverInfo'])
 	},
 	methods: {
-		
+		sendMessage() {
+			// 서버에 내용을 전송한다.
+			const isValid = this.$refs.form.validate()
+
+			if (isValid) {
+				const name = (this.firstName) ? 
+					this.firstName + " " + this.lastName : this.lastName
+				const email = this.email
+				const subject = this.subject
+				const message = this.message
+				const sendData = {name, email, subject, message}
+
+				axios.post(this.serverInfo['contact'], sendData)
+					.then( res => {
+						alert('Email successfully sent!')
+					}).catch( ex => {
+						alert('An error occurred during sending email.')
+					})
+			} else {
+				alert("Please fill in the required forms.")
+			}
+		}
 	},
 	created() {
 		// Main 페이지일 경우 isMain = True

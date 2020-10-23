@@ -21,6 +21,7 @@ export default new Vuex.Store({
       authCode: 'http://127.0.0.1:5000/api/authCode',
       shorten:'http://127.0.0.1:5000/api/shorten',
       check: 'http://127.0.0.1:5000/api/check',
+      contact: 'http://127.0.0.1:5000/api/contact',
       linkPageURL: 'http://127.0.0.1:5000/api/linkList',
       deleteLinkURL: 'http://127.0.0.1:5000/api/deleteLink',
       changeTagURL: 'http://127.0.0.1:5000/api/changeTag',
