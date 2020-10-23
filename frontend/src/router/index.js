@@ -44,7 +44,7 @@ const routes = [
       {
         path: 'contact',
         name: 'MainContact',
-        component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainContact.vue'),
+        component: () => import(/* webpackChunkName: "main" */ '@/views/Contact.vue'),
       },
       {
         path: ':shortURL@',
