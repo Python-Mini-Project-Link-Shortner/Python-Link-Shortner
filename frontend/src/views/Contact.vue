@@ -161,7 +161,7 @@ export default {
 
 <style scoped>
 .polygon {
-	background: linear-gradient(to bottom, rgb(55,115,165), #67D7F5);
+	background: linear-gradient(to bottom, #3773a5, #67D7F5);
 	width: inherit;
 	height: 250px;
 	-webkit-clip-path: polygon(0 0, 100% 0, 100% 59%, 49% 100%, 0 59%);

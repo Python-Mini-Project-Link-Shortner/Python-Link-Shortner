@@ -164,7 +164,7 @@ def get_stats_info(short_url):
     return collection.find_one({ 'shortURL': short_url })
 
 def extract_stats(headers, environ, user_agent, stats:dict):
-    """통계정보를 stats에 반영한다.
+    """헤더에서 통계정보를 추출한다.
 
     Args:
         headers       : Flask request.headers

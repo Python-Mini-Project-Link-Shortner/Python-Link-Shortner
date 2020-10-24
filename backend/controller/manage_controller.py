@@ -1,5 +1,5 @@
 from flask                  import Blueprint, request, jsonify
-from backend.service        import link_service
+from backend.service        import link_service, url_service
 
 manage_controller = Blueprint('manage_controller', __name__)
 
@@ -155,3 +155,11 @@ def unhide_link():
         if res == False: res_data['flag'] = False
 
     return jsonify(res_data)
+
+@manage_controller.route('/showStats', methods=['POST'])
+def show_stats():
+    req_data = request.get_json()
+
+    short_link = req_data['shortLink']
+    stats = url_service.get_stats_info(short_link)
+
