@@ -53,9 +53,24 @@ def update_user():
 # 불만, 피드백 등을 받아 이메일로 전송하는 페이지
 @minipy_controller.route('/contact', methods=['GET','POST'])
 def send_email():
+    # 반환값
+    res_data = {'flag': True}
+
+    # 폼 데이터 정리
     req_data = request.get_json()
-    res_data = {
-        'flag': True,
-    }
+    name = req_data['name']
+    email = req_data['email']
+    subject = req_data['subject']
+    message = req_data['message']
+
+    # 메일 전송용 텍스트
+    text = f"Subject: [MiniPy] {subject} \n\n"
+    text += f"Name: {name}\n"
+    text += f"Message: {message}"
+    text = text.encode('utf-8')     # 한글도 보낼 수 있게 하기 위함.
+
+    # 메일 전송
+    flag = minipy_service.send_gmail(email, text)
+    res_data['flag'] = flag
 
     return jsonify(res_data)

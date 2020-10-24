@@ -113,7 +113,7 @@ export default {
 		isMain: null
 	}),
 	computed: {
-		...mapState(['userInfo', 'serverInfo'])
+		...mapState(['userInfo', 'serverURL'])
 	},
 	methods: {
 		sendMessage() {
@@ -128,7 +128,7 @@ export default {
 				const message = this.message
 				const sendData = {name, email, subject, message}
 
-				axios.post(this.serverInfo['contact'], sendData)
+				axios.post(this.serverURL['contact'], sendData)
 					.then( res => {
 						alert('Email successfully sent!')
 					}).catch( ex => {

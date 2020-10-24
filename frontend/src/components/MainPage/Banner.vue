@@ -5,7 +5,7 @@
         <blockquote>
           <p>
             <span data-duration="1.1" data-delay=".23">"The&nbsp;</span>
-            <span data-duration="1.1" data-delay=".43">Simplier&nbsp;</span>
+            <span data-duration="1.1" data-delay=".43">Simpler&nbsp;</span>
             <span data-duration="1.8" data-delay=".42">It&nbsp;</span>
             <span data-duration="1.2" data-delay=".25">Is,&nbsp;</span>
             <span data-duration="1.7" data-delay=".30">The&nbsp;</span>

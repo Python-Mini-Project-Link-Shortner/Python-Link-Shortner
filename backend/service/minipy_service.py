@@ -12,7 +12,7 @@ if GOOGLE_CLIENT_SECRET is None:
     raise Exception("환경변수 GOOGLE_CLIENT_SECRET을 설정해주십시오.")
 # 구글 이메일 정보
 GOOGLE_MINIPY_ID = os.environ.get('GOOGLE_MINIPY_ID', None)
-GOOGLE_MINIPY_PASSWORD = os.environ('GOOGLE_MINIPY_PASSWORD', None)
+GOOGLE_MINIPY_PASSWORD = os.environ.get('GOOGLE_MINIPY_PASSWORD', None)
 if GOOGLE_MINIPY_ID is None:
     raise Exception("환경변수 GOOGLE_MINIPY_ID를 설정해주십시오.")
 if GOOGLE_MINIPY_PASSWORD is None:
@@ -42,11 +42,15 @@ def handshake_oauth(code):
         'name': name
     }
 
-def send_gmail(send_info):
+def send_gmail(sender_email, text):
     ssl_port = 465                          # SSL로 접근할 경우의 Google Port
     context = ssl.create_default_context()  # SSL 컨텍스트 객체
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", ssl_port, context=context) as server:
-        server.login(GOOGLE_MINIPY_ID, GOOGLE_MINIPY_PASSWORD)
-        # TODO: 발송자, 수신자, 내용 나누어서 지메일로 전송하기
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", ssl_port, context=context) as server:
+            server.login(GOOGLE_MINIPY_ID, GOOGLE_MINIPY_PASSWORD)
+            server.sendmail(sender_email, GOOGLE_MINIPY_ID, text)
+    except:
+        return False
 
+    return True
