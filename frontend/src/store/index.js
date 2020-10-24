@@ -31,11 +31,11 @@ export default new Vuex.Store({
       hideNameListURL: 'http://127.0.0.1:5000/api/hideNameList',
       hideURL: 'http://127.0.0.1:5000/api/hideLink'
     },
+    googleMapAPI: 'AIzaSyD3iDDJCCjgJoToj7MXi9_ObGp5KCTtsPE',
     moduleNames:{
       main: 'main',
       manage: 'manage'
     },
-    clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },
   mutations: {
     setUserInfo(state, payload) {

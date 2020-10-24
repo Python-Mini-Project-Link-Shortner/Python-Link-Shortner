@@ -50,6 +50,11 @@ const routes = [
         path: ':shortURL@',
         name: 'MainLinkCheck',
         component: () => import(/* webpackChunkName: "main" */ '@/views/LinkCheck.vue'),
+      },
+      {
+        path: 'test',
+        name: 'MainTest',
+        component: () => import(/* webpackChunkName: "main" */ '@/components/Manage/GeoChart.vue'),
       }
     ],
   },

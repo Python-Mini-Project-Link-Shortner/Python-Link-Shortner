@@ -15,7 +15,7 @@
 
 		<v-form 
 			ref="form"
-			class="mx-auto mt-10 mb-5"
+			class="mx-auto px-5 mt-10 mb-5"
 		>
 			<!-- 첫 줄: 이름과 성-->
 			<v-row justify="center">
