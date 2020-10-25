@@ -182,6 +182,7 @@ def extract_stats(headers, environ, user_agent, stats:dict):
     referrer = environ.get('HTTP_REFERER')
         # 주소창에서 접근한 경우
     if referrer is None:
+        referrer = 'Address Bar'
         stats['entry']['Address Bar'] = stats['entry'].get('Address Bar', 0) + 1
         # 타사이트에서 접근한 경우
     else:
@@ -201,7 +202,7 @@ def extract_stats(headers, environ, user_agent, stats:dict):
     else:
         user_ip = environ.get('REMOTE_ADDR')
         # ip로부터 국가명 추출
-    with geoip2.database.Reader('backend/database/GeoLite2-Country.mmdb') as reader:
+    with geoip2.database.Reader('MiniPy/backend/database/GeoLite2-Country.mmdb') as reader:
         try:
             response = reader.country(user_ip)
             country = response.country.name
@@ -215,6 +216,16 @@ def extract_stats(headers, environ, user_agent, stats:dict):
     platform = user_agent.platform
     stats['browser'][browser] = stats['browser'].get(browser, 0) + 1
     stats['platform'][platform] = stats['platform'].get(platform, 0) + 1
+
+    # 5. 종합기록
+    overall = {
+        'time': datetime.now(),
+        'entry': referrer,
+        'country': country,
+        'browser': browser,
+        'platform': platform
+    }
+    stats['index'].append(overall)
 
     # 불필요한 필드 삭제
     stats.pop('_id', None)
@@ -230,27 +241,7 @@ def upsert_stats(short_url, stats):
     """
     collection = db.get_collection("STATS")
 
-    # 기본값으로 설정할 필드
-    defaults = { 
-        'count': 0, 
-        'entry': {},
-        'country': {},
-        'time': [],
-        'browser': {},
-        'platform': {}
-        }
-    # 업데이트할 항목은 제외한다.
-    for key in stats:
-        if key in defaults: defaults.pop(key)
-
-    # setOnInsert는 비어있어선 안 된다.
-    if not defaults:
-        collection.update_one({ 'shortURL': short_url }, {
-            '$set': stats
-        })
-    else:
-        collection.update_one({ 'shortURL': short_url }, {
-            '$setOnInsert': defaults,
-            '$set': stats
-        }, upsert=True)
+    collection.update_one({ 'shortURL': short_url }, {
+        '$set': stats
+    }, upsert=True)
 
