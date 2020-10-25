@@ -36,7 +36,7 @@ export default {
 				['RU', 700]
 			])
 			var options = {
-				backgroundColor: '#fffcfc',
+				backgroundColor: '#f1f8e9',
 				width: 500,
 				colorAxis: {colors: ['#e1f7fc', '#3773a5']}
 			}

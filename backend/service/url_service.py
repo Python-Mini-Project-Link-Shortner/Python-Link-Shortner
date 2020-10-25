@@ -202,7 +202,7 @@ def extract_stats(headers, environ, user_agent, stats:dict):
     else:
         user_ip = environ.get('REMOTE_ADDR')
         # ip로부터 국가명 추출
-    with geoip2.database.Reader('MiniPy/backend/database/GeoLite2-Country.mmdb') as reader:
+    with geoip2.database.Reader('backend/database/GeoLite2-Country.mmdb') as reader:
         try:
             response = reader.country(user_ip)
             country = response.country.name
