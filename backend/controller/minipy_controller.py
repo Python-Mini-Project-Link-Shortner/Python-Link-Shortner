@@ -20,6 +20,7 @@ def update_user():
     # 구글에서 얻은 유저 정보
     email = user_data['email']
     name = user_data['name']
+    expiresAt = user_data['expiresAt']
     access_token = user_data['accessToken']
     refresh_token = user_data['refreshToken']
 
@@ -27,7 +28,8 @@ def update_user():
     res_data = {
         'flag': True,
         'email': email,
-        'name': name
+        'name': name,
+        'expiresAt': expiresAt
         }
     update_data = { 
         'lastAccess': datetime.now(),

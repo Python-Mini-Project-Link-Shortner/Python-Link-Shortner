@@ -31,9 +31,11 @@ const userLogin = function(elemID) {
         } else {
           const email = res.data['email']
           const name = res.data['name']
-          
+          // Python 시간은 초 단위이므로 밀리초로 변환
+          const expiresAt = new Date(res.data['expiresAt'] * 1000)
+
           // 유저 정보를 Vuex에 담고, Manage 페이지로 포워딩
-          store.commit('setUserInfo', {loggedIn, email, name})
+          store.commit('setUserInfo', {loggedIn, email, name, expiresAt})
           router.push({name: 'Manage'})
         }
       }).catch( ex => {

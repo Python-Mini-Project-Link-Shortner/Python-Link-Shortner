@@ -1,4 +1,5 @@
 import os, smtplib, ssl
+from datetime import datetime, timedelta, time
 # Google OAuth
 from apiclient          import discovery
 from oauth2client       import client
@@ -33,13 +34,16 @@ def handshake_oauth(code):
     refresh_token = credentials.refresh_token
     email = credentials.id_token['email']
     name = credentials.id_token['name']
+    expiresAt = datetime.now() + timedelta(hours=1)
 
     # 반환
     return {
         'accessToken': access_token,
         'refreshToken': refresh_token,
         'email': email,
-        'name': name
+        'name': name,
+        # 1시간 후 로그아웃
+        'expiresAt': expiresAt.timestamp()
     }
 
 def send_gmail(sender_email, text):
