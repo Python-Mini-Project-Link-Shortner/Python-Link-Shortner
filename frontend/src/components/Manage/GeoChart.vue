@@ -5,8 +5,10 @@
 	- data: 적용할 국가별 데이터 (배열)
 -->
 <template>
-	<div :id="_uid">
-			
+	<div>
+		<div :id="_uid">
+				
+		</div>
 	</div>
 </template>
 
@@ -17,6 +19,20 @@ export default {
 	name: 'GeoChart',
 	computed: {
 		...mapState(['googleMapAPI'])
+	},
+	props: {
+		data: {
+			type: Array,
+			default: () => [['Country', 'Clicks']]
+		},
+		width: {
+			type: String,
+			default: () => '100%'
+		},
+		height: {
+			type: String,
+			default: () => ''
+		}
 	},
 	created() {
 		google.charts.load('current', {
@@ -36,8 +52,7 @@ export default {
 				['RU', 700]
 			])
 			var options = {
-				backgroundColor: '#f1f8e9',
-				width: 500,
+				height: '210',
 				colorAxis: {colors: ['#e1f7fc', '#3773a5']}
 			}
 			var chart = new google.visualization.GeoChart(document.getElementById(this._uid))

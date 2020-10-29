@@ -39,7 +39,7 @@ export default {
 .text-title {
 	font-family: 'Times New Roman', Times, serif;
 	line-height: 1rem;
-	letter-spacing: 2.5px;
+	letter-spacing: 2px;
 	text-transform: uppercase;
 	padding-top: 5px;
 }
