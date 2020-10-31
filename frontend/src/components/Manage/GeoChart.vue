@@ -18,7 +18,11 @@ import {mapState} from 'vuex'
 export default {
 	name: 'GeoChart',
 	computed: {
-		...mapState(['googleMapAPI'])
+		...mapState(['googleMapAPI']),
+		dataArray() {
+			let data = [['Country', 'Clicks']]
+
+		}
 	},
 	props: {
 		data: {

@@ -156,10 +156,3 @@ def unhide_link():
 
     return jsonify(res_data)
 
-@manage_controller.route('/showStats', methods=['POST'])
-def show_stats():
-    req_data = request.get_json()
-
-    short_link = req_data['shortLink']
-    stats = url_service.get_stats_info(short_link)
-

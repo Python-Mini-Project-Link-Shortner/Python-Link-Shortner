@@ -4,18 +4,37 @@
 	>
 		<v-row>
 			<v-col class="white" cols="6">
-				<StatSubHeader 
-					title="countries"
-					subtitle="Overall Period"
-				/>
-				<GeoChart :height="geoChartHeight"/>
+				<v-row>
+					<v-col class="py-0">
+						<StatSubHeader 
+							title="countries"
+							subtitle="Overall Period"
+						/>
+					</v-col>
+				</v-row>
+				<v-row>
+					<v-col>
+						<GeoChart :height="geoChartHeight"/>
+					</v-col>
+				</v-row>
 			</v-col>
 
 			<v-col class="py-0">
 				<v-col cols="12" class="white" :style="{height: '48%'}">
-					<StatSubHeader 
-						title="Total Clicks"
-					/>
+					<v-row>
+						<v-col class="py-0">
+							<StatSubHeader 
+								title="Total Clicks"
+								subtitle="Overall Period"
+							/>
+						</v-col>
+					</v-row>
+
+					<v-row>
+						<v-col class="py-0">
+
+						</v-col>
+					</v-row>
 				</v-col>
 
 				<v-col class="pt-0" :style="{height: '4%'}"></v-col>
