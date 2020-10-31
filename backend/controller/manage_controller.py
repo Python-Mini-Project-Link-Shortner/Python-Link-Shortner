@@ -16,6 +16,19 @@ def link_list():
 
     return res
 
+@manage_controller.route('/favoriteList', methods=['POST'])
+def favorite_list():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    page = req_data['page']
+    item_count = req_data['itemCount']
+
+    # 즐겨찾기 페이지네이션 형태로 가져오기
+    res = link_service.get_unhide_favorite_link_pagination(user_id, page, item_count)
+
+    return res
+
 @manage_controller.route('/deleteLink', methods=['POST'])
 def delete_link():
     req_data = request.get_json()

@@ -1,9 +1,7 @@
 <template>
   <v-container class="text-left" px-6 py-5 fluid>
     <!-- 로딩창 -->
-    <v-overlay :value="loading" :z-index="9999">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <Loading></Loading>
 
     <!-- 분석창 -->
     <v-row>
@@ -21,20 +19,18 @@
 
     <!-- 오류 -->
     <v-row>
-      <v-col cols="12" v-if="showError">
-        <v-alert type="error">
-          {{ errorMsg }}
-        </v-alert>
+      <v-col cols="12">
+        <Error></Error>
       </v-col>
     </v-row>
 
     <!-- 링크 -->
-    <v-row>
-      <v-col cols="12" v-for="link in linkList" :key="link._id">
+    <v-row v-for="link in linkList" :key="link._id">
+      <v-col cols="12">
         <v-card outlined hover>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h6 text-truncate" style="color: #E71D36;">{{ link.shortURL }}</v-list-item-title>
+              <v-list-item-title class="text-h6 text-truncate info--text">{{ link.shortURL }}</v-list-item-title>
               <v-list-item-subtitle>{{ link.makeDate }}</v-list-item-subtitle>
             </v-list-item-content>
             <v-spacer></v-spacer>
@@ -90,8 +86,10 @@
           </v-card-actions>
         </v-card>
       </v-col>
+    </v-row>
 
-      <!-- 페이지네이션 -->
+    <!-- 페이지네이션 -->
+    <v-row>
       <v-col cols="12">
         <v-pagination v-model="page" prev-icon="mdi-menu-left" next-icon="mdi-menu-right" :length="maxPage" :page="page" :total-visible="10"></v-pagination>
       </v-col>
@@ -160,14 +158,13 @@
               추가
             </v-btn>
             <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Favorite); changeFavorite(false);">
-              삭제
+              제거
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
       <!-- 태그 Dialog -->
-      <!-- TODO: 나중에 Change랑 Delete를 전부 이 Dialog 밑에 연결되서 나타나게 해서 추가적인 Dialog 없애보면 어떨까? -->
       <v-dialog v-model="dialogs.tagOpen" max-width="420">
         <v-card>
           <v-card-title class="headline">
@@ -202,7 +199,7 @@
                 </v-btn>
               </v-col>
               <v-col cols="6">
-                <v-btn color="error" class="full-width" @click="tagMode = TagMode.None">
+                <v-btn color="warning" class="full-width" @click="tagMode = TagMode.None">
                   취소
                 </v-btn>
               </v-col>
@@ -222,7 +219,7 @@
                 </v-btn>
               </v-col>
               <v-col cols="6">
-                <v-btn color="info" class="full-width" @click="tagMode = TagMode.None">
+                <v-btn color="warning" class="full-width" @click="tagMode = TagMode.None">
                   취소
                 </v-btn>
               </v-col>
@@ -248,7 +245,7 @@
             <v-btn color="success" text class="font-weight-bold" :disabled="hideName == ''" @click="closeDialog(DialogName.Hide); hideLink(hideName);">
               숨기기
             </v-btn>
-            <v-btn color="error" text class="font-weight-bold" @click="closeDialog(DialogName.Hide)">
+            <v-btn color="warning" text class="font-weight-bold" @click="closeDialog(DialogName.Hide)">
               취소
             </v-btn>
           </v-card-actions>
@@ -281,9 +278,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import axios from 'axios'
 import ShortenLink from '@/components/ShortenLink.vue'
+import LoadingOverlay from '@/components/Manage/LoadingOverlay.vue'
+import ErrorAlert from '@/components/Manage/ErrorAlert.vue'
 
 // enum value
 const DialogName = Object.freeze({
@@ -299,21 +298,16 @@ const TagMode = Object.freeze({
   None: Symbol("None")
 })
 
-const RequestMode = Object.freeze({
-  Single: Symbol("Single"),
-  Multiple: Symbol("Multiple")
-})
-
 export default {
   name: 'ManageHome',
   components: {
     LinkInput: ShortenLink,
+    Loading: LoadingOverlay,
+    Error: ErrorAlert
   },
   data: () => ({
     DialogName,
-    RequestMode,
     TagMode,
-    loading: false, // 로딩상태
     maxPage: 1, // 최대 페이지 번호
     page: 1, // 현재 페이지 번호
     itemPerPage: 10, // 페이지 당 아이템 갯수
@@ -325,15 +319,10 @@ export default {
       tagOpen: false
     },
     linkList: [], // 링크 정보 배열
-    clickedLinkID: '', // 현재 클릭한 링크 아이디
-    checkedLinkIDList: [], // 체크박스 체크한 링크 아이디 배열
-    requestMode: RequestMode.Single, // 서버 요청시 모드 (한개 혹은 여러개)
     tagMode: TagMode.None, // 태그 요청 모드
     tagName: '', // 태그 변경시 사용자가 입력한 태그 이름이 저장될 공간
     hideNameList: [], // 링크 숨긴 위치들이 저장된 배열
     hideName: '', // 링크를 숨길 위치 이름
-    showError: false, // 에러 표시
-    errorMsg: '' // 에러 메시지
   }),
   created: function() {
     // 생성되었을 때 데이터 가져오기
@@ -343,8 +332,8 @@ export default {
     // 라우트 변경시 데이터 가져오기 다시 호출
     '$route': 'pageEnter',
     // 페이지 변경시 다음 페이지 데이터 가져오기
-    page: function(newPage) {
-      this.pageEnter(newPage)
+    page: function() {
+      this.pageEnter()
     },
     // dialog 변경시마다 체크할 값들 검사
     dialogs: {
@@ -359,9 +348,8 @@ export default {
   },
   computed: {
     ...mapState(['serverURL', 'userInfo']),
-    fabDisabled: function() {
-      return this.checkedLinkIDList.length === 0
-    },
+    ...mapState('manage', ['RequestMode']),
+    ...mapGetters('manage', ['linkID']),
     showTagChange: function() {
       switch (this.tagMode) {
       case this.TagMode.Change:
@@ -378,41 +366,33 @@ export default {
         return false
       }
     },
-    linkID: function() {
-      switch (this.requestMode) {
-      case this.RequestMode.Multiple:
-        return this.checkedLinkIDList
-      default:
-        return [this.clickedLinkID]
-      }
+    checkedLinkIDList: {
+      get() { return this.$store.state.manage.checkedLinkIDList },
+      set(value) { this.changeCheckedLinkIDList(value) }
+    },
+    fabDisabled: function() {
+      return this.checkedLinkIDList.length === 0
     }
   },
   methods: {
+    ...mapActions('manage',
+      ['clearSelectLink', 'changeClickedLinkID', 'changeCheckedLinkIDList', 'changeRequestMode',
+        'startLoading', 'delayedStopLoading', 'showError', 'hideError']),
     // 페이지 변경전 Vue 초기화
     resetForPaging() {
       this.fab = false
       this.linkList.length = 0
-      this.clickedLinkID = ''
-      this.checkedLinkIDList.length = 0
+      this.clearSelectLink(),
       this.tagMode = this.TagMode.None
       this.tagName = ''
       this.hideNameList.length = 0
       this.hideName = ''
-      this.showError = false
-      this.errorMsg = ''
+      this.hideError()
     },
     // 페이지가 변경될 때마다 호출된다
-    pageEnter(page = 1) {
+    pageEnter() {
       this.resetForPaging()
       this.fetchLinkData()
-    },
-    // Loading 시작
-    startLoading() {
-      this.loading = true
-    },
-    // Loading 종료
-    stopLoading() {
-      setTimeout(() => {this.loading = false}, 450)
     },
     // 자신의 아이디에 해당하는 LinkList를 서버에서 가져온다
     fetchLinkData() {
@@ -425,10 +405,9 @@ export default {
           this.page = res.data.page
           this.linkList = res.data.list
         }).catch(e => {
-          this.showError = true
-          this.errorMsg = "데이터 불러오기에 실패하였습니다"
+          this.showError("데이터 불러오기에 실패하였습니다")
         }).finally(() => {
-          this.stopLoading()
+          this.delayedStopLoading()
         })
     },
     // 나의 링크 숨김 위치들을 가져온다
@@ -442,29 +421,22 @@ export default {
             return (data != null && data != '')
           })
         }).catch(e => {
-          this.showError = true
-          this.errorMsg = "숨김 위치 목록을 불러도는데 실패하였습니다"
+          this.showError("숨김 위치 목록을 불러오는데 실패하였습니다")
         }).finally(() => {
-          this.stopLoading()
+          this.delayedStopLoading()
         })
     },
     // Dialog 열기
     openDialog(dialogName, requestMode, linkId = '') {
       // linkId 제공될경우 요청한 것으로 변경
       if (linkId !== '') {
-        this.clickedLinkID = linkId
+        this.changeClickedLinkID(linkId)
       }
       
-      // RequestMode 구분
-      switch (requestMode) {
-      case RequestMode.Multiple:
-        this.requestMode = requestMode
-        break
-      default:
-        this.requestMode = RequestMode.Single
-        break
-      }
+      // RequestMode 변경
+      this.changeRequestMode(requestMode)
 
+      // Dialog 변경
       this.changeDialogValue(dialogName, true)
     },
     // Dialog 닫기
@@ -503,13 +475,10 @@ export default {
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
-          console.log(e)
-          this.showError = true
-          this.errorMsg = "삭제에 실패하였습니다"
+          this.showError("삭제에 실패하였습니다")
         }).finally(() => {
-          this.clickedLinkID = ''
-          this.checkedLinkIDList = []
-          this.stopLoading()
+          this.clearSelectLink()
+          this.delayedStopLoading()
         })
     },
     // 선택한 링크의 태그 변경하는 함수
@@ -521,14 +490,11 @@ export default {
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
-          console.log(e)
-          this.showError = true
-          this.errorMsg = "태그 변경에 실패하였습니다"
+          this.showError("태그 변경에 실패하였습니다")
         }).finally(() => {
-          this.clickedLinkID = ''
-          this.checkedLinkIDList = []
+          this.clearSelectLink()
           this.tagName = ''
-          this.stopLoading()
+          this.delayedStopLoading()
         })
     },
     // 선택한 링크의 태그 삭제하는 함수
@@ -540,31 +506,26 @@ export default {
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
-          console.log(e)
-          this.showError = true
-          this.errorMsg = "태그 삭제에 실패하였습니다"
+          this.showError("태그 삭제에 실패하였습니다")
         }).finally(() => {
-          this.clickedLinkID = ''
-          this.checkedLinkIDList = []
-          this.stopLoading()
+          this.clearSelectLink()
+          this.delayedStopLoading()
         })
     },
     // 즐겨찾기 변경
     changeFavorite(favorite) {
       this.startLoading()
 
+      console.log(this.linkID)
       axios.post(favorite == true ? this.serverURL.checkFavoriteURL : this.serverURL.uncheckFavoriteURL,
         { userID: this.userInfo.email, favoriteID: this.linkID })
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
-          console.log(e)
-          this.showError = true
-          this.errorMsg = "변경에 실패하였습니다"
+          this.showError("변경에 실패하였습니다")
         }).finally(() => {
-          this.clickedLinkID = ''
-          this.checkedLinkIDList = []
-          this.stopLoading()
+          this.clearSelectLink()
+          this.delayedStopLoading()
         })
     },
     // 선택한 링크 숨기기
@@ -576,14 +537,11 @@ export default {
         .then(res => {
           this.fetchLinkData()
         }).catch(e => {
-          console.log(e)
-          this.showError = true
-          this.errorMsg = "숨기기에 실패하였습니다"
+          this.showError("숨기기에 실패하였습니다")
         }).finally(() => {
-          this.clickedLinkID = ''
-          this.checkedLinkIDList = []
+          this.clearSelectLink()
           this.hideName = ''
-          this.stopLoading()
+          this.delayedStopLoading()
         })
     }
   }

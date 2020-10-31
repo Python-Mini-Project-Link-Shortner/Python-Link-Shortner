@@ -62,6 +62,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "manageHome" */ '@/views/ManagePage/ManageHome.vue')
       },
       {
+        path: 'favorite',
+        name: 'ManageFavorite',
+        component: () => import(/* webpackChunkName: "manageSub" */ '@/views/ManagePage/ManageFavorite.vue')
+      },
+      {
+        path: 'hidden',
+        name: 'ManageHide',
+        component: () => import(/* webpackChunkName: "manageSub" */ '@/views/ManagePage/ManageHide.vue')
+      },
+      {
         path: ':shortURL@',
         name: 'ManageLinkCheck',
         component: () => import(/* webpackChunkName: "manageLinkCheck" */ '@/views/LinkCheck.vue'),
