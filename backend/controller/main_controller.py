@@ -1,5 +1,5 @@
 from flask              import render_template, Blueprint, redirect, request, jsonify
-from backend.service    import url_service
+from backend.service    import url_service, stat_service
 import json
 
 main_controller = Blueprint('main_controller', __name__)
@@ -23,7 +23,7 @@ def redirect_url(short_url):
     # TODO: 전체 데이터를 수정하여 다시 넣는 것이므로 비효율적
     #       $push를 통해 하나씩 append 하는 방식으로 바꿔보기
     #       단, 이미 있는 항목은 검사하여 카운트를 높여야 한다.
-    stats = url_service.get_stats_info(short_url)
+    stats = stat_service.get_stats_info(short_url)
     if stats is None: 
         stats = { 
             'count': 0, 
@@ -35,7 +35,7 @@ def redirect_url(short_url):
             'index': []
             }
 
-    url_service.extract_stats(
+    stat_service.extract_stats(
         request.headers, 
         request.environ, 
         request.user_agent, 
@@ -43,6 +43,6 @@ def redirect_url(short_url):
         )
 
     # 통계정보 업데이트
-    url_service.upsert_stats(short_url, stats)
+    stat_service.upsert_stats(short_url, stats)
 
     return redirect(raw_url)
