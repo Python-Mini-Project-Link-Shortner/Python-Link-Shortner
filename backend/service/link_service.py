@@ -4,7 +4,7 @@ from backend.database.util.pagination   import pagination
 import pymongo
 
 def get_link_pagination(user_id, page = 1, item_count = 10):
-    """아이디가 가진 축약된 링크를 페이지대로 가져온다
+    """아이디가 가진 링크를 페이지대로 가져온다
 
     Args:
 
@@ -23,7 +23,7 @@ def get_link_pagination(user_id, page = 1, item_count = 10):
     return pagination(res, [('makeDate', pymongo.DESCENDING)], page, item_count)
 
 def get_unhide_link_pagination(user_id, page = 1, item_count = 10):
-    """아이디가 가진 숨겨지지 않은 축약된 링크를 페이지대로 가져온다
+    """아이디가 가진 숨겨지지 않은 링크를 페이지대로 가져온다
 
     Args:
 
@@ -38,6 +38,26 @@ def get_unhide_link_pagination(user_id, page = 1, item_count = 10):
     collection = db.get_collection()
 
     res = collection.find({ 'userID': user_id, '$or': [ { 'hide': { '$exists': False } }, { 'hide': False } ] })
+
+    return pagination(res, [('makeDate', pymongo.DESCENDING)], page, item_count)
+
+def get_unhide_favorite_link_pagination(user_id, page = 1, item_count = 10):
+    """아이디가 가진 즐겨찾기에 추가된 숨겨지지 않은 링크를 페이지대로 가져온다
+
+    Args:
+    
+                user_id (str): 아이디
+                page (int, optional): 페이지 번호. Defaults to 1.
+                item_count (int, optional): 페이지 당 링크 갯수. Defaults to 10.
+
+        Returns:
+
+                pagination: 페이지네이션 데이터
+        """
+    collection = db.get_collection()
+
+    res = collection.find({ 'userID': user_id, 'favorite': True,
+        '$or': [ { 'hide': { '$exists': False } }, { 'hide': False } ] })
 
     return pagination(res, [('makeDate', pymongo.DESCENDING)], page, item_count)
 

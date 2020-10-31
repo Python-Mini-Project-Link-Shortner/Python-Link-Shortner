@@ -22,7 +22,7 @@
         </v-subheader>
 
         <!-- <v-list-item v-for="linkItem in drawerItem" :key="linkItem.text" @click="close()"> -->
-        <v-list-item v-for="linkItem in drawerItem.linkList" :key="linkItem.text" :to="linkItem.link"
+        <v-list-item v-for="linkItem in drawerItem.linkList" :key="linkItem.text" :to="{ name: linkItem.link }"
         color="info" v-ripple="{ class: 'blue--text' }" class="nav-info">
           <v-list-item-icon>
             <v-icon v-text="linkItem.icon"></v-icon>
@@ -39,8 +39,6 @@
     <template v-slot:append>
       <div class="py-3">@2020 MiniPy.com</div>
     </template>
-
-    <!-- TODO: Logout 버튼 화면 크기에 따라서 여기로 옮기기 -->
   </v-navigation-drawer>
 </template>
 
@@ -56,11 +54,10 @@ export default {
   data: () => ({
     drawerManageList: [
       { title: '링크관리', linkList: [
-        { icon: 'mdi-home', text: '홈페이지', link: '#' },
-        { icon: 'mdi-heart', text: '즐겨찾기', link: '#' },
-        { icon: 'mdi-tag', text: '태그관리', link: '#' },
-        { icon: 'mdi-eye-off', text: '숨김관리', link: '#' },
-        { icon: 'mdi-restore-alert', text: '링크검사', link: '#' }
+        { icon: 'mdi-heart', text: '즐겨찾기', link: 'ManageFavorite' },
+        { icon: 'mdi-tag', text: '태그관리', link: 'ManageTag' },
+        { icon: 'mdi-eye-off', text: '숨김관리', link: 'ManageHide' },
+        { icon: 'mdi-restore-alert', text: '링크검사', link: 'ManageLink' }
       ]},
       { title: '링크분석', linkList: [
         { icon: 'mdi-chart-areaspline-variant', text: '분석현황', link: '#' },
