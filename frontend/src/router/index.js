@@ -42,9 +42,19 @@ const routes = [
         component: () => import(/* webpackChunkName: "main" */ '@/views/MainPage/MainAPI.vue'),
       },
       {
+        path: 'contact',
+        name: 'MainContact',
+        component: () => import(/* webpackChunkName: "main" */ '@/views/Contact.vue'),
+      },
+      {
         path: ':shortURL@',
         name: 'MainLinkCheck',
         component: () => import(/* webpackChunkName: "main" */ '@/views/LinkCheck.vue'),
+      },
+      {
+        path: 'test',
+        name: 'MainTest',
+        component: () => import(/* webpackChunkName: "main" */ '@/components/Manage/Statistics.vue'),
       }
     ],
   },
@@ -65,6 +75,11 @@ const routes = [
         path: ':shortURL@',
         name: 'ManageLinkCheck',
         component: () => import(/* webpackChunkName: "manageLinkCheck" */ '@/views/LinkCheck.vue'),
+      },
+      {
+        path: 'test',
+        name: 'ManageTest',
+        component: () => import(/* webpackChunkName: "manage" */ '@/components/Manage/Statistics.vue'),
       }
     ]
   }

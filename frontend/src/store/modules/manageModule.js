@@ -2,11 +2,15 @@ export default module = {
   // namespace가 존재하므로 사용할때는 {등록시킬때이름/}를 추가해줘서 사용해야 한다
   namespaced: true,
   state: () => ({
-    showDrawer: true  // Manage 페이지의 NavigationDrawer 상태값
+    showDrawer: true,  // Manage 페이지의 NavigationDrawer 상태값
+    statData: {}        // 통계창에 표시할 데이터
   }),
   mutations: {
     setDrawer(state, value) { // showDrawer 값 변경
       state.showDrawer = value;
+    },
+    setStatData(state, value) { // StatData 값 할당
+      state.statData = value
     }
   },
   actions: {
