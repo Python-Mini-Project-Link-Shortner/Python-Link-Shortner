@@ -6,7 +6,12 @@
     <!-- 분석창 -->
     <v-row>
       <v-col cols="12">
-        <div style="height: 240px; border: 1px solid black; border-radius: 8px;">여러가지 분석자료들 넣을 수 있으면 넣어보세요</div>
+        <div
+          class="grey lighten-4"
+          style="height: 240px; border-radius: 8px;"
+        >
+          
+        </div>
       </v-col>
     </v-row>
 

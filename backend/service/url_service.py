@@ -3,9 +3,9 @@ from datetime                   import datetime
 from urllib.parse               import urlparse
 # Third-Party Libraries
 from short_url                  import encode_url
-import geoip2.database          # ip -> location
 # Custom modules
 from backend.database.mongo_db  import db
+
 
 def create_short_url(unique_id:int):
     """7자리 문자열을 생성한다.
@@ -150,107 +150,5 @@ def register_url(raw_url, user_id):
 
     return short_url
 
-def get_stats_info(short_url):
-    """DB에서 해당 링크의 통계정보를 전부 가져온다.
 
-    Args:
-        short_url (str): 축약 링크
-    Returns:
-        dict: 찾은 통계 정보
-        None: 해당 축약 링크가 없는 경우
-    """
-    collection = db.get_collection("STATS")
-
-    return collection.find_one({ 'shortURL': short_url })
-
-def extract_stats(headers, environ, user_agent, stats:dict):
-    """통계정보를 stats에 반영한다.
-
-    Args:
-        headers       : Flask request.headers
-        environ (dict): Flask request.environ
-        user_agent    : Flask request.user_agent
-        stats   (dict): 기존 통계 정보
-    Returns:
-        None: stats에 바로 반영된다.
-    """
-
-    # 0. 클릭 카운트를 높인다.
-    stats['count'] += 1
-
-    # 1. 유입경로를 정리한다.
-    referrer = environ.get('HTTP_REFERER')
-        # 주소창에서 접근한 경우
-    if referrer is None:
-        stats['entry']['Address Bar'] = stats['entry'].get('Address Bar', 0) + 1
-        # 타사이트에서 접근한 경우
-    else:
-        host = urlparse(referrer).hostname
-        stats['entry'][host] = stats['entry'].get(host, {})
-        # TODO: referrer는 긴 문자열이기에 검색이 오래 걸릴 수 있음.
-        # 리디렉션이 오래 걸리는 경우 단순배열로 수정할 필요 있음.
-        stats['entry'][host][referrer] = stats['entry'][host].get(referrer, 0) + 1
-
-    # 2. 시간을 기록한다.
-    stats['time'].append(datetime.now())
-
-    # 3. 국가 정보를 기록한다.
-    if headers.getlist("X-Forwarded-For"):
-        # 프록시 서버가 있는 경우
-        user_ip = headers.getlist("X-Forwarded-For")[0]
-    else:
-        user_ip = environ.get('REMOTE_ADDR')
-        # ip로부터 국가명 추출
-    with geoip2.database.Reader('backend/database/GeoLite2-Country.mmdb') as reader:
-        try:
-            response = reader.country(user_ip)
-            country = response.country.name
-        except:
-            country = 'Not Found'
-
-    stats['country'][country] = stats['country'].get(country, 0) + 1
-
-    # 4. 브라우저 및 OS 정보 기록
-    browser = user_agent.browser
-    platform = user_agent.platform
-    stats['browser'][browser] = stats['browser'].get(browser, 0) + 1
-    stats['platform'][platform] = stats['platform'].get(platform, 0) + 1
-
-    # 불필요한 필드 삭제
-    stats.pop('_id', None)
-    stats.pop('shortURL', None)
-
-
-def upsert_stats(short_url, stats):
-    """통계 정보를 업데이트한다.
-
-    Args:
-        short_url (str): 저장 또는 갱신할 축약 링크
-        stats (dict): 반영할 통계 딕셔너리
-    """
-    collection = db.get_collection("STATS")
-
-    # 기본값으로 설정할 필드
-    defaults = { 
-        'count': 0, 
-        'entry': {},
-        'country': {},
-        'time': [],
-        'browser': {},
-        'platform': {}
-        }
-    # 업데이트할 항목은 제외한다.
-    for key in stats:
-        if key in defaults: defaults.pop(key)
-
-    # setOnInsert는 비어있어선 안 된다.
-    if not defaults:
-        collection.update_one({ 'shortURL': short_url }, {
-            '$set': stats
-        })
-    else:
-        collection.update_one({ 'shortURL': short_url }, {
-            '$setOnInsert': defaults,
-            '$set': stats
-        }, upsert=True)
 

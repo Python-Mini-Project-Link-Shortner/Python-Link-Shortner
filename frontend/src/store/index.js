@@ -21,6 +21,7 @@ export default new Vuex.Store({
       authCode: 'http://127.0.0.1:5000/api/authCode',
       shorten:'http://127.0.0.1:5000/api/shorten',
       check: 'http://127.0.0.1:5000/api/check',
+      contact: 'http://127.0.0.1:5000/api/contact',
       linkPageURL: 'http://127.0.0.1:5000/api/linkList',
       favoritePageURL: 'http://127.0.0.1:5000/api/favoriteList',
       deleteLinkURL: 'http://127.0.0.1:5000/api/deleteLink',
@@ -31,11 +32,12 @@ export default new Vuex.Store({
       hideNameListURL: 'http://127.0.0.1:5000/api/hideNameList',
       hideURL: 'http://127.0.0.1:5000/api/hideLink',
     },
+    googleMapAPI: 'AIzaSyD3iDDJCCjgJoToj7MXi9_ObGp5KCTtsPE',
+    clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com',
     moduleNames:{
       main: 'main',
       manage: 'manage'
     },
-    clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com'
   },
   mutations: {
     setUserInfo(state, payload) {

@@ -8,6 +8,7 @@ export default module = {
   namespaced: true,
   state: () => ({
     RequestMode,
+    statData: {},        // 통계창에 표시할 데이터
     showDrawer: true,  // Manage 페이지의 NavigationDrawer 상태값
     showError: false, // 에러 표시
     errorMsg: '', // 에러 메시지
@@ -17,6 +18,9 @@ export default module = {
     checkedLinkIDList: [] // 체크박스 체크한 링크 아이디 배열
   }),
   mutations: {
+    setStatData(state, value) { // StatData 값 할당
+      state.statData = value
+    },
     setDrawer(state, value) {
       state.showDrawer = value
     },

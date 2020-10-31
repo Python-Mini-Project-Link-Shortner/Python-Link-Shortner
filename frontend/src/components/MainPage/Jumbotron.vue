@@ -35,7 +35,7 @@
       <v-row
       align="center" 
       :style="{height: imgHeight * 1/3 + 'px'}">
-        <ShortenLink toggle alert :behavior="btnToggle" :key="btnToggle"/>
+        <ShortenLink alert :behavior="btnToggle" :key="btnToggle"/>
       </v-row>
 
       <v-row
