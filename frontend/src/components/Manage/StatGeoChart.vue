@@ -5,8 +5,11 @@
 	- data: 적용할 국가별 데이터 (배열)
 -->
 <template>
-	<div>
-		<div :id="_uid">
+	<div class="display-flex flex-row">
+		<div>
+			as
+		</div>
+		<div class="flex-grow" :id="_uid">
 				
 		</div>
 	</div>
@@ -70,4 +73,18 @@ export default {
 </script>
 
 <style scoped>
+.display-flex {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+.flex-column {
+	flex-direction: column;
+}
+.flex-row {
+	flex-direction: row;
+}
+.flex-grow {
+	flex-grow: 1;
+}
 </style>

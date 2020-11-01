@@ -3,6 +3,8 @@ from datetime                   import datetime
 from urllib.parse               import urlparse
 # Third-Party Libraries
 from short_url                  import encode_url
+from lxml.html                  import fromstring
+import requests
 # Custom modules
 from backend.database.mongo_db  import db
 
@@ -50,6 +52,16 @@ def normalize_url(raw_url):
     parse = urlparse(raw_url, scheme='http')
 
     return parse.geturl()
+
+def get_page_title(raw_url):
+    """해당 URL의 제목을 추출한다.
+
+    Args:
+        url (str): 제목을 추출할 URL
+    """
+    r = requests.get(raw_url)
+    parse_tree = fromstring(r.content)
+    return parse_tree.findtext('.//title')
 
 def get_url(url, target="short"):
     """DB에서 축약된 URL을 가져온다.
@@ -135,6 +147,7 @@ def register_url(raw_url, user_id):
     data = {
         'rawURL': raw_url,
         'shortURL': short_url,
+        'pageTitle': get_page_title(raw_url),
         'userID': user_id,
         'makeDate': datetime.now(),
         'favorite': False

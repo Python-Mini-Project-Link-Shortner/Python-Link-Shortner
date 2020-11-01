@@ -3,32 +3,34 @@
 		class="mx-auto px-8 grey lighten-4"
 	>
 		<v-row>
+			<!-- 국가별 통계 -->
 			<v-col class="white" cols="6">
 				<v-row>
 					<v-col class="py-0">
-						<StatSubHeader 
+						<SubHeader 
 							title="countries"
 							subtitle="Overall Period"
 						/>
 					</v-col>
 				</v-row>
-				<v-row>
-					<v-col>
-						<GeoChart :height="geoChartHeight"/>
-					</v-col>
-				</v-row>
+
+				<GeoChart :height="geoChartHeight"/>
 			</v-col>
 
+			<!-- 기간별 통계 -->
 			<v-col class="py-0">
 				<v-col cols="12" class="white" :style="{height: '48%'}">
-					<v-row>
-						<v-col class="py-0">
-							<StatSubHeader 
+					<div class="display-flex flex-column flow-column">
+						<div>
+							<SubHeader 
 								title="Total Clicks"
 								subtitle="Overall Period"
 							/>
-						</v-col>
-					</v-row>
+						</div>
+						<div class="flex-grow inner-flex display-2 primary--text">
+							5000
+						</div>
+					</div>
 
 					<v-row>
 						<v-col class="py-0">
@@ -48,7 +50,7 @@
 </template>
 
 <script>
-import GeoChart from '@/components/Manage/GeoChart.vue'
+import StatGeoChart from '@/components/Manage/StatGeoChart.vue'
 import StatSubHeader from '@/components/Manage/StatSubHeader.vue'
 export default {
 	name: 'Statistics',
@@ -67,11 +69,30 @@ export default {
 		}
 	},
 	components: {
-		GeoChart, StatSubHeader
+		GeoChart: StatGeoChart, 
+		SubHeader: StatSubHeader,
 	}
 }
 </script>
 
-<style>
-
+<style scoped>
+.display-flex {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+.flex-column {
+	flex-direction: column;
+}
+.flex-row {
+	flex-direction: row;
+}
+.flex-grow {
+	flex-grow: 1;
+}
+.inner-flex {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 </style>
