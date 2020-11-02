@@ -6,25 +6,42 @@
 -->
 <template>
 	<div class="display-flex flex-row">
-		<div>
-			as
-		</div>
+		<ProgressChart :items="countries" />
+
 		<div class="flex-grow" :id="_uid">
-				
+			
 		</div>
 	</div>
 </template>
 
 <script>
 import {mapState} from 'vuex'
+import StatProgressChart from '@/components/Manage/StatProgressChart.vue'
 
 export default {
 	name: 'GeoChart',
+	data: () => ({
+		dataHeader: ['Country', 'Clicks'],
+	}),
 	computed: {
 		...mapState(['googleMapAPI']),
+		countries() {
+			return {
+				'Germany': 200,
+				'United States': 300,
+				'Brazil': 400,
+				'Canada': 500
+			}
+		},
 		dataArray() {
-			let data = [['Country', 'Clicks']]
+			const countries = this.countries
+			let res = []
+			res.push(this.dataHeader)
+			for (const country in countries) {
+				res.push([country, countries[country]])
+			}
 
+			return res
 		}
 	},
 	props: {
@@ -49,18 +66,11 @@ export default {
 
 		// 로드 후 적용할 콜백함수
 		const drawRegionsMap = () => {
-			var data = google.visualization.arrayToDataTable([
-				['Country', 'Clicks'],
-				['Germany', 200],
-				['United States', 300],
-				['Brazil', 400],
-				['Canada', 500],
-				['France', 600],
-				['RU', 700]
-			])
+			var data = google.visualization.arrayToDataTable(this.dataArray)
 			var options = {
 				height: '210',
-				colorAxis: {colors: ['#e1f7fc', '#3773a5']}
+				colorAxis: {colors: ['#e1f7fc', '#3773a5']},
+				legend: 'none'
 			}
 			var chart = new google.visualization.GeoChart(document.getElementById(this._uid))
 
@@ -68,6 +78,9 @@ export default {
 		}
 
 		google.charts.setOnLoadCallback(drawRegionsMap)
+	},
+	components: {
+		ProgressChart: StatProgressChart,
 	}
 }
 </script>
