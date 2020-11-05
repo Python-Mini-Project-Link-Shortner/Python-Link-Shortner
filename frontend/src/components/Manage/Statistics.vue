@@ -4,7 +4,7 @@
 	>
 		<v-row>
 			<!-- 국가별 통계 -->
-			<v-col class="white" cols="6">
+			<v-col class="white border-decor" cols="6">
 				<v-row>
 					<v-col class="py-0">
 						<SubHeader 
@@ -94,5 +94,9 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+.border-decor {
+	border: 1px solid #CDCDCD !important;
+	border-radius: 8px;
 }
 </style>

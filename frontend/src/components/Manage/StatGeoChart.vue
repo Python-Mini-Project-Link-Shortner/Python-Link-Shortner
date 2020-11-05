@@ -30,7 +30,7 @@ export default {
 				'Germany': 200,
 				'United States': 300,
 				'Brazil': 400,
-				'Canada': 500
+				'Canada': 1500
 			}
 		},
 		dataArray() {
