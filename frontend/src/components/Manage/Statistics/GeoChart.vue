@@ -7,7 +7,9 @@
 <template>
 	<div class="display-flex flex-row" ref="parent">
 		<div ref="pChart">
-			<ProgressChart :items="countries"/>
+			<ProgressChart 
+				class="my-2 px-2"
+				:items="countries"/>
 		</div>
 
 		<div class="flex-grow">
@@ -18,7 +20,7 @@
 
 <script>
 import {mapState} from 'vuex'
-import StatProgressChart from '@/components/Manage/StatProgressChart.vue'
+import ProgressChart from '@/components/Manage/Statistics/ProgressChart.vue'
 
 export default {
 	name: 'GeoChart',
@@ -99,11 +101,11 @@ export default {
 		this.breakpoint = this.$vuetify.breakpoint.name
 		window.addEventListener('resize', this.redrawChart)
 	},
-	components: {
-		ProgressChart: StatProgressChart,
-	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.redrawChart)
+	},
+	components: {
+		ProgressChart: ProgressChart,
 	}
 }
 </script>

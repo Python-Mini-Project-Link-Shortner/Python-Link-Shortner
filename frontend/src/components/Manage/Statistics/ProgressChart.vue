@@ -1,5 +1,5 @@
 <template>
-  <div class="my-2 px-2 common-font">
+  <div class="common-font">
 		<span class="no-wrap mb-2"><b>{{totalCount}}</b> - Total Count</span>
 		<!--  -->
 		<div 

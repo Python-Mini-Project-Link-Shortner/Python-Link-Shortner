@@ -2,47 +2,30 @@
   <v-container
 		class="mx-auto px-8 grey lighten-4"
 	>
-		<v-row>
+		<v-row justify="space-around">
 			<!-- 국가별 통계 -->
-			<v-col class="white border-decor" cols="6">
-				<v-row>
-					<v-col class="py-0">
-						<SubHeader 
-							title="countries"
-							subtitle="Overall Period"
-						/>
-					</v-col>
-				</v-row>
+			<v-col cols="6" xl="4">
+				<!-- Gutter 적용을 위한 Col 중첩 -->
+				<v-col class="white border-decor">
+					<SubHeader 
+						title="countries"
+						subtitle="Overall Period"
+					/>
 
-				<GeoChart :height="geoChartHeight"/>
+					<GeoChart :height="geoChartHeight"/>
+				</v-col>
 			</v-col>
 
 			<!-- 기간별 통계 -->
-			<v-col class="py-0">
-				<v-col cols="12" class="white" :style="{height: '48%'}">
-					<div class="display-flex flex-column flow-column">
-						<div>
-							<SubHeader 
-								title="Total Clicks"
-								subtitle="Overall Period"
-							/>
-						</div>
-						<div class="flex-grow inner-flex display-2 primary--text">
-							5000
-						</div>
-					</div>
+			<v-col cols="6" xl="4">
+				<!-- Gutter 적용을 위한 Col 중첩 -->
+				<v-col class="white border-decor fill-height">
+					<SubHeader 
+						title="traffic"
+						subtitle="Last 14 days"
+					/>
 
-					<v-row>
-						<v-col class="py-0">
-
-						</v-col>
-					</v-row>
-				</v-col>
-
-				<v-col class="pt-0" :style="{height: '4%'}"></v-col>
-
-				<v-col class="white" :style="{height: '48%'}">
-						aa
+					<TimeChart />
 				</v-col>
 			</v-col>
 		</v-row>
@@ -50,8 +33,9 @@
 </template>
 
 <script>
-import StatGeoChart from '@/components/Manage/StatGeoChart.vue'
-import StatSubHeader from '@/components/Manage/StatSubHeader.vue'
+import SubHeader from '@/components/Manage/Statistics/SubHeader.vue'
+import GeoChart from '@/components/Manage/Statistics/GeoChart.vue'
+import TimeChart from '@/components/Manage/Statistics/TimeChart.vue'
 export default {
 	name: 'Statistics',
 	data: () => ({
@@ -69,8 +53,9 @@ export default {
 		}
 	},
 	components: {
-		GeoChart: StatGeoChart, 
-		SubHeader: StatSubHeader,
+		SubHeader: SubHeader,
+		GeoChart: GeoChart, 
+		TimeChart: TimeChart,
 	}
 }
 </script>
@@ -94,6 +79,9 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+.fill-height {
+	height: 100%;
 }
 .border-decor {
 	border: 1px solid #CDCDCD !important;
