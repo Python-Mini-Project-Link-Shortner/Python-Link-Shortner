@@ -32,7 +32,7 @@
     <!-- 링크 -->
     <v-row v-for="link in linkList" :key="link._id">
       <v-col cols="12">
-        <v-card outlined hover>
+        <v-card outlined hover @click="setStatData(link.shortURL)">
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-h6 text-truncate info--text">{{ link.shortURL }}</v-list-item-title>
@@ -382,7 +382,7 @@ export default {
   methods: {
     ...mapActions('manage',
       ['clearSelectLink', 'changeClickedLinkID', 'changeCheckedLinkIDList', 'changeRequestMode',
-        'startLoading', 'delayedStopLoading', 'showError', 'hideError']),
+        'startLoading', 'delayedStopLoading', 'showError', 'hideError', 'setStatData']),
     // 페이지 변경전 Vue 초기화
     resetForPaging() {
       this.fab = false
@@ -546,6 +546,20 @@ export default {
         }).finally(() => {
           this.clearSelectLink()
           this.hideName = ''
+          this.delayedStopLoading()
+        })
+    },
+    setStatData(shortURL) {
+      this.startLoading()
+
+      axios.post('http://127.0.0.1:5000/api/tempStat',
+        { userID: this.userInfo.email, shortURL: shortURL })
+        .then(res => {
+          if (res.data.flag == false) { console.log('아무것도 없어요') }
+          else { this.setStatData(res.data.stat) }
+        }).catch(e => {
+          this.showError("통계 자료 불러오기에 실패하였습니다")
+        }).finally(() => {
           this.delayedStopLoading()
         })
     }

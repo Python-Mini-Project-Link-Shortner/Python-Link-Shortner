@@ -77,9 +77,8 @@ export default {
         ]
       },
       { title: 'MiniPy', linkList: [
-        { icon: 'mdi-chat', text: '연락', link: '#' },
-        { icon: 'mdi-file-document-edit', text: '약관', link: '#' },
-        { icon: 'mdi-alert-box', text: '신고', link: '#' }
+        { icon: 'mdi-alert-box', text: '연락/신고', link: '#' },
+        { icon: 'mdi-file-document-edit', text: '약관', link: '#' }
       ]}
     ]
   }),

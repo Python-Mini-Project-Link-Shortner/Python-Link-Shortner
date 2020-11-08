@@ -77,6 +77,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "manageSub" */ '@/views/ManagePage/ManageFavorite.vue')
       },
       {
+        path: 'tag',
+        name: 'ManageTag',
+        component: () => import(/* webpackChunkName: "manageSub" */ '@/views/ManagePage/ManageTag.vue')
+      },
+      {
         path: 'hidden',
         name: 'ManageHide',
         component: () => import(/* webpackChunkName: "manageSub" */ '@/views/ManagePage/ManageHide.vue')

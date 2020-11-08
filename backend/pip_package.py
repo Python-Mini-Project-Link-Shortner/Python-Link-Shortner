@@ -18,5 +18,6 @@ try:
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-auth-httplib2'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'google-auth-oauthlib'])
     subprocess.call([sys.executable, '-m', 'pip', 'install', 'oauth2client'])
+    subprocess.call([sys.executable, '-m', 'pip', 'install', 'lxml'])
 except Exception as e:
     print(e)

@@ -320,3 +320,30 @@ def unhide_link_array(user_id, unhide_id_array):
 
     if result.modified_count == len(unhide_id_array): return True
     return False
+
+def get_tag_list(user_id):
+    collection = db.get_collection()
+
+    result = collection.find({
+        'userID': user_id,
+        '$and': [ {'tagName': { '$ne': None } }, { 'tagName': { '$ne': "" } } ],
+        '$or': [ { 'hide': { '$exists': False } }, { 'hide': False } ] })
+
+    if result is None: return None
+
+    result = result.distinct('tagName')
+    result.sort()
+    return result
+
+def get_tagged_link_list(user_id, tag):
+    collection = db.get_collection()
+
+    result = collection.find({
+        'userID': user_id,
+        'tagName': tag,
+        '$or': [ { 'hide': { '$exists': False } }, { 'hide': False } ]
+    })
+
+    if result is None: return None
+
+    return list(result)

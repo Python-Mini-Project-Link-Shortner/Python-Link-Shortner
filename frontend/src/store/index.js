@@ -31,6 +31,9 @@ export default new Vuex.Store({
       uncheckFavoriteURL: 'http://127.0.0.1:5000/api/uncheckFavorite',
       hideNameListURL: 'http://127.0.0.1:5000/api/hideNameList',
       hideURL: 'http://127.0.0.1:5000/api/hideLink',
+      tagListURL: 'http://127.0.0.1:5000/api/tagList',
+      hideListURL: 'http://127.0.0.1:5000/api/hideList',
+      taggedLinkListURL: 'http://127.0.0.1:5000/api/taggedLinkList'
     },
     googleMapAPI: 'AIzaSyD3iDDJCCjgJoToj7MXi9_ObGp5KCTtsPE',
     clientID: '623170114008-hftrjkuefmi8aif5jrlsonnu3tv69q7v.apps.googleusercontent.com',
