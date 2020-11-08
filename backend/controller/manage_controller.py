@@ -1,5 +1,5 @@
 from flask                  import Blueprint, request, jsonify
-from backend.service        import link_service, url_service
+from backend.service        import link_service, url_service, stat_service
 
 manage_controller = Blueprint('manage_controller', __name__)
 
@@ -169,3 +169,46 @@ def unhide_link():
 
     return jsonify(res_data)
 
+@manage_controller.route('/tagList', methods=['POST'])
+def tag_list():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+
+    tags = link_service.get_tag_list(user_id)
+
+    res_data = { 'flag': True, 'tags': tags }
+    if tags == None:
+        res_data['flag'] = False
+
+    return jsonify(res_data)
+
+@manage_controller.route('/taggedLinkList', methods=['POST'])
+def tagged_link_list():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    tag_name = req_data['tag']
+
+    links = link_service.get_tagged_link_list(user_id, tag_name)
+
+    res_data = { 'flag': True, 'link': links}
+    if links == None:
+        res_data['flag'] = False
+    
+    return jsonify(res_data)
+
+@manage_controller.route('/tempStat', methods=['POST'])
+def tempStat():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    short_url = req_data['shortURL']
+
+    stat = stat_service.get_stats_info(short_url)
+
+    res_data = { 'flag': True, 'stat': stat }
+    if stat == None:
+        res_data['flag'] = False
+
+    return jsonify(res_data)

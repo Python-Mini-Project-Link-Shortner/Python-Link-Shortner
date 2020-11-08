@@ -15,7 +15,12 @@ export default module = {
     loading: false, // 로딩상태
     requestMode: RequestMode.Single,  // Request 요청시의 단독/여러개 상태값
     clickedLinkID: '', // 현재 클릭한 링크 아이디
-    checkedLinkIDList: [] // 체크박스 체크한 링크 아이디 배열
+    checkedLinkIDList: [], // 체크박스 체크한 링크 아이디 배열
+    breadcrumbs: {
+      favorite: [ { text: '링크관리', disabled: true, href: '#' }, { text: '즐겨찾기', disabled: false, href: '#' } ],
+      hide: [ { text: '링크관리', disabled: true, href: '#' }, { text: '숨김관리', disabled: false, href: '#' } ],
+      tag: [ { text: '링크관리', disabled: true, href: '#' }, { text: '태그관리', disabled: false, href: '#' } ]
+    }
   }),
   mutations: {
     setStatData(state, value) { // StatData 값 할당
@@ -89,6 +94,9 @@ export default module = {
     },
     changeRequestMode({commit}, payload) {
       commit('setRequestMode', payload)
+    },
+    setStatData({commit}, payload) {
+      commit('setStatData', payload)
     }
   },
   getters: {

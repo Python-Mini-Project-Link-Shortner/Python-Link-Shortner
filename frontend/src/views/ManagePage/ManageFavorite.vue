@@ -1,5 +1,8 @@
 <template>
   <v-container class="text-left" px-6 py-5 fluid>
+    <!-- 링크 트리 -->
+    <v-breadcrumbs :items="breadcrumbs.favorite" class="pl-2 pt-2 pb-0"></v-breadcrumbs>
+
     <!-- 로딩 -->
     <Loading></Loading>
 
@@ -10,26 +13,32 @@
       </v-col>
     </v-row>
 
-    <p class="text-h4 text-center">
+    <p class="text-h4 mb-8 pl-1">
       즐겨찾기
     </p>
 
     <v-row v-for="link in linkList" :key="link._id">
       <v-col cols="12">
-        <v-card outlined hover>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6 text-truncate info--text">{{ link.shortURL }}</v-list-item-title>
-              <v-list-item-subtitle>{{ link.makeDate }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-card-subtitle class="py-0 font-weight-regular">브라우저탭에뜨는 이름</v-card-subtitle>
-          <v-card-text class="text--primary pb-1">{{ link.rawURL }}</v-card-text>
-
-          <v-card-actions class="px-4">
-            <v-btn color="error" @click="openDialog(link._id)">제거</v-btn>
-          </v-card-actions>
+        <v-card outlined hover class="px-4 py-2">
+          <div style="display: flex" >
+              <div class="text-h6 text-truncate info--text">
+                {{ link.shortURL }}
+              </div>
+              <v-spacer></v-spacer>
+              <div class="pt-1 grey--text">
+                {{ link.makeDate }}
+              </div>
+          </div>
+          <div style="display: flex" class="mt-4">
+            <div>
+              <div class="font-weight-regular text-caption grey--text">브라우저탭에뜨는 이름</div>
+              {{ link.rawURL }}
+            </div>
+            <v-spacer></v-spacer>
+            <div>
+              <v-btn style="height: 100%" color="error" class="text-subtitle-1" @click="openDialog(link._id)">취소</v-btn>
+            </div>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -91,7 +100,7 @@ export default {
   },
   computed: {
     ...mapState(['serverURL', 'userInfo']),
-    ...mapState('manage', ['RequestMode']),
+    ...mapState('manage', ['RequestMode', 'breadcrumbs']),
     ...mapGetters('manage', ['linkID'])
   },
   methods: {
