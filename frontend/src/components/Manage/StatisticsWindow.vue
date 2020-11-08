@@ -28,6 +28,19 @@
 					<TimeChart />
 				</v-col>
 			</v-col>
+
+			<!-- 브라우저 통계 -->
+			<v-col xl="4" v-show="$vuetify.breakpoint.xl">
+				<!-- Gutter 적용을 위한 Col 중첩 -->
+				<v-col class="white border-decor fill-height">
+					<SubHeader
+						title="browser"
+						subtitle="Overall Period"
+					/>
+
+					<BrowserChart />
+				</v-col>
+			</v-col>
 		</v-row>
   </v-container>
 </template>
@@ -36,6 +49,8 @@
 import SubHeader from '@/components/Manage/Statistics/SubHeader.vue'
 import GeoChart from '@/components/Manage/Statistics/GeoChart.vue'
 import TimeChart from '@/components/Manage/Statistics/TimeChart.vue'
+import BrowserChart from '@/components/Manage/Statistics/BrowserChart.vue'
+
 export default {
 	name: 'Statistics',
 	data: () => ({
@@ -56,6 +71,7 @@ export default {
 		SubHeader: SubHeader,
 		GeoChart: GeoChart, 
 		TimeChart: TimeChart,
+		BrowserChart: BrowserChart
 	}
 }
 </script>

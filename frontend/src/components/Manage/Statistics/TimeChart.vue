@@ -25,7 +25,7 @@ export default {
 		// 트래픽 기록을 그래프용 배열로 변환한다.
 		dataArray() {
 			const traffic = this.traffic
-			var formatter = new google.visualization.DateFormat({
+			const formatter = new google.visualization.DateFormat({
 				pattern: 'MMM d (EEE)'
 			})
 			let res = []
@@ -86,7 +86,10 @@ export default {
 		// 반응형으로 만들기
 		this.breakpoint = this.$vuetify.breakpoint.name
 		window.addEventListener('resize', this.redrawChart)
-	}
+	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.redrawChart)
+	},
 }
 </script>
 
