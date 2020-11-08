@@ -89,12 +89,17 @@ const routes = [
       {
         path: ':shortURL@',
         name: 'ManageLinkCheck',
-        component: () => import(/* webpackChunkName: "manageLinkCheck" */ '@/views/LinkCheck.vue'),
+        component: () => import(/* webpackChunkName: "manageLinkCheck" */ '@/views/LinkCheck.vue')
       },
       {
         path: 'test',
         name: 'ManageTest',
-        component: () => import(/* webpackChunkName: "manage" */ '@/components/Manage/StatisticsWindow.vue'),
+        component: () => import(/* webpackChunkName: "manage" */ '@/components/Manage/StatisticsWindow.vue')
+      },
+      {
+        path: 'contact',
+        name: 'ManageContact',
+        component: () => import(/* webpackChunkName: "manage" */ '@/views/Contact.vue')
       }
     ]
   }
