@@ -6,9 +6,11 @@
 export default {
 	name: 'TimeChart',
 	data: () => ({
-		dataHeader: ['Day', 'Clicks']
+		dataHeader: ['Day', 'Clicks'],
+		breakpoint: null
 	}),
 	computed: {
+		// 지난 14일간의 트래픽 기록
 		traffic() {
 			const now = new Date()
 			let res = []
@@ -20,6 +22,7 @@ export default {
 
 			return res
 		},
+		// 트래픽 기록을 그래프용 배열로 변환한다.
 		dataArray() {
 			const traffic = this.traffic
 			var formatter = new google.visualization.DateFormat({
@@ -62,6 +65,15 @@ export default {
 		drawChart() {
 			const chart = new google.visualization.LineChart(document.getElementById(this._uid))
 			chart.draw(this.dataArray, this.options)
+		},
+		redrawChart() {
+			// 화면 사이즈가 변경되면 새로고침
+			const currentBreakpoint = this.$vuetify.breakpoint.name
+
+			if (currentBreakpoint !== this.breakpoint) {
+				this.drawChart()
+				this.breakpoint = currentBreakpoint
+			}
 		}
 	},
 	created() {
@@ -70,6 +82,10 @@ export default {
 			'packages':['corechart'],
 		})
 		google.charts.setOnLoadCallback(this.drawChart)
+
+		// 반응형으로 만들기
+		this.breakpoint = this.$vuetify.breakpoint.name
+		window.addEventListener('resize', this.redrawChart)
 	}
 }
 </script>
