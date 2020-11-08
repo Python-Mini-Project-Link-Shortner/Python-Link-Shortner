@@ -54,7 +54,7 @@ const routes = [
       {
         path: 'test',
         name: 'MainTest',
-        component: () => import(/* webpackChunkName: "main" */ '@/components/Manage/Statistics.vue'),
+        component: () => import(/* webpackChunkName: "main" */ '@/components/Manage/StatisticsWindow.vue'),
       }
     ],
   },
@@ -89,7 +89,7 @@ const routes = [
       {
         path: 'test',
         name: 'ManageTest',
-        component: () => import(/* webpackChunkName: "manage" */ '@/components/Manage/Statistics.vue'),
+        component: () => import(/* webpackChunkName: "manage" */ '@/components/Manage/StatisticsWindow.vue'),
       }
     ]
   }
