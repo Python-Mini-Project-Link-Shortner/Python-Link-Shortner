@@ -31,7 +31,7 @@
           </div>
           <div style="display: flex" class="mt-4">
             <div>
-              <div class="font-weight-regular text-caption grey--text">브라우저탭에뜨는 이름</div>
+              <div class="font-weight-regular text-caption grey--text">{{ link.pageTitle }}</div>
               {{ link.rawURL }}
             </div>
             <v-spacer></v-spacer>

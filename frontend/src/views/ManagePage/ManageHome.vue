@@ -6,12 +6,7 @@
     <!-- 분석창 -->
     <v-row>
       <v-col cols="12">
-        <div
-          class="grey lighten-4"
-          style="height: 240px; border-radius: 8px;"
-        >
-          
-        </div>
+        <Statistics></Statistics>
       </v-col>
     </v-row>
 
@@ -42,7 +37,8 @@
             <v-checkbox v-model="checkedLinkIDList" :value="link._id"></v-checkbox>
           </v-list-item>
 
-          <v-card-subtitle class="py-0 font-weight-regular">브라우저탭에뜨는 이름</v-card-subtitle>
+          <img :src="link.rawURL + '/favicon.ico'" />
+          <v-card-subtitle class="py-0 font-weight-regular">{{ link.pageTitle }}</v-card-subtitle>
           <v-card-text class="text--primary pb-1">{{ link.rawURL }}</v-card-text>
 
           <v-card-actions class="px-4">
@@ -286,6 +282,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import axios from 'axios'
 import ShortenLink from '@/components/ShortenLink.vue'
+import Statistics from '@/components/Manage/StatisticsWindow.vue'
 import LoadingOverlay from '@/components/Manage/LoadingOverlay.vue'
 import ErrorAlert from '@/components/Manage/ErrorAlert.vue'
 
@@ -308,7 +305,8 @@ export default {
   components: {
     LinkInput: ShortenLink,
     Loading: LoadingOverlay,
-    Error: ErrorAlert
+    Error: ErrorAlert,
+    Statistics: Statistics
   },
   data: () => ({
     DialogName,
