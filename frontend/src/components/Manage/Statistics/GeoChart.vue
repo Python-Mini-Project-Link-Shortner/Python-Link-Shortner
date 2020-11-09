@@ -31,20 +31,22 @@ export default {
 	}),
 	computed: {
 		...mapState(['googleMapAPI']),
+		...mapState('manage', ['statData']),
 		countries() {
-			return {
-				'Germany': 200,
-				'United States': 300,
-				'Brazil': 400,
-				'Canada': 1500
-			}
+			const statData = this.statData
+			if (this.isObjectEmpty(statData))
+				return null
+
+			return statData['country']
 		},
 		dataArray() {
 			const countries = this.countries
 			let res = []
 			res.push(this.dataHeader)
 			for (const country in countries) {
-				res.push([country, countries[country]])
+				if (country !== 'Not Found') {
+					res.push([country, countries[country]])
+				}
 			}
 
 			return google.visualization.arrayToDataTable(res)
@@ -78,7 +80,7 @@ export default {
 
 			chart.draw(this.dataArray, this.options)
 		},
-		redrawChart() {
+		makeResponsive() {
 			// 화면 사이즈가 변경되면 크기 새로고침
 			const currentBreakpoint = this.$vuetify.breakpoint.name
 
@@ -86,6 +88,16 @@ export default {
 				this.responsiveWidth = this.$refs.parent.clientWidth - this.$refs.pChart.clientWidth
 				this.drawGeoChart()
 				this.breakpoint = currentBreakpoint
+			}
+		},
+		isObjectEmpty(obj) {
+			return Object.keys(obj).length === 0
+		}
+	},
+	watch: {
+		statData: {
+			handler: function() {
+				this.drawGeoChart()
 			}
 		}
 	},
@@ -99,10 +111,10 @@ export default {
 
 		// 2. 현재 Breakpoint 기록 및 변화 시 새로고침
 		this.breakpoint = this.$vuetify.breakpoint.name
-		window.addEventListener('resize', this.redrawChart)
+		window.addEventListener('resize', this.makeResponsive)
 	},
 	beforeDestroy() {
-		window.removeEventListener('resize', this.redrawChart)
+		window.removeEventListener('resize', this.makeResponsive)
 	},
 	components: {
 		ProgressChart: ProgressChart,

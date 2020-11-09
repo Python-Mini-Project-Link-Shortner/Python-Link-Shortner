@@ -27,7 +27,7 @@
     <!-- 링크 -->
     <v-row v-for="link in linkList" :key="link._id">
       <v-col cols="12">
-        <v-card outlined hover @click="setStatData(link.shortURL)">
+        <v-card outlined hover @click="fetchStatData(link.shortURL)">
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-h6 text-truncate info--text">{{ link.shortURL }}</v-list-item-title>
@@ -547,14 +547,13 @@ export default {
           this.delayedStopLoading()
         })
     },
-    setStatData(shortURL) {
+    fetchStatData(shortURL) {
       this.startLoading()
 
-      axios.post('http://127.0.0.1:5000/api/tempStat',
+      axios.post(this.serverURL.getStats,
         { userID: this.userInfo.email, shortURL: shortURL })
         .then(res => {
-          if (res.data.flag == false) { console.log('아무것도 없어요') }
-          else { this.setStatData(res.data.stat) }
+          this.setStatData(res.data.stat)
         }).catch(e => {
           this.showError("통계 자료 불러오기에 실패하였습니다")
         }).finally(() => {

@@ -30,7 +30,7 @@ export default {
 		},
 		options() {
 			return {
-				pieHole: 0.4,
+				pieHole: 0.3,
 			}
 		}
 	},

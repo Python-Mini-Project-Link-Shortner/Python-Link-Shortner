@@ -22,6 +22,7 @@ export default new Vuex.Store({
       shorten:'http://127.0.0.1:5000/api/shorten',
       check: 'http://127.0.0.1:5000/api/check',
       contact: 'http://127.0.0.1:5000/api/contact',
+      getStats: 'http://127.0.0.1:5000/api/getStats',
       linkPageURL: 'http://127.0.0.1:5000/api/linkList',
       favoritePageURL: 'http://127.0.0.1:5000/api/favoriteList',
       deleteLinkURL: 'http://127.0.0.1:5000/api/deleteLink',

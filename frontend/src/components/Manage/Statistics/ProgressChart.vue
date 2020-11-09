@@ -1,17 +1,20 @@
 <template>
   <div class="common-font">
 		<span class="no-wrap mb-2"><b>{{totalCount}}</b> - Total Count</span>
-		<!--  -->
+		<!-- 국가명, 클릭수, 막대 반복표시 -->
 		<div 
 			v-for="(item, index) in sortedItems" 
 			:key="item[0]"
 		>
 			<div class="d-flex justify-space-between pb-1">
+				<!-- 국가명 -->
 				<div>{{item[0]}}</div>
+				<!-- 클릭수 -->
 				<div>
 					{{formatNumber(item[1])}}
 				</div>
 			</div>
+			<!-- 막대 -->
 			<div 
 				:style="{
 					'background-color': (index === 0) ? colorHighest : colorNormal,
@@ -19,10 +22,10 @@
 					'width': calculateWidth(item[1])
 				}"
 				class="mb-1"
-			>
-
-			</div>
+			/>
 		</div>
+
+		<div class="grey--text" v-if="isDataEmpty()">No Data.</div>
 	</div>
 </template>
 
@@ -45,7 +48,7 @@ export default {
 			let res = []
 
 			// 데이터가 없으면 null 반환
-			if (Object.keys(items).length === 0)
+			if (this.isDataEmpty(items))
 				return null
 
 			// 객체를 배열에 담고 정렬 후 반환
@@ -71,6 +74,9 @@ export default {
 		},
 		formatNumber(num) {
 			return numberWithCommas(num)
+		},
+		isDataEmpty() {
+			return this.items === null || Object.keys(this.items).length === 0
 		}
 	},
 	props: {
@@ -90,7 +96,7 @@ export default {
 			type: Number,
 			default: () => 6
 		}
-	}
+	},
 }
 </script>
 

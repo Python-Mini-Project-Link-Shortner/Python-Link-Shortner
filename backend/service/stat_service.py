@@ -6,6 +6,16 @@ import geoip2.database          # ip -> location
 # Custom modules
 from backend.database.mongo_db  import db
 
+STAT_DEFAULT = {
+    'browser': {},
+    'count': 0,
+    'country': {},
+    'entry': {},
+    'index': [],
+    'platform': {},
+    'time': []
+}
+
 def get_stats_info(short_url):
     """DB에서 해당 링크의 통계정보를 전부 가져온다.
 
@@ -13,11 +23,19 @@ def get_stats_info(short_url):
         short_url (str): 축약 링크
     Returns:
         dict: 찾은 통계 정보
-        None: 해당 축약 링크가 없는 경우
+        None: 통계 정보가 없는 경우 (클릭수 0)
     """
     collection = db.get_collection("STATS")
 
     return collection.find_one({ 'shortURL': short_url })
+
+def get_default_stats():
+    """빈 통계 정보를 반환한다. 
+
+    Returns:
+        dict: 빈 통계 양식
+    """
+    return STAT_DEFAULT
 
 def extract_stats(headers, environ, user_agent, stats:dict):
     """헤더에서 통계정보를 추출한다.

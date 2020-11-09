@@ -197,18 +197,3 @@ def tagged_link_list():
         res_data['flag'] = False
     
     return jsonify(res_data)
-
-@manage_controller.route('/tempStat', methods=['POST'])
-def tempStat():
-    req_data = request.get_json()
-
-    user_id = req_data['userID']
-    short_url = req_data['shortURL']
-
-    stat = stat_service.get_stats_info(short_url)
-
-    res_data = { 'flag': True, 'stat': stat }
-    if stat == None:
-        res_data['flag'] = False
-
-    return jsonify(res_data)
