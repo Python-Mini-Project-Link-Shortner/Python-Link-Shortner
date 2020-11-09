@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
 	name: 'TimeChart',
 	data: () => ({
@@ -10,6 +12,7 @@ export default {
 		breakpoint: null
 	}),
 	computed: {
+		...mapState('manage', ['statData']),
 		// 지난 14일간의 트래픽 기록
 		traffic() {
 			const now = new Date()
@@ -43,6 +46,7 @@ export default {
 			const traffic = this.traffic
 			let hTicks = []
 			
+			// 가로축 값: 최근 14일
 			traffic.forEach((value) => {
 				hTicks.push(value[0])
 			})
@@ -59,6 +63,13 @@ export default {
 					curveType: 'function',
 					legend: 'none'
         }
+		}
+	},
+	watch: {
+		statData: {
+			handler: function() {
+				console.log(this.statData)
+			}
 		}
 	},
 	methods: {
