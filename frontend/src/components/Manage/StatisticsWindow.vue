@@ -4,7 +4,7 @@
 	>
 		<v-row justify="space-around">
 			<!-- 국가별 통계 -->
-			<v-col cols="6" xl="4">
+			<v-col cols="12" sm="6" xl="4">
 				<!-- Gutter 적용을 위한 Col 중첩 -->
 				<v-col class="white border-decor">
 					<SubHeader 
@@ -17,7 +17,7 @@
 			</v-col>
 
 			<!-- 기간별 통계 -->
-			<v-col cols="6" xl="4">
+			<v-col cols="12" sm="6" xl="4">
 				<!-- Gutter 적용을 위한 Col 중첩 -->
 				<v-col class="white border-decor fill-height">
 					<SubHeader 

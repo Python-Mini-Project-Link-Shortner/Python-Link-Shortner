@@ -102,7 +102,6 @@ export default {
 		statData: {
 			handler: function() {
 				this.drawChart()
-				console.log(this.statData)
 			}
 		}
 	},
