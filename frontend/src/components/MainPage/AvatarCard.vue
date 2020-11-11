@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-5 my-8" min-height="300px" max-width="360px">
+    <!-- 상단 중앙 아바타 -->
     <div class="text-center" :style="{height: `${iconSize/2}px`}">
-      <!-- 상단 중앙 아바타 -->
       <v-avatar class="mx-auto" :style="styles" :size="iconSize" color="white" rounded>
         <v-icon size="60" color="rgb(55,115,165)">{{icon}}</v-icon>
       </v-avatar>
@@ -10,9 +10,11 @@
     <v-card-title class="justify-center title pt-1">
       <slot name="title" />
     </v-card-title>
+    <!-- 카드 내용 -->
     <v-card-text class="px-8 text-justify">
       <slot name="content" />
     </v-card-text>
+    <!-- 카드 하단 버튼 영역-->
     <v-card-actions class="px-8">
       <slot name="actions" />
     </v-card-actions>

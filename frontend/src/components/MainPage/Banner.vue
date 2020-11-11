@@ -31,9 +31,9 @@ export default {
     setTextAnimation() {
       const words = this.$el.getElementsByTagName('span')
       const cite = this.$el.getElementsByTagName('cite')[0]
-      let maxDelay = 0, maxDuration = 0                   // 애니메이션 주기
+      let maxDelay = 0, maxDuration = 0      // 애니메이션 주기
 
-      // 각 단어에 개별 애니메이션을 추가한다.
+      // 각 단어에 개별 CSS 애니메이션을 추가한다.
       for (let i=0; i < words.length; i++) {
         const word = words[i]
         const duration = word.dataset.duration
