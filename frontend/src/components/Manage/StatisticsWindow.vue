@@ -1,5 +1,5 @@
 <template>
-  <v-container
+	<v-container
 		class="mx-auto px-8 grey lighten-4"
 	>
 		<v-row justify="space-around">
@@ -42,7 +42,7 @@
 				</v-col>
 			</v-col>
 		</v-row>
-  </v-container>
+	</v-container>
 </template>
 
 <script>

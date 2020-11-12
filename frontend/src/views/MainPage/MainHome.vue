@@ -13,7 +13,7 @@
           threshold: [0.0, 1.0]
         }
       }" index="1" />
-    
+
     <Features />
 
     <Banner height="300"/>
