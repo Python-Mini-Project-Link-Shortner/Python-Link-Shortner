@@ -16,6 +16,6 @@ export default {
 .h-spacer {
   height: 4px;
   background-image: radial-gradient(farthest-side at 50% 0,
-      rgb(55,115,165) 0%, transparent 70%);
+      rgb(55,115,165) 30%, transparent 70%);
 }
 </style>

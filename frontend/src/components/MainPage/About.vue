@@ -8,7 +8,7 @@
     <v-container class="limit-width mt-5">
       <v-row justify="center">
         <v-col class="d-flex justify-center" cols="12" sm="9" md="4">
-          <AvatarCard icon="fa-link">
+          <AvatarCard icon="fa-link" icon-hoist>
             <template v-slot:title>
               Shorten
             </template>
@@ -19,7 +19,7 @@
           </AvatarCard>
         </v-col>
         <v-col class="d-flex justify-center" cols="12" sm="9" md="4">
-          <AvatarCard icon="share">
+          <AvatarCard icon="share" icon-hoist>
             <template v-slot:title>
               Share
             </template>
@@ -30,7 +30,7 @@
           </AvatarCard>
         </v-col>
         <v-col class="d-flex justify-center" cols="12" sm="9" md="4">
-          <AvatarCard icon="poll">
+          <AvatarCard icon="poll" icon-hoist>
             <template v-slot:title>
               Manage
             </template>

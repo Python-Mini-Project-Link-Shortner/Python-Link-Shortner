@@ -3,7 +3,7 @@
 	<HSpacer class="mb-9" />
 
   <SubHeader title="Features">
-    Those features are combined to create one comprehensive platform, MiniPy.
+    These features are combined to create one comprehensive platform, MiniPy.
   </SubHeader>
 
     <v-container class="limit-width px-6 mx-auto">
@@ -24,11 +24,22 @@
             :key="idx"
 						center-active
           >
-            <FeatureCard
-              class="ma-8 mx-10"
-              :title="item.title"
-              :desc="item.desc"
-            />
+            <AvatarCard 
+              class="ma-8 mx-10 pt-5"
+              minHeight="250px" minWidth="250px" 
+              iconSize="60" :icon="item.icon"
+              borderColor="transparent" hoverWidth="1"
+              titleSize="1.2"
+            >
+              <template v-slot:title>
+                {{item.title}}
+              </template>
+
+              <template v-slot:content>
+                {{item.desc}}
+              </template>
+            </AvatarCard>
+
           </v-slide-item>
         </v-slide-group>
       </v-sheet>
@@ -38,7 +49,7 @@
 
 <script>
 import SubHeader from '@/components/MainPage/SubHeader.vue'
-import FeatureCard from '@/components/MainPage/FeatureCard.vue'
+import AvatarCard from '@/components/MainPage/AvatarCard.vue'
 import HSpacer from '@/components/MainPage/HSpacer.vue'
 
 export default {
@@ -46,17 +57,21 @@ export default {
   data: () => ({
     slideModel: null,
     slideItems: [
-      {'icon': null, 'title': 'a', 'desc': 'a', 'idx': 0},
-      {'icon': null, 'title': 'b', 'desc': 'b', 'idx': 1},
-      {'icon': null, 'title': 'c', 'desc': 'c', 'idx': 2},
-      {'icon': null, 'title': 'd', 'desc': 'd', 'idx': 3},
-      {'icon': null, 'title': 'e', 'desc': 'e', 'idx': 4}
+      {
+        'icon': 'fa-chart-bar', 
+        'title': 'Analystics', 
+        'desc': ''
+      },
+      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
+      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
+      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
+      {'icon': 'fa-link', 'title': 'null', 'desc': ''}
     ],
     pauseSlide: false,
   }),
   components: {
     SubHeader: SubHeader,
-		FeatureCard: FeatureCard,
+    AvatarCard: AvatarCard,
 		HSpacer: HSpacer
 	},
 	methods: {
@@ -84,13 +99,6 @@ export default {
       this.slideModel = (curSlide == maxIndex) ? 0 : curSlide + 1
     }, 8000)
   },
-	watch: {
-		slideModel: {
-			handler: function() {
-				console.log(this.slideModel)
-			}
-		}
-	}
 }
 </script>
 
