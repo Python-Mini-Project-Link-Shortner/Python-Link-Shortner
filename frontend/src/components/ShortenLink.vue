@@ -7,7 +7,6 @@
       solo
       clearable
       rounded
-      autofocus
       hide-details
       :placeholder="behaviorSetting.placeholderText"
       >

@@ -48,7 +48,7 @@ const userLogin = function(elemID) {
 
   // 로그인 기능을 적용한다.
   // grantOfflineAccess: auth2에 설정된 스코프에 대한 사용자의 동의를 얻은 후
-  //   서버측 핸드쉐이크를 위한 일회성 코드를 then으로 반환한다.
+  //                     서버측 핸드쉐이크를 위한 일회성 코드를 then으로 반환한다.
   element.addEventListener("click", function() {
     auth2.grantOfflineAccess().then(signInCallback)
   })

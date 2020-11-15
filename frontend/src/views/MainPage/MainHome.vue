@@ -13,7 +13,9 @@
           threshold: [0.0, 1.0]
         }
       }" index="1" />
-    
+
+    <Features />
+
     <Banner height="300"/>
   </div>
 </template>
@@ -21,6 +23,7 @@
 <script>
 import Jumbotron from '@/components/MainPage/Jumbotron.vue'
 import About from '@/components/MainPage/About.vue'
+import Features from '@/components/MainPage/Features.vue'
 import Banner from '@/components/MainPage/Banner.vue'
 import { mapState, mapMutations } from 'vuex'
 
@@ -71,7 +74,7 @@ export default {
     }
   },
   components: {
-    Jumbotron, About, Banner
+    Jumbotron, About, Features, Banner
   }
 }
 </script>

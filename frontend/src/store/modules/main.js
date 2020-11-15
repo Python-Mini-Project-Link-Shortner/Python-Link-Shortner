@@ -4,7 +4,7 @@ const main = {
     mainLinks: [
       {name: 'Main', routeName: 'Main', href: '/main#'},
       {name: 'About', routeName: 'Main', href: '/main#about'},
-      {name: 'Features', routeName: 'Main', href: '/main#Features'},
+      {name: 'Features', routeName: 'Main', href: '/main#features'},
       {name: 'Contact', routeName: 'MainContact', href: '/main/contact'},
       {name: 'API', routeName: 'MainAPI', href: '/main/api'}
     ],

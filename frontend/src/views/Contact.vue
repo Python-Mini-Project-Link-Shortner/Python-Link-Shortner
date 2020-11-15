@@ -1,6 +1,6 @@
 <template>
 	<v-container class="pt-0 px-0" :class="{'limit-width': isMain}">
-		<div class="polygon white--text">
+		<div class="polygon white--text text-center">
 			<div class="pt-5 mb-3 text-h5 font-weight-medium">
 				E-Mail Us
 			</div>
@@ -74,14 +74,17 @@
 				</v-col>
 			</v-row>
 
-			<v-btn
-				outlined
-				class="mb-5 px-8"
-				color="primary"
-				@click="sendMessage"
-			>
-				Send
-			</v-btn>
+			<!-- 마지막: 버튼-->
+			<v-row justify="center">
+				<v-btn
+					outlined
+					class="mb-5 px-8"
+					color="primary"
+					@click="sendMessage"
+				>
+					Send
+				</v-btn>
+			</v-row>
 		</v-form>
 	</v-container>
 </template>

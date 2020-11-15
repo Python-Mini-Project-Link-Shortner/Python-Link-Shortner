@@ -23,7 +23,7 @@ export default module = {
     }
   }),
   mutations: {
-    setStatData(state, value) { // StatData 값 할당
+    setStatData(state, value) {
       state.statData = value
     },
     setDrawer(state, value) {

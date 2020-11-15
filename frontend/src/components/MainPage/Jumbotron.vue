@@ -61,20 +61,27 @@ export default {
     ],
     btnToggle: null,
     forceUpdate: 1,
+    resizeTimeOut: null,
   }),
   methods: {
     // forceUpdate 값을 변경한다.
     tooltipUpdate() {
-      const temp = String(this.btnToggle)
-      
-      // DOM 업데이트 후 툴팁을 다시 표시한다.
-      this.btnToggle = ''
-      this.$nextTick(() => {
-        this.btnToggle = temp
-      })
+      // resize가 끝난 시점에 실행한다.
+      if (this.resizeTimeOut)
+        clearTimeout(this.resizeTimeOut)
 
-      // 툴팁 컴포넌트를 업데이트한다.
-      this.forceUpdate = this.forceUpdate * (-1)
+      this.resizeTimeOut = setTimeout(function() {
+        const temp = String(this.btnToggle)
+
+        // DOM 업데이트 후 툴팁을 다시 표시한다.
+        this.btnToggle = ''
+        this.$nextTick(() => {
+          this.btnToggle = temp
+        })
+
+        // 툴팁 컴포넌트를 업데이트한다.
+        this.forceUpdate = this.forceUpdate * (-1)
+      }.bind(this), 200)
     }
   },
   mounted() {

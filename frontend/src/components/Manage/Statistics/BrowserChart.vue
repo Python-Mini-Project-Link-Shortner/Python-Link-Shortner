@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
 	name: 'BrowserChart',
 	data: () => ({
@@ -10,12 +12,9 @@ export default {
 		breakpoint: null
 	}),
 	computed: {
+		...mapState('manage', ['statData']),
 		browsers() {
-			return {
-				'Chrome': 10,
-				'Safari': 5,
-				'Firefox': 8,
-			}
+			return this.statData.browser
 		},
 		dataArray() {
 			const browsers = this.browsers
@@ -30,7 +29,17 @@ export default {
 		},
 		options() {
 			return {
-				pieHole: 0.4,
+				pieSliceTextStyle: {
+					color: 'black',
+				},
+				pieHole: 0.3,
+			}
+		}
+	},
+	watch: {
+		statData: {
+			handler: function() {
+				this.drawChart()
 			}
 		}
 	},
