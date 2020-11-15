@@ -42,7 +42,7 @@
           -->
           <!-- TODO: 크기에 따라 drawer로 숢기기 -->
           <v-btn tile v-bind="attrs" v-on="on" class="no-background-hover info pl-3 pr-1 py-5 rounded wd-128 white--text text-subtitle-1 hidden-sm-and-down">
-            아이디 <v-icon v-text="showAccountMenu ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
+            계정 <v-icon v-text="showAccountMenu ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
           </v-btn>
         </template>
 
@@ -92,7 +92,7 @@ export default {
   data: () => ({
     showAccountMenu: false, // 계정 관리 메뉴 표시 여부
     accountActionList: [ // 관리 메뉴
-      { title: '계정관리', link: '', event: ''},
+      // { title: '계정관리', link: '', event: ''},
       { title: '로그아웃', link: '', action: 'logout'}
     ]
   }),

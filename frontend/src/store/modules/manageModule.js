@@ -17,9 +17,9 @@ export default module = {
     clickedLinkID: '', // 현재 클릭한 링크 아이디
     checkedLinkIDList: [], // 체크박스 체크한 링크 아이디 배열
     breadcrumbs: {
-      favorite: [ { text: '링크관리', disabled: true, href: '#' }, { text: '즐겨찾기', disabled: false, href: '#' } ],
-      hide: [ { text: '링크관리', disabled: true, href: '#' }, { text: '숨김관리', disabled: false, href: '#' } ],
-      tag: [ { text: '링크관리', disabled: true, href: '#' }, { text: '태그관리', disabled: false, href: '#' } ]
+      favorite: [ { text: '링크관리', link: 'Manage' }, { text: '즐겨찾기', link: 'ManageFavorite' } ],
+      hide: [ { text: '링크관리', link: 'Manage' }, { text: '숨김관리', link: 'ManageHide' } ],
+      tag: [ { text: '링크관리', link: 'Manage' }, { text: '태그관리', link: 'ManageTag' } ]
     }
   }),
   mutations: {
