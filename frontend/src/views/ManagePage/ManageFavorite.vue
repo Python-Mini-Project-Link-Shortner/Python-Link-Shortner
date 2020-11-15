@@ -1,7 +1,15 @@
 <template>
   <v-container class="text-left" px-6 py-5 fluid>
     <!-- 링크 트리 -->
-    <v-breadcrumbs :items="breadcrumbs.favorite" class="pl-2 pt-2 pb-0"></v-breadcrumbs>
+    <v-breadcrumbs :items="breadcrumbs.favorite" class="pl-2 pt-2 pb-0">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :to="{ name: item.link }"
+          :exact="true">
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
 
     <!-- 로딩 -->
     <Loading></Loading>
@@ -31,12 +39,12 @@
           </div>
           <div style="display: flex" class="mt-4">
             <div>
-              <div class="font-weight-regular text-caption grey--text">{{ link.pageTitle }}</div>
-              {{ link.rawURL }}
+              <div style="height: 18px;" class="font-weight-regular text-caption grey--text">{{ link.pageTitle ? link.pageTitle : link.rawURL }}</div>
+              <div style="height: 24px;">{{ link.rawURL }}</div>
             </div>
             <v-spacer></v-spacer>
             <div>
-              <v-btn style="height: 100%" color="error" class="text-subtitle-1" @click="openDialog(link._id)">취소</v-btn>
+              <v-btn style="height: 100%;" color="error" class="text-subtitle-1" @click="openDialog(link._id)">취소</v-btn>
             </div>
           </div>
         </v-card>
@@ -117,7 +125,7 @@ export default {
     fetchLinkData() {
       this.startLoading()
 
-      axios.post(this.serverURL.favoritePageURL,
+      axios.post(this.serverURL.favoriteListURL,
         { userID: this.userInfo.email, page: this.page, itemCount: this.itemPerPage })
         .then(res => {
           this.maxPage = res.data.maxPage

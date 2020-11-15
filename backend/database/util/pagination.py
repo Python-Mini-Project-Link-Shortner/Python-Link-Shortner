@@ -6,7 +6,7 @@ def pagination(data, sort_dict = None, page = 1, item_count = 10):
     Args:
 
             data (pymongo.cursor.Cursor): 페이지네이션 하고 싶은 MongoDB의 기본 Cursor 데이터
-            sort_dict (List, optional): 정렬하기 위한 [('이름': pymongo.ASCENDING), ('이름': pymongo.DESCENDING)...] 형태의 값. Defaults to None.
+            sort_dict (List, optional): 정렬하기 위한 [('이름', pymongo.ASCENDING), ('이름', pymongo.DESCENDING)...] 형태의 값. Defaults to None.
             page (int, optional): 원하는 페이지 번호. Defaults to 1.
             item_count (int, optional): 한 페이지 당 아이템 갯수. Defaults to 10.
     """

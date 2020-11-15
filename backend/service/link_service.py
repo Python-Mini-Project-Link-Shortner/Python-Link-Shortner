@@ -235,11 +235,16 @@ def get_hide_name_list(user_id):
     collection = db.get_collection()
 
     # distinct는 list를 반환한다
-    result = collection.find({ 'userID': user_id }).distinct('hideName')
+    result = collection.find({
+        'userID': user_id,
+        'hide': True,
+        '$and': [ {'hideName': { '$ne': None } }, { 'hideName': { '$ne': "" } } ],
+        })
 
     if result is None: return None
 
     # 정렬 후 반환
+    result = result.distinct('hideName')
     result.sort()
     return result
 
@@ -297,7 +302,7 @@ def unhide_link(user_id, unhide_id):
     """
     collection = db.get_collection()
 
-    result = collection.update_one({ 'userID': user_id, '_id': ObjectId(unhide_id) }, { '$unset': { 'hideName': '' } })
+    result = collection.update_one({ 'userID': user_id, '_id': ObjectId(unhide_id) }, { '$set': { 'hide': False }, '$unset': { 'hideName': '' } })
 
     if result.modified_count == 1: return True
     return False
@@ -316,7 +321,7 @@ def unhide_link_array(user_id, unhide_id_array):
     """
     collection = db.get_collection()
 
-    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, unhide_id_array)) } }, { '$unset': { 'hideName': '' } })
+    result = collection.update_many({ 'userID': user_id, '_id': { '$in': list(map(ObjectId, unhide_id_array)) } }, { '$set': { 'hide': False }, '$unset': { 'hideName': '' } })
 
     if result.modified_count == len(unhide_id_array): return True
     return False
@@ -342,6 +347,19 @@ def get_tagged_link_list(user_id, tag):
         'userID': user_id,
         'tagName': tag,
         '$or': [ { 'hide': { '$exists': False } }, { 'hide': False } ]
+    })
+
+    if result is None: return None
+
+    return list(result)
+
+def get_hidden_link_list(user_id, directory):
+    collection = db.get_collection()
+
+    result = collection.find({
+        'userID': user_id,
+        'hide': True,
+        'hideName': directory
     })
 
     if result is None: return None

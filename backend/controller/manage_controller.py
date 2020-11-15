@@ -130,7 +130,10 @@ def hide_name_list():
 
     res = link_service.get_hide_name_list(user_id)
 
-    return jsonify(res)
+    res_data = { 'flag': True, 'list': res }
+    if res is None: res_data['flag'] = False
+
+    return jsonify(res_data)
 
 @manage_controller.route('/hideLink', methods=['POST'])
 def hide_link():
@@ -178,7 +181,7 @@ def tag_list():
     tags = link_service.get_tag_list(user_id)
 
     res_data = { 'flag': True, 'tags': tags }
-    if tags == None:
+    if tags is None:
         res_data['flag'] = False
 
     return jsonify(res_data)
@@ -193,9 +196,24 @@ def tagged_link_list():
     links = link_service.get_tagged_link_list(user_id, tag_name)
 
     res_data = { 'flag': True, 'link': links}
-    if links == None:
+    if links is None:
         res_data['flag'] = False
     
+    return jsonify(res_data)
+
+@manage_controller.route('/hiddenLinkList', methods=['POST'])
+def hidden_link_list():
+    req_data = request.get_json()
+
+    user_id = req_data['userID']
+    directory_name = req_data['directory']
+
+    links = link_service.get_hidden_link_list(user_id, directory_name)
+
+    res_data = { 'flag': True, 'link': links }
+    if links is None:
+        res_data['flag'] = False
+
     return jsonify(res_data)
 
 @manage_controller.route('/tempStat', methods=['POST'])

@@ -37,8 +37,10 @@
             <v-checkbox v-model="checkedLinkIDList" :value="link._id"></v-checkbox>
           </v-list-item>
 
-          <img :src="link.rawURL + '/favicon.ico'" />
-          <v-card-subtitle class="py-0 font-weight-regular">{{ link.pageTitle }}</v-card-subtitle>
+          <v-card-subtitle class="py-0 font-weight-regular">
+            <img height="12" :src="link.rawURL + '/favicon.ico'" />
+            {{ link.pageTitle ? link.pageTitle : '...' }}
+          </v-card-subtitle>
           <v-card-text class="text--primary pb-1">{{ link.rawURL }}</v-card-text>
 
           <v-card-actions class="px-4">
@@ -141,7 +143,7 @@
     <!-- Dialog 모음 -->
     <div>
       <!-- 즐겨찾기 Dialog -->
-      <v-dialog v-model="dialogs.favoriteOpen" width="360">
+      <v-dialog v-model="dialogs.favoriteOpen" width="420">
         <v-card>
           <v-card-title class="headline">
             즐겨찾기
@@ -230,7 +232,7 @@
       </v-dialog>
 
       <!-- 숨김 Dialog -->
-      <v-dialog v-model="dialogs.hideOpen" max-width="360">
+      <v-dialog v-model="dialogs.hideOpen" max-width="420">
         <v-card>
           <v-card-title class="headline">
             링크 숨기기
@@ -254,7 +256,7 @@
       </v-dialog>
 
       <!-- 삭제 Dialog -->
-      <v-dialog v-model="dialogs.deleteOpen" max-width="360">
+      <v-dialog v-model="dialogs.deleteOpen" max-width="420">
         <v-card>
           <v-card-title class="headline error--text">
             링크 삭제
@@ -401,7 +403,7 @@ export default {
     fetchLinkData() {
       this.startLoading()
 
-      axios.post(this.serverURL.linkPageURL,
+      axios.post(this.serverURL.linkListURL,
         { userID: this.userInfo.email, page: this.page, itemCount: this.itemPerPage })
         .then(res => {
           this.maxPage = res.data.maxPage
@@ -420,9 +422,7 @@ export default {
       axios.post(this.serverURL.hideNameListURL,
         { userID: this.userInfo.email })
         .then(res => {
-          this.hideNameList = res.data.filter(function(data) {
-            return (data != null && data != '')
-          })
+          this.hideNameList = res.data.list
         }).catch(e => {
           this.showError("숨김 위치 목록을 불러오는데 실패하였습니다")
         }).finally(() => {

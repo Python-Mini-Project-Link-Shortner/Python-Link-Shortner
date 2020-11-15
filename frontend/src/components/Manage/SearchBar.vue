@@ -9,7 +9,7 @@
     @property {label} 아무 입력도 없을 때 나오는 단어
   -->
   <v-text-field flat solo hide-details dense outlined
-  label="검색" v-model="searchText" class="mr-2" @keyup.enter="search()">
+  label="태그로 검색" v-model="searchText" class="mr-2" @keyup.enter="search()">
     <v-icon slot="append" :color="this.searchText === '' ? 'error' : 'success'" @click="search()">
         mdi-text-box-search
       </v-icon>
