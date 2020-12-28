@@ -11,3 +11,6 @@ Running on a Heroku free server, it may require a few seconds to start up the se
   - Flask
   - pymongo (+ voluptuous)
 
+# Developers
+  - Won Seok, J
+  - Jun Soo, C
