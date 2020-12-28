@@ -15,58 +15,29 @@
 
     <!--
       메뉴에 표시될 리스트
-      @property {subheader} 메뉴 구분용 타이틀 넣을때 필요합니다
     -->
-    <v-list subheader>
-      <!-- 메뉴의 타이틀 -->
-      <v-subheader>Action1</v-subheader>
+    <v-list nav dense rounded>
+      <div v-for="(drawerItem, index) in drawerManageList" :key="drawerItem.title">
+        <v-subheader v-text="drawerItem.title" class="mb-2">
+        </v-subheader>
 
-      <!-- 표시될 아이템 -->
-      <v-list-item v-for="item in drawerSubtitle1ActionList" :key="item.text" @click="close();">
-        <v-list-item-icon>
-          <v-icon v-text="item.icon"></v-icon>
-        </v-list-item-icon>
+        <!-- <v-list-item v-for="linkItem in drawerItem" :key="linkItem.text" @click="close()"> -->
+        <v-list-item v-for="linkItem in drawerItem.linkList" :key="linkItem.text" :to="{ name: linkItem.link }"
+        color="info" v-ripple="{ class: 'blue--text' }" class="nav-info">
+          <v-list-item-icon>
+            <v-icon v-text="linkItem.icon"></v-icon>
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <!-- 구분줄 -->
-      <v-divider></v-divider>
-      <!-- 메뉴의 타이틀 -->
-      <v-subheader>Action2</v-subheader>
-
-      <!-- 표시될 아이템 -->
-      <v-list-item v-for="item in drawerSubtitle2ActionList" :key="item.text" @click="close();">
-        <v-list-item-icon>
-          <v-icon v-text="item.icon"></v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <!-- 구분줄 -->
-      <v-divider></v-divider>
-      <!-- 메뉴의 타이틀 -->
-      <v-subheader>Action2</v-subheader>
-
-      <!-- 표시될 아이템 -->
-      <v-list-item v-for="item in drawerSubtitle3ActionList" :key="item.text" @click="close();">
-        <v-list-item-icon>
-          <v-icon v-text="item.icon"></v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title v-text="linkItem.text"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider v-if="index !== drawerManageList.length - 1"></v-divider>
+      </div>
     </v-list>
 
     <template v-slot:append>
-      <div class="mb-3">@2020 MiniPy.com</div>
+      <div class="py-3">@2020 MiniPy.com</div>
     </template>
   </v-navigation-drawer>
 </template>
@@ -81,15 +52,34 @@ export default {
     HomeLogo: Logo
   },
   data: () => ({
-    drawerSubtitle1ActionList: [ // 좌측 링크 메뉴1
-      { icon: 'mdi-contacts', text: 'Something1', link: '' },
-      { icon: 'mdi-history', text: 'Something2', link: '' }
-    ],
-    drawerSubtitle2ActionList: [ // 좌측 링크 메뉴2
-      { icon: 'mdi-content-copy', text: 'Something3', link: '' }
-    ],
-    drawerSubtitle3ActionList: [ // 좌측 링크 메뉴3
-      { icon: 'mdi-content-copy', text: 'Something4', link: '' }
+    drawerManageList: [
+      { title: '링크관리', linkList: [
+        { icon: 'mdi-heart', text: '즐겨찾기', link: 'ManageFavorite' },
+        { icon: 'mdi-tag', text: '태그관리', link: 'ManageTag' },
+        { icon: 'mdi-eye-off', text: '숨김관리', link: 'ManageHide' },
+        { icon: 'mdi-restore-alert', text: '링크검사', link: 'ManageLink' }
+      ]},
+      { title: '링크분석', linkList: [
+        { icon: 'mdi-chart-areaspline-variant', text: '분석현황', link: '#' },
+        { icon: 'mdi-finance', text:'기간별분석', link: '#' },
+        { icon: 'mdi-chart-bubble', text: '국가별분석', link: '#' }
+      ]},
+      {
+        title: 'API', linkList: [
+          { icon: 'mdi-code-json', text: '메뉴얼', link: '#' }
+        ]
+      },
+      {
+        title: '언어', linkList: [
+          { icon: 'mdi-translate', text:'ENG', link: '#' },
+          { icon: 'mdi-translate', text: '한국어', link: '#' },
+          { icon: 'mdi-translate', text: '中文', link: '#' }
+        ]
+      },
+      { title: 'MiniPy', linkList: [
+        { icon: 'mdi-alert-box', text: '문의/신고', link: 'ManageContact' },
+        { icon: 'mdi-file-document-edit', text: '약관', link: '#' }
+      ]}
     ]
   }),
   computed: {
@@ -113,5 +103,10 @@ export default {
 </script>
 
 <style scoped>
-
+  .nav-info:hover {
+    background-color: #E3F2FD;
+  }
+  .nav-info:hover * {
+    color: #2962FF;
+  }
 </style>

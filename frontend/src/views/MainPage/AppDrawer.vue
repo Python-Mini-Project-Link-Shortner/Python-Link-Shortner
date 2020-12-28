@@ -6,24 +6,30 @@
   temporary
   >
 
-  <v-list rounded>
-    <v-list-item-group v-model="tabIndex" color="primary">
-      <v-list-item
-      v-for="(link, index) in mainLinks"
-      :key="link.name"
-      :value="index"
-      @click="onItemClick(link)"
-      >
-        <v-list-item-content>
-          <v-list-item-title v-text="link.name" />
-        </v-list-item-content>
-      </v-list-item>
-    </v-list-item-group>
-  </v-list>
+    <v-list rounded>
+      <v-list-item-group v-model="tabIndex" color="primary">
+        <v-list-item
+        v-for="(link, index) in mainLinks"
+        :key="link.name"
+        :value="index"
+        @click="onItemClick(link)"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="link.name" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+    <!-- 구글 로그인 버튼 -->
+    <template v-slot:append>
+      <GLoginBtn class="my-5" long/>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script>
+import GLoginBtn from '@/components/GLoginBtn.vue'
 import {mapState, mapMutations} from 'vuex'
 import mixRoute from '@/components/mixins/mixRoute.js' // goTo(item)
 
@@ -49,6 +55,9 @@ export default {
       this.goTo(item)
     }
   },
-  mixins: [ mixRoute ]
+  mixins: [ mixRoute ],
+  components: {
+    GLoginBtn
+  }
 }
 </script>

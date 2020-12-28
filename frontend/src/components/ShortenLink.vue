@@ -7,12 +7,27 @@
       solo
       clearable
       rounded
-      autofocus
       hide-details
-      placeholder="Input Your Link Here."
+      :placeholder="behaviorSetting.placeholderText"
       >
+        <!-- 링크 아이콘 -->
+        <template slot="prepend-inner">
+          <v-tooltip :value="toggleTooltip" bottom>
+            <template v-slot:activator="{ attrs }">
+              <v-icon 
+                class="mr-3" size="20" color="rgb(55,115,165)"
+                v-on="toggle ? {click: () => iconToggle()} : {}"
+                v-bind="attrs">
+                {{behaviorSetting.icon}}
+              </v-icon>
+            </template>
+            <span>Click to change the mode</span>
+          </v-tooltip>
+        </template>
+
+        <!-- Shorten/Check 버튼 -->
         <template slot="append">
-          <v-btn color="primary" @click="shortenURL">Shorten</v-btn>
+          <v-btn color="primary" @click="behaviorHandler">{{behaviorSetting.btnText}}</v-btn>
         </template>
       </v-text-field>
     </v-col>
@@ -31,10 +46,13 @@
           <v-col class="py-0 pl-5">
             {{alertSetting.msg}}
           </v-col>
+
+          <!-- 메시지 복사 버튼. -->
           <v-col class="py-0 pr-5 text-right"
             v-clipboard="() => alertSetting.msg"
             v-clipboard:success="clipboardSuccess"
-            v-clipboard:error="clipboardError">
+            v-clipboard:error="clipboardError"
+            v-if="alertSetting.copyBtn">
             <v-btn small outlined>Copy</v-btn>
           </v-col>
         </v-row>
@@ -69,6 +87,7 @@
 <script>
 import {mapState} from 'vuex'
 import axios from 'axios'
+import {getShortCode} from '@/assets/js/handleURL.js'
 
 export default {
   name: 'ShortenLink',
@@ -76,6 +95,7 @@ export default {
     url: '',
     alertSetting: {
       isSuccess: false,
+      copyBtn: true,
       type: 'success',
       msg: 'default'
     },
@@ -83,27 +103,111 @@ export default {
       show: false,
       color: '',
       msg: ''
+    },
+    behaviorSetting: {
+      type: '',
+      btnText: '',
+      placeholderText: '',
+      icon: ''
     }
   }),
+  computed: {
+    ...mapState(['serverURL', 'userInfo']),
+    normalizedBehavior() {
+      let behavior
+
+      if (this.toggle) {
+        behavior = this.behaviorSetting.type
+      } else {
+        // null값 방지
+        behavior = (!this.behavior) ? 'Shorten' : this.behavior
+      }
+
+      return behavior.trim().toLowerCase()
+    }
+  },
   props: {
     alert: {
+      type: Boolean,
+      default: () => false
+    },
+    behavior: {
+      type: String,
+      default: () => 'Shorten'
+    },
+    toggle: {
+      type: Boolean,
+      default: () => false
+    },
+    toggleTooltip: {
       type: Boolean,
       default: () => false
     }
   },
   methods: {
+    // 동작에 따라 여러 텍스트 및 타입을 설정한다.
+    setBehavior() {
+      const behavior = this.normalizedBehavior
+
+      if (behavior === 'shorten') {
+        this.behaviorSetting.btnText = 'SHORTEN'
+        this.behaviorSetting.placeholderText = 'Input Your Link Here'
+        this.behaviorSetting.icon = 'fa-link'
+      } else if (behavior === 'check') {
+        this.behaviorSetting.btnText = 'CHECK'
+        this.behaviorSetting.placeholderText = 'Input Your Shortend Link Here'
+        this.behaviorSetting.icon = 'done_outline'
+      }
+    },
+    iconToggle() {
+      const currentType = this.behaviorSetting.type
+
+      // 타입 토글 및 동작 설정
+      this.behaviorSetting.type = (currentType === 'Shorten') ? 'Check' : 'Shorten'
+      this.setBehavior()
+    },
+    // 동작을 결정할 메소드
+    behaviorHandler() {
+      const behavior = this.normalizedBehavior
+      if (behavior === 'shorten') {
+        this.shortenURL()
+      } else if (behavior === 'check') {
+        this.checkURL()
+      }
+    },
     // 서버로부터 축약 링크를 반환받는다. => Shorten 버튼
     shortenURL() {
-      axios.post(this.serverURL, {url: this.url})
+      const userID = this.userInfo['email']
+      const requestData = {
+        url: this.url,
+        email: userID
+      }
+
+      axios.post(this.serverURL['shorten'], requestData)
         .then( res => {
           const alert = this.alertSetting
 
-          alert.isSuccess = res.data.flag                       // 반환 후 아래에 메시지를 표시한다.
+          alert.isSuccess = true                                // 반환 후 아래에 메시지를 표시한다.
           alert.type = res.data.flag ? 'success' : 'warning'    // 메시지 박스의 테마
           alert.msg = res.data.msg                              // 표시할 메시지
         }).catch( ex => {
           console.log(ex)
         })
+    },
+    checkURL() {
+      const result = getShortCode(this.url)
+
+      // 올바른 URL 형식인지 검사한다.
+      if (!result.flag) {
+        alert(result.msg)
+        return
+      }
+
+      // LinkCheck 페이지로 이동한다.
+      this.$router.push({
+        name: 'LinkCheck',
+        params: {shortURL: result.shortCode}
+      })
     },
     clipboardSuccess() {
       const snack = this.snackSetting
@@ -120,29 +224,10 @@ export default {
       snack.color = 'warning'
     }
   },
-  computed: {
-    ...mapState(['serverURL'])
-  }
+  mounted() {
+    // 최초 값 할당 및 동작 설정
+    this.behaviorSetting.type = (!this.behavior) ? 'Shorten' : this.behavior
+    this.setBehavior()
+  },
 }
 </script>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500&display=swap');
-.logo {
-	font-family: 'Recursive', sans-serif;
-	font-weight: 300;
-	font-size: 2em;
-	text-decoration: none;
-	color: inherit;
-}
-.logo .py {
-	color: rgb(55,115,165);
-}
-.no-drag {
-	-ms-user-select: none; 
-	-moz-user-select: -moz-none;
-	-webkit-user-select: none; 
-	-khtml-user-select: none; 
-	user-select:none;
-}
-</style>

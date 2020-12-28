@@ -1,5 +1,5 @@
 <template>
-	<router-link tag="a" :to="to" class="logo no-drag">
+	<router-link tag="a" :to="to" class="logo no-drag" :class="{'text-small' : sizable && $vuetify.breakpoint.smAndDown}">
 		<span v-if="!plain">&lt;</span> Mini<span class="py">Py</span> <span v-if="!plain">&gt;</span>
 	</router-link>
 </template>
@@ -13,6 +13,10 @@ props: {
 		default: () => ({name: 'Main'})
 	},
 	plain : {
+		type: Boolean,
+		default: () => false
+	},
+	sizable: {
 		type: Boolean,
 		default: () => false
 	}
@@ -38,5 +42,8 @@ props: {
 	-webkit-user-select: none; 
 	-khtml-user-select: none; 
 	user-select:none;
+}
+.text-small {
+	font-size: 1.5em !important;
 }
 </style>
