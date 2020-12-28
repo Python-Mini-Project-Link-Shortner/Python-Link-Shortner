@@ -1,5 +1,12 @@
-# Python-Link-Shortner
+# MiniPy
+ A Link Shortener using Python as backend, Vue.js as frontend.
+![image](https://user-images.githubusercontent.com/51331195/103190076-c51a3480-4912-11eb-937c-78cef981862c.png)
+
+# URL
+: http://minipy-git.herokuapp.com/main/
+Running on a Heroku free server, it may require a few seconds to start up the server.
 
 # Modules
   - Flask
   - pymongo (+ voluptuous)
+
