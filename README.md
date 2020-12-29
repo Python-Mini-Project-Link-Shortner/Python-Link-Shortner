@@ -18,6 +18,9 @@ Note that this project is still in development. Minor bugs and some unfilled com
    - Vue.js
    - Vuetify
    - Axios
+   - gsap
+   - Google Charts
+   - Google OAuth
    
 # Developers
   - Won Seok, J (Cotidie)
