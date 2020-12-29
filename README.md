@@ -6,6 +6,7 @@
 : http://minipy-git.herokuapp.com/main/
 
 Since the app is running on a free Heroku server, It may require a few seconds to start up the server.
+Note that this project is still in development. Minor bugs and some unfilled components are expected.
 
 # Modules
   - Flask
