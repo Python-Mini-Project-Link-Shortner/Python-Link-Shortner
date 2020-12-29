@@ -10,9 +10,15 @@ Since the app is running on a free Heroku server, It may require a few seconds t
 Note that this project is still in development. Minor bugs and some unfilled components are expected.
 
 # Modules
+(Python)
   - Flask
   - pymongo (+ voluptuous)
 
+(Javascript)
+   - Vue.js
+   - Vuetify
+   - Axios
+   
 # Developers
   - Won Seok, J (Cotidie)
   - Jun Soo, C  (cjcjon)
