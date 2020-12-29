@@ -14,6 +14,7 @@ Note that this project is still in development. Minor bugs and some unfilled com
   - Flask
   - Whitenoise (middleware for loading static files)
   - pymongo (+ voluptuous)
+  - lxml
 
 (Javascript)
    - Vue.js
