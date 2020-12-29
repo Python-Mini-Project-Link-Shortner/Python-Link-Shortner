@@ -12,6 +12,7 @@ Note that this project is still in development. Minor bugs and some unfilled com
 # Modules
 (Python)
   - Flask
+  - Whitenoise (middleware for loading static files)
   - pymongo (+ voluptuous)
 
 (Javascript)
