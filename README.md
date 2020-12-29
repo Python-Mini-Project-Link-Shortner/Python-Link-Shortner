@@ -14,5 +14,5 @@ Note that this project is still in development. Minor bugs and some unfilled com
   - pymongo (+ voluptuous)
 
 # Developers
-  - Won Seok, J
-  - Jun Soo, C
+  - Won Seok, J (Cotidie)
+  - Jun Soo, C  (cjcjon)
