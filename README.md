@@ -26,5 +26,5 @@ Note that this project is still in development. Minor bugs and some unfilled com
    - Google OAuth
    
 # Developers
-  - Won Seok, J (Cotidie)
-  - Jun Soo, Ch  (cjcjon)
+  - Won Seok (Cotidie)
+  - Jun Soo  (cjcjon)
