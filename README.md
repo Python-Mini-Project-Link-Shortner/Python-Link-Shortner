@@ -27,4 +27,4 @@ Note that this project is still in development. Minor bugs and some unfilled com
    
 # Developers
   - Won Seok, J (Cotidie)
-  - Jun Soo, C  (cjcjon)
+  - Jun Soo, Ch  (cjcjon)
