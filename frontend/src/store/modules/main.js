@@ -6,7 +6,6 @@ const main = {
       {name: 'About', routeName: 'Main', href: '/main#about'},
       {name: 'Features', routeName: 'Main', href: '/main#features'},
       {name: 'Contact', routeName: 'MainContact', href: '/main/contact'},
-      {name: 'API', routeName: 'MainAPI', href: '/main/api'}
     ],
     intersectEnabled: true,
     drawer: false,

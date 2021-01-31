@@ -11,7 +11,7 @@
 
         <div>
           <v-tabs
-          class="hidden-sm-and-down" 
+          class="hidden-sm-and-down mr-5" 
           background-color="transparent"
           slider-size="2"
           optional
