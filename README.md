@@ -21,6 +21,7 @@ Note that this project is still in development. Minor bugs and some unfilled com
    - Vuetify
    - Axios
    - gsap
+   - Font Awesome
    - Google Charts
    - Google OAuth
    
