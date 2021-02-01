@@ -26,10 +26,11 @@
           >
             <AvatarCard 
               class="ma-8 mx-10 pt-5"
-              minHeight="250px" minWidth="250px" 
+              minHeight="250px" minWidth="250px" maxWidth="250px" 
               iconSize="60" :icon="item.icon"
               borderColor="transparent" hoverWidth="1"
               titleSize="1.2"
+              textContent="text-center"
             >
               <template v-slot:title>
                 {{item.title}}
@@ -59,13 +60,19 @@ export default {
     slideItems: [
       {
         'icon': 'fa-chart-bar', 
-        'title': 'Analystics', 
-        'desc': ''
+        'title': 'Traffic Tracing', 
+        'desc': 'You can collect access and traffic information by looking at the simplified graph in your dashboard.'
       },
-      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
-      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
-      {'icon': 'fa-link', 'title': 'null', 'desc': ''},
-      {'icon': 'fa-link', 'title': 'null', 'desc': ''}
+      {
+        'icon': 'fa-id-badge',
+        'title': 'Personal Profile',
+        'desc': 'Personal Profile is automatically created via Google Login. No additional personal data is required.'
+      },
+      {
+        'icon': 'fa-check-square', 
+        'title': 'Link Check', 
+        'desc': 'By attaching # after a link or by using the check tab above, suspicious links can be verified beforehand.'
+        },
     ],
     pauseSlide: false,
   }),
@@ -79,25 +86,9 @@ export default {
       console.log('hi')
       this.slideModel = idx
     },
-    haltSlide() {
-      this.pauseSlide = true
-    },
-    resumeSlide() {
-      this.pauseSlide = false
-    },
     consoleLog() {
       console.log('HI')
     }
-  },
-  created() {
-    setInterval(() => {
-      if (this.pauseSlide) return
-
-      const curSlide = this.slideModel
-      const maxIndex = this.slideItems.length - 1
-
-      this.slideModel = (curSlide == maxIndex) ? 0 : curSlide + 1
-    }, 8000)
   },
 }
 </script>
