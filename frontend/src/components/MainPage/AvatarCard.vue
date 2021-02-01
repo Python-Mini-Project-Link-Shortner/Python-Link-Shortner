@@ -19,7 +19,7 @@
       <slot name="title" />
     </v-card-title>
     <!-- 카드 내용 -->
-    <v-card-text class="px-8 text-justify">
+    <v-card-text class="px-8" :class="textContent">
       <slot name="content" />
     </v-card-text>
     <!-- 카드 하단 버튼 영역-->
@@ -76,6 +76,10 @@ export default {
     maxWidth: {
       type: String,
       default: () => '360px'
+    },
+    textContent: {
+      type: String,
+      default: () => 'text-justify'
     }
   },
   computed: {
